@@ -1,0 +1,395 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+
+    /* Custom luxury colors */
+    --luxury-cream: 35 20% 96%;
+    --luxury-beige: 35 15% 90%;
+    --luxury-warm: 35 25% 85%;
+    --luxury-accent: 35 30% 75%;
+    --luxury-text: 30 8% 20%;
+    --luxury-muted: 30 5% 50%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-light;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+}
+
+@layer components {
+  .luxury-text {
+    @apply text-gray-800 dark:text-gray-100;
+  }
+
+  .luxury-muted {
+    @apply text-gray-600 dark:text-gray-400;
+  }
+
+  .luxury-card {
+    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50;
+  }
+
+  .luxury-card-hover {
+    @apply hover:bg-white/90 dark:hover:bg-gray-800/90 hover:border-gray-300/50 dark:hover:border-gray-600/50;
+  }
+
+  .luxury-button-primary {
+    @apply bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 hover:from-amber-500 hover:via-yellow-600 hover:to-amber-700 text-white font-medium;
+  }
+
+  .luxury-button-category {
+    @apply bg-white/70 dark:bg-gray-800/70 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600;
+  }
+
+  .luxury-button-category.active {
+    @apply bg-gradient-to-r from-amber-100 to-yellow-100 dark:from-amber-900/50 dark:to-yellow-900/50 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-700;
+  }
+
+  .luxury-hover {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .luxury-text-glow {
+    @apply drop-shadow-sm;
+  }
+
+  .modal-content {
+    @apply bg-gradient-to-br from-white via-luxury-beige to-luxury-warm dark:from-gray-800 dark:via-gray-850 dark:to-gray-900;
+  }
+}
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .luxury-bg {
+    background-color: hsl(var(--luxury-cream));
+  }
+
+  .dark .luxury-card {
+    background: linear-gradient(145deg, hsl(var(--luxury-cream)), hsl(var(--luxury-beige)));
+    border: 1px solid hsl(var(--luxury-warm));
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .luxury-button {
+    background: linear-gradient(145deg, hsl(var(--luxury-warm)), hsl(var(--luxury-accent)));
+    border: 1px solid hsl(var(--luxury-accent));
+    color: hsl(var(--luxury-text));
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .luxury-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(145deg, hsl(var(--luxury-accent)), hsl(var(--luxury-warm)));
+  }
+
+  .dark .luxury-button {
+    background: linear-gradient(145deg, hsl(var(--luxury-warm)), hsl(var(--luxury-accent)));
+    color: hsl(var(--luxury-text));
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .dark .luxury-button:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Constant fading gold animation for header text */
+  .luxury-fade-gold {
+    animation: fadeGold 3s ease-in-out infinite;
+  }
+
+  @keyframes fadeGold {
+    0%,
+    100% {
+      color: #cd7f32; /* Bronze */
+    }
+    50% {
+      color: #ffd700; /* Gold */
+    }
+  }
+
+  /* Mesmerizing Comfortillo name fade animation */
+  .luxury-name-fade {
+    animation: nameFade 4s ease-in-out infinite;
+  }
+
+  @keyframes nameFade {
+    0%,
+    100% {
+      background: linear-gradient(to right, #cd7f32, #b8860b, #cd7f32);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    33% {
+      background: linear-gradient(to right, #daa520, #ffd700, #daa520);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    66% {
+      background: linear-gradient(to right, #f4e4bc, #fff8dc, #f4e4bc);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--luxury-beige));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, hsl(var(--luxury-accent)), hsl(var(--luxury-warm)));
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, hsl(var(--luxury-warm)), hsl(var(--luxury-accent)));
+  }
+
+  /* Luxury gradient backgrounds */
+  .bg-luxury-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--luxury-cream)) 0%,
+      hsl(var(--luxury-beige)) 25%,
+      hsl(var(--luxury-warm)) 50%,
+      hsl(var(--luxury-beige)) 75%,
+      hsl(var(--luxury-cream)) 100%
+    );
+    animation: gradientShift 8s ease-in-out infinite;
+  }
+
+  @keyframes gradientShift {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Breathtaking modal animations */
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(-20px) rotateX(10deg);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0) rotateX(0deg);
+      filter: blur(0px);
+    }
+  }
+
+  @keyframes modalSlideOut {
+    from {
+      opacity: 1;
+      transform: scale(1) translateY(0) rotateX(0deg);
+      filter: blur(0px);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.9) translateY(-20px) rotateX(10deg);
+      filter: blur(4px);
+    }
+  }
+
+  .modal-content[data-state="closed"] {
+    animation: modalSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Breathtaking card hover effects */
+  .luxury-card-hover {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .luxury-card-hover:hover {
+    transform: translateY(-8px) rotateX(2deg) rotateY(1deg) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  }
+
+  .dark .luxury-card-hover:hover {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Mesmerizing text animations */
+  .luxury-text-glow {
+    text-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    animation: textGlow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes textGlow {
+    from {
+      text-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    }
+    to {
+      text-shadow: 0 0 40px rgba(0, 0, 0, 0.2), 0 0 60px rgba(212, 175, 55, 0.1);
+    }
+  }
+
+  .dark .luxury-text-glow {
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    animation: textGlowDark 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes textGlowDark {
+    from {
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+    to {
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.2), 0 0 60px rgba(212, 175, 55, 0.2);
+    }
+  }
+
+  /* Luxury progress bar with mesmerizing animation */
+  .luxury-progress {
+    background: linear-gradient(90deg, #d4af37, #f4e4bc, #d4af37);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    animation: progressGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes progressGlow {
+    from {
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+    to {
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+    }
+  }
+
+  /* Luxury badge with floating animation */
+  .luxury-badge {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  .dark .luxury-badge {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Breathtaking entrance animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
