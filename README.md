@@ -14,3 +14,19 @@ This project represents my journey in software engineering.
     * Implemented full accessibility standards (WCAG).
     * Added bilingual support (TR/EN) via i18n routing.
     * Significantly improved performance and SEO scores.
+## ⚡ Performance & Quality Benchmarks (Google Lighthouse)
+
+Comfortillo v2 has been engineered for maximum efficiency, achieving near-perfect scores on both Desktop and Mobile devices.
+
+### 🖥️ Desktop Performance
+![Lighthouse Desktop](./lighthouse-desktop.png)
+
+### 📱 Mobile Optimization
+![Lighthouse Mobile](./lighthouse-mobile.png)
+
+| Category | Desktop Score | Mobile Score |
+| :--- | :--- | :--- |
+| **Performance** | 🟢 100 / 100 | 🟢 98 / 100 |
+| **Accessibility** | 🟢 90 / 100 | 🟢 90 / 100 |
+| **Best Practices** | 🟢 100 / 100 | 🟢 100 / 100 |
+| **SEO** | 🟢 100 / 100 | 🟢 100 / 100 |
