@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { MessageSquare, Home, Users, Info, LogIn, UserPlus, User, Settings, ChevronDown } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import { useLanguage } from "@/hooks/use-language"
 import { SearchBar } from "./search-bar"
 import type { Post } from "@/app/page"
 
@@ -15,6 +16,7 @@ interface NavigationBarProps {
   onSettingsOpen: () => void
   onSearchResults?: (results: Post[]) => void
   onClearSearch?: () => void
+  headerHeight?: number
 }
 
 export function NavigationBar({
@@ -24,20 +26,26 @@ export function NavigationBar({
   onSettingsOpen,
   onSearchResults,
   onClearSearch,
+  headerHeight = 80,
 }: NavigationBarProps) {
   const [showUserMenu, setShowUserMenu] = useState(false)
+  const { t } = useLanguage()
 
   const navItems = [
-    { id: "home", label: "Ana sayfa", icon: Home },
-    { id: "forum", label: "Forum", icon: Users },
-    { id: "ai-chat", label: "AI ile dertleş", icon: MessageSquare },
-    { id: "about", label: "Hakkımızda", icon: Info },
+    { id: "home", label: t("nav.home"), icon: Home, ariaLabel: t("nav.home") },
+    { id: "forum", label: t("nav.forum"), icon: Users, ariaLabel: t("nav.forum") },
+    { id: "ai-chat", label: t("nav.aiChat"), icon: MessageSquare, ariaLabel: t("nav.aiChat") },
+    { id: "about", label: t("nav.about"), icon: Info, ariaLabel: t("nav.about") },
   ]
 
   const { user, isAuthenticated, logout } = useAuth()
 
   return (
-    <div className="luxury-bg backdrop-blur-md border-y border-luxury-warm/30 sticky top-[100px] z-40 shadow-sm">
+    <div
+      className="luxury-bg backdrop-blur-md border-y border-luxury-warm/30 sticky z-40 shadow-sm"
+      style={{ top: `${headerHeight}px` }}
+      role="navigation"
+    >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between gap-6">
           {/* Left side - Navigation items */}
@@ -56,6 +64,8 @@ export function NavigationBar({
                   }`}
                   size="sm"
                   style={{ animationDelay: `${index * 0.1}s` }}
+                  aria-label={item.ariaLabel}
+                  aria-current={activeSection === item.id ? "page" : undefined}
                 >
                   <Icon className="h-4 w-4" />
                   <span className="hidden sm:inline">{item.label}</span>
@@ -80,13 +90,17 @@ export function NavigationBar({
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="flex items-center space-x-3 transition-all duration-500 rounded-xl px-4 py-2 font-medium luxury-hover luxury-text hover:bg-luxury-warm/20"
                   size="sm"
+                  aria-label={t("nav.profile")}
+                  aria-expanded={showUserMenu}
+                  aria-haspopup="menu"
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-amber-300 to-amber-500 rounded-full flex items-center justify-center shadow-lg">
-                    <User className="h-4 w-4 text-amber-900" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#D4C8BB] to-[#BDB1A4] rounded-full flex items-center justify-center shadow-lg">
+                    <User className="h-4 w-4 text-[#3D352C]" />
                   </div>
                   <span className="hidden md:inline font-semibold">{user.name}</span>
                   <ChevronDown
                     className={`h-4 w-4 transition-transform duration-300 ${showUserMenu ? "rotate-180" : ""}`}
+                    aria-hidden="true"
                   />
                 </Button>
 
@@ -94,7 +108,7 @@ export function NavigationBar({
                 {showUserMenu && (
                   <Card className="absolute right-0 top-full mt-2 w-64 border-0 luxury-card shadow-2xl rounded-2xl z-50 animate-scale-in">
                     <CardContent className="p-2">
-                      <div className="space-y-1">
+                      <div className="space-y-1" role="menu">
                         <Button
                           variant="ghost"
                           onClick={() => {
@@ -106,9 +120,11 @@ export function NavigationBar({
                               ? "luxury-button shadow-md"
                               : "luxury-text hover:bg-luxury-warm/20"
                           }`}
+                          role="menuitem"
+                          aria-label={t("nav.profile")}
                         >
-                          <User className="h-4 w-4 mr-3" />
-                          Profil
+                          <User className="h-4 w-4 mr-3" aria-hidden="true" />
+                          {t("nav.profile")}
                         </Button>
 
                         <Button
@@ -118,12 +134,14 @@ export function NavigationBar({
                             setShowUserMenu(false)
                           }}
                           className="w-full justify-start luxury-text hover:bg-luxury-warm/20 rounded-xl px-4 py-3 font-medium luxury-hover transition-all duration-300"
+                          role="menuitem"
+                          aria-label={t("nav.settings")}
                         >
-                          <Settings className="h-4 w-4 mr-3" />
-                          Ayarlar
+                          <Settings className="h-4 w-4 mr-3" aria-hidden="true" />
+                          {t("nav.settings")}
                         </Button>
 
-                        <hr className="border-luxury-warm/30 my-2" />
+                        <hr className="border-luxury-warm/30 my-2" aria-hidden="true" />
 
                         <Button
                           variant="ghost"
@@ -132,9 +150,11 @@ export function NavigationBar({
                             setShowUserMenu(false)
                           }}
                           className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl px-4 py-3 font-medium luxury-hover transition-all duration-300"
+                          role="menuitem"
+                          aria-label={t("nav.logout")}
                         >
-                          <LogIn className="h-4 w-4 mr-3" />
-                          Çıkış Yap
+                          <LogIn className="h-4 w-4 mr-3" aria-hidden="true" />
+                          {t("nav.logout")}
                         </Button>
                       </div>
                     </CardContent>
@@ -151,17 +171,19 @@ export function NavigationBar({
                   onClick={() => onAuthAction("login")}
                   className="flex items-center space-x-2 luxury-button-category rounded-xl px-4 py-2 font-medium luxury-hover transition-all duration-500"
                   size="sm"
+                  aria-label={t("nav.login")}
                 >
-                  <LogIn className="h-4 w-4" />
-                  <span className="hidden sm:inline">Giriş yap</span>
+                  <LogIn className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">{t("nav.login")}</span>
                 </Button>
                 <Button
                   onClick={() => onAuthAction("register")}
                   className="flex items-center space-x-2 luxury-button-primary rounded-xl px-4 py-2 font-medium shadow-lg luxury-hover"
                   size="sm"
+                  aria-label={t("nav.register")}
                 >
-                  <UserPlus className="h-4 w-4" />
-                  <span className="hidden sm:inline">Kayıt ol</span>
+                  <UserPlus className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">{t("nav.register")}</span>
                 </Button>
               </>
             )}

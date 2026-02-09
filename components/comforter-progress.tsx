@@ -4,12 +4,14 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { getComforterLevel, getNextLevel, getProgressToNextLevel } from "@/utils/comforter-system"
 import { Crown, ArrowRight } from "lucide-react"
+import { useLanguage } from "@/hooks/use-language"
 
 interface ComforterProgressProps {
   points: number
 }
 
 export function ComforterProgress({ points }: ComforterProgressProps) {
+  const { t } = useLanguage()
   const currentLevel = getComforterLevel(points)
   const nextLevel = getNextLevel(points)
   const progress = getProgressToNextLevel(points)
@@ -18,8 +20,8 @@ export function ComforterProgress({ points }: ComforterProgressProps) {
     return (
       <div className="luxury-card p-6 rounded-2xl space-y-4">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <Crown className="h-6 w-6 text-amber-500" />
-          <span className="text-lg luxury-text font-semibold">Maksimum seviyeye ulaştın! 🎉</span>
+          <Crown className="h-6 w-6 text-[#BDB1A4]" />
+          <span className="text-lg luxury-text font-semibold">{t("comforter.maxLevel")} 🎉</span>
         </div>
 
         <div className="flex items-center justify-center mb-4">
@@ -39,7 +41,7 @@ export function ComforterProgress({ points }: ComforterProgressProps) {
 
   return (
     <div className="luxury-card p-6 rounded-2xl space-y-6">
-      <h3 className="text-xl font-semibold luxury-text text-center mb-4">Comforter İlerlemesi</h3>
+      <h3 className="text-xl font-semibold luxury-text text-center mb-4">{t("comforter.progress")}</h3>
 
       {/* Current and Next Level Display */}
       <div className="flex items-center justify-between mb-4">
@@ -73,7 +75,7 @@ export function ComforterProgress({ points }: ComforterProgressProps) {
         <div className="flex justify-between text-sm luxury-muted">
           <span>{currentLevel.minPoints}</span>
           <span className="font-medium">
-            {nextLevel.minPoints - points} puan daha {nextLevel.name} olmak için
+            {nextLevel.minPoints - points} {t("comforter.pointsNeeded")} {nextLevel.name} {t("comforter.toReach")}
           </span>
           <span>{nextLevel.minPoints}</span>
         </div>

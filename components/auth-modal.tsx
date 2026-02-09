@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Heart, Mail, Lock, User, Eye, EyeOff, Shield } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import { useLanguage } from "@/hooks/use-language"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -29,6 +30,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
   })
 
   const { login, register } = useAuth()
+  const { t, language } = useLanguage()
 
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false)
@@ -56,12 +58,12 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
     e.preventDefault()
 
     if (registerData.password !== registerData.confirmPassword) {
-      alert("Şifreler eşleşmiyor!")
+      alert(t("auth.passwordMismatch"))
       return
     }
 
     if (!acceptedTerms || !acceptedPrivacy || !acceptedCommunity) {
-      alert("Kayıt olmak için tüm şartları ve politikaları kabul etmelisiniz!")
+      alert(t("auth.acceptAllTerms"))
       return
     }
 
@@ -86,57 +88,57 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md bg-white border-0 shadow-2xl">
+        <DialogContent className="sm:max-w-md bg-white dark:bg-slate-950 border-0 shadow-2xl">
           <DialogHeader className="text-center pb-4">
-            <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
+            <DialogTitle className="text-2xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-2">
               <Heart className="h-6 w-6 text-pink-500" />
-              Comfortillo'ya Hoş Geldin
+              {t("auth.welcomeTitle")}
             </DialogTitle>
-            <p className="text-gray-600 mt-2">Güvenli duygusal destek alanına katıl</p>
+            <p className="text-gray-600 dark:text-gray-300 mt-2">{t("auth.welcomeSubtitle")}</p>
           </DialogHeader>
 
           <Tabs defaultValue={defaultTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Giriş Yap</TabsTrigger>
-              <TabsTrigger value="register">Kayıt Ol</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 mb-6 dark:bg-slate-800">
+              <TabsTrigger value="login" className="dark:data-[state=active]:bg-slate-700">{t("auth.login")}</TabsTrigger>
+              <TabsTrigger value="register" className="dark:data-[state=active]:bg-slate-700">{t("auth.register")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">E-posta</Label>
+                  <Label htmlFor="login-email" className="dark:text-gray-200">{t("auth.email")}</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="login-email"
                       type="email"
-                      placeholder="ornek@email.com"
+                      placeholder={t("auth.emailPlaceholder")}
                       value={loginData.email}
                       onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                      className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Şifre</Label>
+                  <Label htmlFor="login-password" className="dark:text-gray-200">{t("auth.password")}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="login-password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Şifrenizi girin"
+                      placeholder={t("auth.passwordPlaceholder")}
                       value={loginData.password}
                       onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                      className="pl-10 pr-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                      className="pl-10 pr-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
                       required
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent dark:hover:bg-slate-800"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
@@ -151,21 +153,21 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                  className="w-full bg-gradient-to-r from-[#C4B8AB] to-[#A89888] hover:from-[#B5A999] hover:to-[#9E9285] text-[#3D352C]"
                 >
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Giriş yapılıyor...
+                      {t("auth.logging")}
                     </div>
                   ) : (
-                    "Giriş Yap"
+                    t("auth.loginButton")
                   )}
                 </Button>
 
                 <div className="text-center">
-                  <Button variant="link" className="text-sm text-blue-600 hover:text-blue-700">
-                    Şifremi unuttum
+                  <Button variant="link" className="text-sm text-[#9E9285] hover:text-[#8B8478]">
+                    {t("auth.forgotPassword")}
                   </Button>
                 </div>
               </form>
@@ -174,55 +176,55 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
             <TabsContent value="register">
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-name">Ad Soyad</Label>
+                  <Label htmlFor="register-name" className="dark:text-gray-200">{t("auth.name")}</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="register-name"
                       type="text"
-                      placeholder="Adınız ve soyadınız"
+                      placeholder={t("auth.namePlaceholder")}
                       value={registerData.name}
                       onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
-                      className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="register-email">E-posta</Label>
+                  <Label htmlFor="register-email" className="dark:text-gray-200">{t("auth.email")}</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="register-email"
                       type="email"
-                      placeholder="ornek@email.com"
+                      placeholder={t("auth.emailPlaceholder")}
                       value={registerData.email}
                       onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                      className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="register-password">Şifre</Label>
+                  <Label htmlFor="register-password" className="dark:text-gray-200">{t("auth.password")}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="register-password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Güçlü bir şifre oluşturun"
+                      placeholder={t("auth.newPasswordPlaceholder")}
                       value={registerData.password}
                       onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                      className="pl-10 pr-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                      className="pl-10 pr-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
                       required
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent dark:hover:bg-slate-800"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
@@ -235,25 +237,25 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="register-confirm-password">Şifre Tekrar</Label>
+                  <Label htmlFor="register-confirm-password" className="dark:text-gray-200">{t("auth.confirmPassword")}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="register-confirm-password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Şifrenizi tekrar girin"
+                      placeholder={t("auth.confirmPasswordPlaceholder")}
                       value={registerData.confirmPassword}
                       onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
-                      className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
                       required
                     />
                   </div>
                 </div>
 
                 {/* Terms and Policies Acceptance */}
-                <div className="space-y-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
-                    Kayıt olmak için aşağıdaki şartları kabul etmelisiniz:
+                <div className="space-y-3 p-4 bg-[#F5F0EA] dark:bg-[#2E2A25]/30 border border-[#D4C8BB] dark:border-[#5A5045] rounded-lg">
+                  <p className="text-sm font-medium text-[#5C5248] dark:text-[#D4C8BB] mb-3">
+                    {t("auth.acceptTerms")}
                   </p>
 
                   <div className="space-y-3">
@@ -263,17 +265,17 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                         id="accept-community"
                         checked={acceptedCommunity}
                         onChange={(e) => setAcceptedCommunity(e.target.checked)}
-                        className="mt-1 h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300 rounded"
+                        className="mt-1 h-4 w-4 text-[#BDB1A4] focus:ring-[#BDB1A4] border-[#D4C8BB] rounded"
                       />
-                      <label htmlFor="accept-community" className="text-sm text-amber-800 dark:text-amber-200">
+                      <label htmlFor="accept-community" className="text-sm text-[#5C5248] dark:text-[#D4C8BB]">
                         <button
                           type="button"
                           onClick={() => setShowTermsModal("community")}
-                          className="font-medium underline hover:no-underline text-amber-700 dark:text-amber-300"
+                          className="font-medium underline hover:no-underline text-[#6B6258] dark:text-[#D4C8BB]"
                         >
-                          Topluluk Kuralları
+                          {t("auth.communityRules")}
                         </button>
-                        'nı okudum ve kabul ediyorum
+                        {t("auth.readAndAccept")}
                       </label>
                     </div>
 
@@ -283,17 +285,17 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                         id="accept-privacy"
                         checked={acceptedPrivacy}
                         onChange={(e) => setAcceptedPrivacy(e.target.checked)}
-                        className="mt-1 h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300 rounded"
+                        className="mt-1 h-4 w-4 text-[#BDB1A4] focus:ring-[#BDB1A4] border-[#D4C8BB] rounded"
                       />
-                      <label htmlFor="accept-privacy" className="text-sm text-amber-800 dark:text-amber-200">
+                      <label htmlFor="accept-privacy" className="text-sm text-[#5C5248] dark:text-[#D4C8BB]">
                         <button
                           type="button"
                           onClick={() => setShowTermsModal("privacy")}
-                          className="font-medium underline hover:no-underline text-amber-700 dark:text-amber-300"
+                          className="font-medium underline hover:no-underline text-[#6B6258] dark:text-[#D4C8BB]"
                         >
-                          Gizlilik Politikası
+                          {t("auth.privacyPolicy")}
                         </button>
-                        'nı okudum ve kabul ediyorum
+                        {t("auth.readAndAccept")}
                       </label>
                     </div>
 
@@ -303,17 +305,17 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                         id="accept-terms"
                         checked={acceptedTerms}
                         onChange={(e) => setAcceptedTerms(e.target.checked)}
-                        className="mt-1 h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300 rounded"
+                        className="mt-1 h-4 w-4 text-[#BDB1A4] focus:ring-[#BDB1A4] border-[#D4C8BB] rounded"
                       />
-                      <label htmlFor="accept-terms" className="text-sm text-amber-800 dark:text-amber-200">
+                      <label htmlFor="accept-terms" className="text-sm text-[#5C5248] dark:text-[#D4C8BB]">
                         <button
                           type="button"
                           onClick={() => setShowTermsModal("terms")}
-                          className="font-medium underline hover:no-underline text-amber-700 dark:text-amber-300"
+                          className="font-medium underline hover:no-underline text-[#6B6258] dark:text-[#D4C8BB]"
                         >
-                          Kullanım Şartları
+                          {t("auth.termsOfService")}
                         </button>
-                        'nı okudum ve kabul ediyorum
+                        {t("auth.readAndAccept")}
                       </label>
                     </div>
                   </div>
@@ -322,24 +324,24 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 <Button
                   type="submit"
                   disabled={isLoading || !acceptedTerms || !acceptedPrivacy || !acceptedCommunity}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                  className="w-full bg-gradient-to-r from-[#C4B8AB] to-[#A89888] hover:from-[#B5A999] hover:to-[#9E9285] text-[#3D352C]"
                 >
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Kayıt oluşturuluyor...
+                      {t("auth.registering")}
                     </div>
                   ) : (
-                    "Kayıt Ol"
+                    t("auth.registerButton")
                   )}
                 </Button>
               </form>
             </TabsContent>
           </Tabs>
 
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800 text-center">
-              <strong>Hatırla:</strong> Comfortillo'da güvendesin. Verilerini koruyoruz ve kimliğin anonim kalır. 💙
+          <div className="mt-6 p-4 bg-[#F5F0EA] dark:bg-[#2A2725]/30 border border-[#D4C8BB] dark:border-[#4A4540] rounded-lg">
+            <p className="text-sm text-[#6B6258] dark:text-[#C4B8AB] text-center">
+              {t("auth.reminder")}
             </p>
           </div>
         </DialogContent>
@@ -348,26 +350,26 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
       {/* Terms and Policies Modals */}
       {showTermsModal && (
         <Dialog open={!!showTermsModal} onOpenChange={() => setShowTermsModal(null)}>
-          <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto luxury-card border-0 shadow-2xl modal-content rounded-2xl">
+          <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto luxury-card border-0 shadow-2xl modal-content rounded-2xl bg-white dark:bg-slate-950">
             <DialogHeader className="text-center pb-4">
-              <DialogTitle className="text-2xl font-bold luxury-text flex items-center justify-center gap-2">
-                <Shield className="h-6 w-6 text-amber-500" />
-                {showTermsModal === "community" && "Topluluk Kuralları"}
-                {showTermsModal === "privacy" && "Gizlilik Politikası"}
-                {showTermsModal === "terms" && "Kullanım Şartları"}
+              <DialogTitle className="text-2xl font-bold luxury-text dark:text-white flex items-center justify-center gap-2">
+                <Shield className="h-6 w-6 text-[#BDB1A4]" />
+                {showTermsModal === "community" && t("auth.communityRulesTitle")}
+                {showTermsModal === "privacy" && t("auth.privacyPolicyTitle")}
+                {showTermsModal === "terms" && t("auth.termsOfServiceTitle")}
               </DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-6 text-sm luxury-text leading-relaxed">
+            <div className="space-y-6 text-sm luxury-text dark:text-gray-300 leading-relaxed">
               {showTermsModal === "community" && (
                 <div className="space-y-6">
                   <div className="text-center">
-                    <h3 className="text-xl font-bold luxury-text mb-2">Comfortillo Topluluk Kuralları</h3>
-                    <p className="text-sm luxury-muted">Son Güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
+                    <h3 className="text-xl font-bold luxury-text dark:text-white mb-2">Comfortillo Topluluk Kuralları</h3>
+                    <p className="text-sm luxury-muted dark:text-gray-400">Son Güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
                   </div>
 
-                  <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-                    <p className="text-amber-800 dark:text-amber-200 font-medium">
+                  <div className="bg-[#F5F0EA] dark:bg-[#2E2A25]/20 border border-[#D4C8BB] dark:border-[#5C5248] rounded-lg p-4">
+                    <p className="text-[#6B6258] dark:text-[#E0D6CB] font-medium">
                       Bu kurallar, Türkiye Cumhuriyeti yasalarına uygun olarak hazırlanmış olup, tüm kullanıcılar için
                       bağlayıcıdır.
                     </p>
@@ -375,7 +377,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
 
                   <div className="space-y-6">
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">1. GENEL İLKELER</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">1. GENEL İLKELER</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>1.1.</strong> Comfortillo, duygusal destek ve topluluk yardımlaşması amacıyla kurulmuş
@@ -398,7 +400,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         2. YASAK FAALİYETLER
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -441,7 +443,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">3. İÇERİK KURALLARI</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">3. İÇERİK KURALLARI</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>3.1.</strong> Paylaşılan tüm içerikler gerçek ve doğru olmalıdır.
@@ -462,7 +464,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         4. GİZLİLİK VE GÜVENLİK
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -483,7 +485,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         5. ACİL DURUM PROTOKOLÜ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -506,7 +508,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         6. MODERASYON VE YAPTIRIMLARI
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -529,7 +531,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">7. YASAL SORUMLULUK</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">7. YASAL SORUMLULUK</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>7.1.</strong> Kullanıcılar, paylaştıkları içeriklerden yasal olarak sorumludur.
@@ -545,7 +547,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">8. İLETİŞİM</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">8. İLETİŞİM</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>8.1.</strong> Kural ihlalleri için: moderasyon@comfortillo.com
@@ -572,8 +574,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
               {showTermsModal === "privacy" && (
                 <div className="space-y-6">
                   <div className="text-center">
-                    <h3 className="text-xl font-bold luxury-text mb-2">Gizlilik Politikası</h3>
-                    <p className="text-sm luxury-muted">Son Güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
+                    <h3 className="text-xl font-bold luxury-text dark:text-white mb-2">Gizlilik Politikası</h3>
+                    <p className="text-sm luxury-muted dark:text-gray-400">Son Güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
                   </div>
 
                   <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
@@ -585,7 +587,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
 
                   <div className="space-y-6">
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">1. VERİ SORUMLUSU</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">1. VERİ SORUMLUSU</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>1.1.</strong> Veri Sorumlusu: Comfortillo Teknoloji A.Ş.
@@ -603,7 +605,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         2. TOPLANAN KİŞİSEL VERİLER
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -648,7 +650,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         3. VERİ TOPLAMA YÖNTEMLERİ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -668,7 +670,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         4. VERİ İŞLEME AMAÇLARI
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -711,7 +713,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         5. VERİ SAKLAMA SÜRELERİ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -734,7 +736,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">6. VERİ GÜVENLİĞİ</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">6. VERİ GÜVENLİĞİ</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>6.1. Teknik Önlemler:</strong>
@@ -759,7 +761,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">7. VERİ PAYLAŞIMI</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">7. VERİ PAYLAŞIMI</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>7.1.</strong> Kişisel verileriniz, aşağıdaki durumlar dışında üçüncü taraflarla
@@ -785,7 +787,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">8. HAKLARINIZ</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">8. HAKLARINIZ</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>8.1.</strong> KVKK kapsamında sahip olduğunuz haklar:
@@ -815,7 +817,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         9. ÇEREZLER (COOKIES)
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -836,7 +838,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">10. İLETİŞİM</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">10. İLETİŞİM</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>10.1.</strong> KVKK hakları için: kvkk@comfortillo.com
@@ -854,7 +856,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         11. POLİTİKA DEĞİŞİKLİKLERİ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -883,8 +885,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
               {showTermsModal === "terms" && (
                 <div className="space-y-6">
                   <div className="text-center">
-                    <h3 className="text-xl font-bold luxury-text mb-2">Kullanım Şartları</h3>
-                    <p className="text-sm luxury-muted">Son Güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
+                    <h3 className="text-xl font-bold luxury-text dark:text-white mb-2">Kullanım Şartları</h3>
+                    <p className="text-sm luxury-muted dark:text-gray-400">Son Güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
                   </div>
 
                   <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
@@ -896,7 +898,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
 
                   <div className="space-y-6">
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         1. TARAFLAR VE TANIMLAR
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -920,7 +922,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         2. HİZMET TANIMI VE KAPSAMI
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -948,7 +950,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         3. KULLANICI KAYDI VE HESAP YÖNETİMİ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -975,7 +977,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         4. KULLANICI HAKLARI VE YÜKÜMLÜLÜKLERİ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1004,7 +1006,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         5. YASAK FAALİYETLER
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1027,7 +1029,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         6. FİKRİ MÜLKİYET HAKLARI
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1051,7 +1053,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         7. HİZMET SINIRLARI VE GARANTİLER
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1078,7 +1080,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         8. SORUMLULUK SINIRI
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1102,7 +1104,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         9. HESAP ASKIYA ALMA VE SONLANDIRMA
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1129,7 +1131,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         10. UYUŞMAZLIK ÇÖZÜMÜ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1149,7 +1151,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         11. ŞART DEĞİŞİKLİKLERİ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1169,7 +1171,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">
                         12. İLETİŞİM BİLGİLERİ
                       </h4>
                       <div className="space-y-2 ml-4">
@@ -1198,7 +1200,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-lg text-amber-700 dark:text-amber-400 mb-3">13. YÜRÜRLÜK</h4>
+                      <h4 className="font-bold text-lg text-[#8B8478] dark:text-[#C4B8AB] mb-3">13. YÜRÜRLÜK</h4>
                       <div className="space-y-2 ml-4">
                         <p>
                           <strong>13.1.</strong> Bu şartlar, kabul edildiği tarihten itibaren yürürlüğe girer.
@@ -1227,9 +1229,9 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
             <div className="flex justify-end pt-6">
               <Button
                 onClick={() => setShowTermsModal(null)}
-                className="luxury-button-primary rounded-xl px-6 py-2 font-medium luxury-hover shadow-lg"
+                className="luxury-button-primary rounded-xl px-6 py-2 font-medium luxury-hover shadow-lg dark:bg-slate-700 dark:hover:bg-slate-600"
               >
-                Anladım
+                {t("auth.understood")}
               </Button>
             </div>
           </DialogContent>

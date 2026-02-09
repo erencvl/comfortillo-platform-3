@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Heart, MessageCircle, Award, Send, User, Clock } from "lucide-react"
 import { moderateContent } from "@/utils/content-moderation"
 import { useAuth } from "@/hooks/use-auth"
+import { useLanguage } from "@/hooks/use-language"
 
 export interface Reply {
   id: string
@@ -44,6 +45,7 @@ export function ReplySystem({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [moderationError, setModerationError] = useState("")
   const { isAuthenticated, user } = useAuth()
+  const { t } = useLanguage()
 
   const formatTimeAgo = (timestamp: number) => {
     const now = Date.now()
@@ -52,11 +54,11 @@ export function ReplySystem({
     const days = Math.floor(hours / 24)
 
     if (days > 0) {
-      return `${days} gün önce`
+      return `${days} ${t("post.timeAgo.days")}`
     } else if (hours > 0) {
-      return `${hours} saat önce`
+      return `${hours} ${t("post.timeAgo.hours")}`
     } else {
-      return "Az önce"
+      return t("post.timeAgo.now")
     }
   }
 
@@ -73,7 +75,7 @@ export function ReplySystem({
     // Content moderation
     const moderationResult = moderateContent(replyContent)
     if (!moderationResult.isAllowed) {
-      setModerationError(moderationResult.reason || "İçerik uygun değil")
+      setModerationError(moderationResult.reason || t("common.error"))
       return
     }
 
@@ -112,22 +114,22 @@ export function ReplySystem({
       {/* Existing Replies */}
       {replies.length > 0 && (
         <div className="space-y-3">
-          <h4 className="font-medium text-gray-800 flex items-center gap-2">
+          <h4 className="font-medium text-gray-800 dark:text-gray-200 flex items-center gap-2">
             <MessageCircle className="h-4 w-4" />
-            Yanıtlar ({replies.length})
+            {t("replies.title")} ({replies.length})
           </h4>
 
           {replies.map((reply) => (
-            <Card key={reply.id} className="border-l-4 border-l-blue-200 bg-gray-50/50">
+            <Card key={reply.id} className="border-l-4 border-l-blue-200 bg-gray-50/50 dark:bg-gray-800/50">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-blue-600" />
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                      <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <span className="font-medium text-gray-800">{reply.authorName}</span>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span className="font-medium text-gray-800 dark:text-gray-200">{reply.authorName}</span>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                         <Clock className="h-3 w-3" />
                         {formatTimeAgo(reply.timestamp)}
                       </div>
@@ -137,20 +139,20 @@ export function ReplySystem({
                   {reply.isSolution && (
                     <Badge className="bg-green-100 text-green-800 border-green-200">
                       <Award className="h-3 w-3 mr-1" />
-                      Sorun Çözücü!
+                      {t("replies.markSolution")}
                     </Badge>
                   )}
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-3">{reply.content}</p>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">{reply.content}</p>
 
                 <div className="flex items-center gap-3">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleLike(reply.id)}
-                    className={`text-gray-600 hover:text-pink-600 hover:bg-pink-50 transition-colors ${
-                      reply.isLiked ? "text-pink-600 bg-pink-50" : ""
+                    className={`text-gray-600 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-colors ${
+                      reply.isLiked ? "text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20" : ""
                     }`}
                   >
                     <Heart className={`h-4 w-4 mr-1 ${reply.isLiked ? "fill-current" : ""}`} />
@@ -162,10 +164,10 @@ export function ReplySystem({
                       variant="ghost"
                       size="sm"
                       onClick={() => handleMarkSolution(reply.id)}
-                      className="text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors"
+                      className="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
                     >
                       <Award className="h-4 w-4 mr-1" />
-                      Sorun Çözücü!
+                      {t("replies.markSolution")}
                     </Button>
                   )}
                 </div>
@@ -176,7 +178,7 @@ export function ReplySystem({
       )}
 
       {/* Reply Form */}
-      <Card className="border-dashed border-2 border-gray-200 bg-gray-50/30">
+      <Card className="border-dashed border-2 border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/30">
         <CardContent className="p-4">
           <form onSubmit={handleSubmitReply} className="space-y-3">
             <Textarea
@@ -184,23 +186,23 @@ export function ReplySystem({
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder={
                 isAuthenticated
-                  ? "Bu kişiye nasıl yardım edebilirsin? Deneyimlerini, önerilerini paylaş..."
-                  : "Yanıt yazmak için giriş yapmalısın..."
+                  ? t("replies.placeholder")
+                  : t("replies.loginRequired")
               }
-              className="border-gray-200 focus:border-blue-500 focus:ring-blue-500 resize-none"
+              className="border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 resize-none"
               rows={3}
               maxLength={1000}
               disabled={!isAuthenticated}
             />
 
             {moderationError && (
-              <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+              <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
                 {moderationError}
               </div>
             )}
 
             <div className="flex items-center justify-between">
-              <div className="text-xs text-gray-500">{replyContent.length}/1000 karakter</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{replyContent.length}/1000 {t("replies.characters")}</div>
 
               <Button
                 type="submit"
@@ -211,12 +213,12 @@ export function ReplySystem({
                 {isSubmitting ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
-                    Gönderiliyor...
+                    {t("replies.sending")}
                   </div>
                 ) : (
                   <div className="flex items-center">
                     <Send className="h-3 w-3 mr-2" />
-                    Yanıtla
+                    {t("replies.replyBtn")}
                   </div>
                 )}
               </Button>
@@ -224,11 +226,11 @@ export function ReplySystem({
           </form>
 
           {!isAuthenticated && (
-            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-center">
-              <p className="text-sm text-blue-800">
-                Yanıt yazmak için{" "}
+            <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-center">
+              <p className="text-sm text-blue-800 dark:text-blue-300">
+                {t("replies.loginRequired")} {" "}
                 <button onClick={onAuthRequired} className="font-medium underline hover:no-underline">
-                  giriş yapmalısın
+                  {t("replies.loginLink")}
                 </button>
               </p>
             </div>

@@ -10,6 +10,7 @@ import { Leaderboard } from "@/components/leaderboard"
 import type { Post } from "@/app/page"
 import type { Reply } from "./nested-reply-system"
 import { useAuth } from "@/hooks/use-auth"
+import { useLanguage } from "@/hooks/use-language"
 
 interface ForumPageProps {
   onAuthRequired: () => void
@@ -20,7 +21,7 @@ const SAMPLE_POSTS: Post[] = [
   {
     id: "1",
     title: "Yalnızlık hissi beni tüketmeye başladı",
-    category: "Yalnızlık",
+    category: "loneliness",
     content:
       "Son zamanlarda kendimi çok yalnız hissediyorum. Arkadaşlarım var ama onlarla bile konuşurken bir boşluk hissediyorum. Sanki kimse beni gerçekten anlamıyor...",
     timestamp: Date.now() - 3600000,
@@ -29,7 +30,7 @@ const SAMPLE_POSTS: Post[] = [
   {
     id: "2",
     title: "İş stresi dayanılmaz hale geldi",
-    category: "Stres",
+    category: "stress",
     content:
       "Her gün işe giderken midem bulanıyor. Patronumun baskısı, sürekli artan iş yükü... Bazen nefes alamıyorum sanki. Bu böyle devam edemez.",
     timestamp: Date.now() - 7200000,
@@ -38,7 +39,7 @@ const SAMPLE_POSTS: Post[] = [
   {
     id: "3",
     title: "Ailemle olan sorunlar",
-    category: "Aile",
+    category: "family",
     content:
       "Ailem beni hiç anlamıyor. Sürekli eleştiri, sürekli beklentiler. Kendi hayatımı yaşayamıyorum. 25 yaşındayım ama hala çocuk muamelesi görüyorum.",
     timestamp: Date.now() - 10800000,
@@ -53,6 +54,7 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
   const [replies, setReplies] = useState<Reply[]>([])
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const { isAuthenticated, user } = useAuth()
+  const { t } = useLanguage()
 
   useEffect(() => {
     const savedPosts = localStorage.getItem("comfortillo-posts")
@@ -197,7 +199,16 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
     }
   }
 
-  const categories = ["all", "Yalnızlık", "Stres", "Aile", "İlişkiler", "Kaygı", "Depresyon", "Diğer"]
+  const categories = [
+    { value: "all", label: t("forum.all") },
+    { value: "loneliness", label: t("category.loneliness") },
+    { value: "stress", label: t("category.stress") },
+    { value: "family", label: t("category.family") },
+    { value: "relationships", label: t("category.relationships") },
+    { value: "anxiety", label: t("category.anxiety") },
+    { value: "depression", label: t("category.depression") },
+    { value: "other", label: t("category.other") },
+  ]
 
   const displayPosts =
     searchResults || (selectedCategory === "all" ? posts : posts.filter((post) => post.category === selectedCategory))
@@ -205,14 +216,14 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
   return (
     <div className="max-w-6xl mx-auto space-y-12">
       {/* Header */}
-      <div className="text-center animate-fade-in-up">
+      <div className="text-center animate-fade-in-up" role="region" aria-label={t("forum.title")}>
         <h1 className="text-4xl font-bold luxury-text mb-6 luxury-text-glow">
-          {searchResults ? "Arama Sonuçları" : "Topluluk Forumu"}
+          {searchResults ? t("forum.searchResults") : t("forum.title")}
         </h1>
         <p className="text-xl luxury-muted max-w-3xl mx-auto leading-relaxed font-light">
           {searchResults
-            ? `${searchResults.length} sonuç bulundu`
-            : "Duygularını paylaş, başkalarının hikayelerini dinle. Burada herkes birbirini anlıyor ve destekliyor."}
+            ? `${searchResults.length} ${t("forum.resultsFound")}`
+            : t("forum.subtitle")}
         </p>
       </div>
 
@@ -222,14 +233,15 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
           variant="outline"
           onClick={() => setShowLeaderboard(!showLeaderboard)}
           className="luxury-button-category rounded-full px-8 py-3 font-medium text-lg shadow-lg"
+          aria-label={showLeaderboard ? t("forum.showForum") : t("forum.showLeaderboard")}
         >
           <Trophy className="h-5 w-5 mr-3" />
-          {showLeaderboard ? "Forumu Göster" : "Liderlik Tablosunu Göster"}
+          {showLeaderboard ? t("forum.showForum") : t("forum.showLeaderboard")}
         </Button>
       </div>
 
       {showLeaderboard ? (
-        <div className="animate-fade-in-up">
+        <div className="animate-fade-in-up" role="region" aria-label="Leaderboard">
           <Leaderboard />
         </div>
       ) : (
@@ -239,11 +251,11 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
             <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 luxury-text">
-                  <Search className="h-6 w-6 text-amber-600" />
-                  <span className="font-medium text-lg">
+                  <Search className="h-6 w-6 text-[#A89888]" />
+                  <span className="font-medium text-lg" role="status">
                     {searchResults.length === 0
-                      ? "Aradığınız kriterlere uygun sonuç bulunamadı"
-                      : `${searchResults.length} paylaşım bulundu`}
+                      ? t("forum.emptySearchAction")
+                      : `${searchResults.length} ${t("forum.posts")}`}
                   </span>
                 </div>
               </CardContent>
@@ -252,33 +264,33 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
 
           {/* Stats Section */}
           {!searchResults && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in-up">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in-up" role="region" aria-label="Forum statistics">
               <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
                 <CardContent className="p-6">
-                  <Users className="h-8 w-8 text-amber-600 mx-auto mb-3" />
+                  <Users className="h-8 w-8 text-[#A89888] mx-auto mb-3" />
                   <div className="text-3xl font-bold luxury-text">1,247</div>
-                  <div className="text-sm luxury-muted font-medium">Destekleyen</div>
+                  <div className="text-sm luxury-muted font-medium">{t("forum.supporters")}</div>
                 </CardContent>
               </Card>
               <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
                 <CardContent className="p-6">
                   <MessageCircle className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
                   <div className="text-3xl font-bold luxury-text">3,891</div>
-                  <div className="text-sm luxury-muted font-medium">Paylaşım</div>
+                  <div className="text-sm luxury-muted font-medium">{t("forum.posts")}</div>
                 </CardContent>
               </Card>
               <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
                 <CardContent className="p-6">
                   <Heart className="h-8 w-8 text-rose-600 mx-auto mb-3" />
                   <div className="text-3xl font-bold luxury-text">12,456</div>
-                  <div className="text-sm luxury-muted font-medium">Destek</div>
+                  <div className="text-sm luxury-muted font-medium">{t("forum.support")}</div>
                 </CardContent>
               </Card>
               <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
                 <CardContent className="p-6">
                   <Calendar className="h-8 w-8 text-violet-600 mx-auto mb-3" />
                   <div className="text-3xl font-bold luxury-text">24/7</div>
-                  <div className="text-sm luxury-muted font-medium">Aktif</div>
+                  <div className="text-sm luxury-muted font-medium">{t("forum.active")}</div>
                 </CardContent>
               </Card>
             </div>
@@ -296,47 +308,49 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
               }}
               className="luxury-button-primary rounded-full px-12 py-4 text-lg font-semibold shadow-2xl luxury-hover transform transition-all duration-500"
               size="lg"
+              aria-label={t("forum.createPost")}
             >
               <Plus className="h-6 w-6 mr-3" />
-              Duygularını Paylaş
+              {t("forum.createPost")}
             </Button>
           </div>
 
           {/* Category Filter */}
           {!searchResults && (
-            <div className="flex flex-wrap gap-3 justify-center animate-fade-in-up">
-              {categories.map((category, index) => (
+            <div className="flex flex-wrap gap-3 justify-center animate-fade-in-up" role="region" aria-label="Category filter">
+              {categories.map((cat, index) => (
                 <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category)}
+                  key={cat.value}
+                  variant={selectedCategory === cat.value ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(cat.value)}
                   className={`rounded-full transition-all duration-500 font-medium px-6 py-2 luxury-hover ${
-                    selectedCategory === category
+                    selectedCategory === cat.value
                       ? "luxury-button-category active shadow-lg scale-105"
                       : "luxury-button-category"
                   }`}
                   size="sm"
                   style={{ animationDelay: `${index * 0.1}s` }}
+                  aria-pressed={selectedCategory === cat.value}
                 >
-                  {category === "all" ? "Tümü" : category}
+                  {cat.label}
                 </Button>
               ))}
             </div>
           )}
 
           {/* Posts Grid */}
-          <div className="space-y-8">
+          <div className="space-y-8" role="region" aria-label="Forum posts">
             {displayPosts.length === 0 ? (
               <Card className="text-center py-16 border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
                 <CardContent>
-                  <MessageCircle className="h-16 w-16 text-amber-400 mx-auto mb-6" />
+                  <MessageCircle className="h-16 w-16 text-[#C4B8AB] mx-auto mb-6" />
                   <h3 className="text-2xl font-medium luxury-text mb-4">
-                    {searchResults ? "Arama sonucu bulunamadı" : "Bu kategoride henüz paylaşım yok"}
+                    {searchResults ? t("forum.emptySearch") : t("forum.emptyCategory")}
                   </h3>
                   <p className="luxury-muted text-lg font-light">
                     {searchResults
-                      ? "Farklı anahtar kelimeler deneyebilir veya yeni bir paylaşım yapabilirsin"
-                      : "İlk paylaşımı sen yap ve topluluğa öncülük et"}
+                      ? t("forum.emptySearchAction")
+                      : t("forum.emptyAction")}
                   </p>
                 </CardContent>
               </Card>

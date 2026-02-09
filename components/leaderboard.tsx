@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Trophy, Medal, Award, Crown } from "lucide-react"
 import { ComforterBadge } from "./comforter-badge"
+import { useLanguage } from "@/hooks/use-language"
 
 interface LeaderboardUser {
   id: string
@@ -15,6 +16,7 @@ interface LeaderboardUser {
 }
 
 export function Leaderboard() {
+  const { t } = useLanguage()
   const [topUsers, setTopUsers] = useState<LeaderboardUser[]>([])
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export function Leaderboard() {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Crown className="h-6 w-6 text-yellow-500 animate-pulse" />
+        return <Crown className="h-6 w-6 text-[#BDB1A4] animate-pulse" />
       case 2:
         return <Trophy className="h-6 w-6 text-gray-400 animate-bounce" />
       case 3:
@@ -64,11 +66,11 @@ export function Leaderboard() {
   const getRankBg = (rank: number) => {
     switch (rank) {
       case 1:
-        return "bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-300 shadow-lg"
+        return "bg-gradient-to-r from-[#F0EBE5] to-[#F0EBE5] border-[#E0D6CB] shadow-lg dark:from-[#2E2A25]/30 dark:to-[#2E2A25]/30 dark:border-[#5C5248]"
       case 2:
-        return "bg-gradient-to-r from-gray-100 to-slate-100 border-gray-300 shadow-md"
+        return "bg-gradient-to-r from-gray-100 to-slate-100 border-gray-300 shadow-md dark:from-gray-800/30 dark:to-slate-800/30 dark:border-gray-600"
       case 3:
-        return "bg-gradient-to-r from-orange-100 to-red-100 border-orange-300 shadow-md"
+        return "bg-gradient-to-r from-orange-100 to-red-100 border-orange-300 shadow-md dark:from-orange-900/30 dark:to-red-900/30 dark:border-orange-700"
       default:
         return "luxury-card border-luxury-warm"
     }
@@ -78,17 +80,17 @@ export function Leaderboard() {
     <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-fade-in-up">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-bold luxury-text flex items-center justify-center gap-3 luxury-text-glow">
-          <Trophy className="h-8 w-8 text-amber-500 animate-bounce" />
-          Comforter Liderlik Tablosu
+          <Trophy className="h-8 w-8 text-[#BDB1A4] animate-bounce" />
+          {t("leaderboard.title")}
         </CardTitle>
-        <p className="luxury-muted text-lg font-light">En çok yardım eden topluluk üyeleri</p>
+        <p className="luxury-muted text-lg font-light">{t("leaderboard.subtitle")}</p>
       </CardHeader>
       <CardContent className="space-y-4">
         {topUsers.length === 0 ? (
           <div className="text-center py-12 luxury-muted">
-            <Trophy className="h-16 w-16 mx-auto mb-6 text-amber-300 animate-pulse" />
-            <p className="text-lg font-medium">Henüz liderlik tablosunda kimse yok</p>
-            <p className="text-sm font-light">İlk sen ol ve başkalarına yardım et!</p>
+            <Trophy className="h-16 w-16 mx-auto mb-6 text-[#D4C8BB] animate-pulse" />
+            <p className="text-lg font-medium">{t("leaderboard.empty")}</p>
+            <p className="text-sm font-light">{t("leaderboard.emptyAction")}</p>
           </div>
         ) : (
           topUsers.map((user, index) => (
@@ -106,7 +108,7 @@ export function Leaderboard() {
 
                   <Avatar className="w-16 h-16 border-4 border-white shadow-lg luxury-card-hover">
                     <AvatarImage src={user.profilePhoto || "/placeholder.svg"} alt={user.name} />
-                    <AvatarFallback className="bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold text-lg">
+                    <AvatarFallback className="bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white font-bold text-lg">
                       {user.name
                         .split(" ")
                         .map((n) => n[0])

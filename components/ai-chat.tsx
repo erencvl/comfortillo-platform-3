@@ -7,7 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/components/ui/use-toast"
-import type { ChatCompletionRequestMessage } from "openai"
+interface ChatMessage {
+  role: "user" | "assistant" | "system"
+  content: string
+}
 import { ChatSuggestions } from "./chat-suggestions"
 
 interface AIChatProps {
@@ -27,7 +30,7 @@ export const AIChat: React.FC<AIChatProps> = ({
   emptyStateHeading = "How can I help you today?",
   emptyStateDescription = "Start by asking a question.",
 }) => {
-  const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
@@ -62,7 +65,7 @@ export const AIChat: React.FC<AIChatProps> = ({
 
     if (!input.trim()) return
 
-    const userMessage: ChatCompletionRequestMessage = {
+    const userMessage: ChatMessage = {
       role: "user",
       content: input,
     }
@@ -86,7 +89,7 @@ export const AIChat: React.FC<AIChatProps> = ({
       }
 
       const data = await response.json()
-      const aiMessage: ChatCompletionRequestMessage = {
+      const aiMessage: ChatMessage = {
         role: "assistant",
         content: data.response,
       }

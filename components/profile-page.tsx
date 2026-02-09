@@ -19,6 +19,7 @@ import {
   AlertTriangle,
 } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import { useLanguage } from "@/hooks/use-language"
 import type { Post } from "@/app/page"
 import type { Reply } from "./nested-reply-system"
 import { ComforterBadge } from "./comforter-badge"
@@ -49,6 +50,7 @@ interface ProfilePageProps {
 
 export function ProfilePage({ onEditProfile }: ProfilePageProps) {
   const { user } = useAuth()
+  const { t, language } = useLanguage()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [userPosts, setUserPosts] = useState<Post[]>([])
   const [userReplies, setUserReplies] = useState<Reply[]>([])
@@ -65,8 +67,8 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
           name: user.name,
           nickname: user.name.split(" ")[0],
           age: 25,
-          city: "İstanbul",
-          bio: "Henüz bir bio eklenmedi.",
+          city: t("profile.defaultCity"),
+          bio: t("profile.defaultBio"),
           interests: [],
           joinDate: user.joinDate,
           postsCount: 0,
@@ -96,7 +98,7 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
   }, [user])
 
   const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString("tr-TR", {
+    return new Date(timestamp).toLocaleDateString(language === "tr" ? "tr-TR" : "en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -110,21 +112,21 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
     const hours = Math.floor(diff / (1000 * 60 * 60))
 
     if (days > 0) {
-      return `${days} gün önce`
+      return `${days} ${t("post.timeAgo.days")}`
     } else if (hours > 0) {
-      return `${hours} saat önce`
+      return `${hours} ${t("post.timeAgo.hours")}`
     } else {
-      return "Az önce"
+      return t("post.timeAgo.now")
     }
   }
 
   if (!profile || !user) {
     return (
       <div className="max-w-4xl mx-auto">
-        <Card className="text-center py-12 luxury-card rounded-2xl">
+        <Card className="text-center py-12 luxury-card rounded-2xl dark:bg-slate-800 dark:border-slate-700">
           <CardContent>
-            <User className="h-12 w-12 luxury-muted mx-auto mb-4" />
-            <p className="luxury-muted">Profil yükleniyor...</p>
+            <User className="h-12 w-12 luxury-muted mx-auto mb-4 dark:text-slate-400" />
+            <p className="luxury-muted dark:text-slate-400">{t("profile.loading")}</p>
           </CardContent>
         </Card>
       </div>
@@ -134,10 +136,10 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Profile Banner */}
-      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl overflow-hidden animate-fade-in-up">
+      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl overflow-hidden animate-fade-in-up dark:bg-slate-800 dark:border-slate-700">
         <div className="relative">
           <div
-            className="h-32 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500"
+            className="h-32 bg-gradient-to-r from-[#C4B8AB] via-[#BDB1A4] to-[#A89888] dark:from-[#6B6258] dark:via-[#7D7268] dark:to-[#6B6258]"
             style={{
               backgroundImage: profile.profileBanner ? `url(${profile.profileBanner})` : undefined,
               backgroundSize: "cover",
@@ -148,9 +150,9 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
           <CardContent className="relative -mt-16 p-8">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div className="relative">
-                <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
+                <Avatar className="w-32 h-32 border-4 border-white shadow-lg dark:border-slate-700">
                   <AvatarImage src={profile.profilePhoto || "/placeholder.svg"} alt={profile.name} />
-                  <AvatarFallback className="text-2xl bg-gradient-to-r from-amber-400 to-amber-600 text-white">
+                  <AvatarFallback className="text-2xl bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white dark:from-[#6B6258] dark:to-[#4A4039]">
                     {profile.name
                       .split(" ")
                       .map((n) => n[0])
@@ -158,7 +160,7 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
                       .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 -right-2 bg-amber-500 rounded-full p-2 shadow-lg">
+                <div className="absolute -bottom-2 -right-2 bg-[#BDB1A4] rounded-full p-2 shadow-lg dark:bg-[#8B8478]">
                   <Camera className="h-4 w-4 text-white" />
                 </div>
               </div>
@@ -166,47 +168,47 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
               <div className="flex-1 text-center md:text-left">
                 <div className="mb-4">
                   <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
-                    <h1 className="text-3xl font-bold luxury-text">{profile.name}</h1>
+                    <h1 className="text-3xl font-bold luxury-text dark:text-white">{profile.name}</h1>
                     <ComforterBadge points={profile.comforterPoints} />
                   </div>
-                  <p className="text-lg luxury-muted mb-2">@{profile.nickname}</p>
-                  <p className="luxury-text leading-relaxed">{profile.bio}</p>
+                  <p className="text-lg luxury-muted mb-2 dark:text-slate-400">@{profile.nickname}</p>
+                  <p className="luxury-text leading-relaxed dark:text-slate-300">{profile.bio}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted">
+                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
                     <Calendar className="h-4 w-4" />
-                    <span>{profile.age} yaşında</span>
+                    <span>{profile.age}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted">
+                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
                     <MapPin className="h-4 w-4" />
                     <span>{profile.city}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted">
+                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
                     <Clock className="h-4 w-4" />
-                    <span>{formatDate(profile.joinDate)} tarihinde katıldı</span>
+                    <span>{t("profile.joinedDate")}: {formatDate(profile.joinDate)}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted">
+                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
                     <User className="h-4 w-4" />
                     <span>@{profile.nickname}</span>
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium luxury-text mb-2">İlgi Alanları</h3>
+                  <h3 className="text-sm font-medium luxury-text mb-2 dark:text-white">{t("profile.interests")}</h3>
                   {profile.interests.length > 0 ? (
                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                       {profile.interests.map((interest, index) => (
                         <Badge
                           key={index}
-                          className="bg-gradient-to-r from-amber-100 to-amber-200 text-amber-800 border-amber-300 border-2 rounded-full px-3 py-1"
+                          className="bg-gradient-to-r from-[#F0EBE5] to-[#E8E2DA] text-[#6B6258] border-[#D4C8BB] border-2 rounded-full px-3 py-1 dark:from-[#2E2A25] dark:to-[#332F2B] dark:text-[#E0D6CB] dark:border-[#5A5045]"
                         >
                           {interest}
                         </Badge>
                       ))}
                     </div>
                   ) : (
-                    <p className="luxury-muted text-sm text-center md:text-left">Henüz ilgi alanı eklenmemiş</p>
+                    <p className="luxury-muted text-sm text-center md:text-left dark:text-slate-400">{t("profile.noInterests")}</p>
                   )}
                 </div>
 
@@ -220,16 +222,16 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
                     className="luxury-button-primary rounded-xl px-6 py-2 font-medium luxury-hover shadow-lg"
                   >
                     <Settings className="h-4 w-4 mr-2" />
-                    Profili Düzenle
+                    {t("profile.editProfile")}
                   </Button>
 
                   <Button
                     variant="outline"
                     onClick={() => setShowReportModal(true)}
-                    className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 bg-transparent rounded-xl px-6 py-2 font-medium luxury-hover"
+                    className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 bg-transparent rounded-xl px-6 py-2 font-medium luxury-hover dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
                   >
                     <AlertTriangle className="h-4 w-4 mr-2" />
-                    Profili Bildir
+                    {t("profile.report")}
                   </Button>
                 </div>
               </div>
@@ -240,80 +242,80 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in-up">
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
+        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
           <CardContent className="p-4">
-            <MessageCircle className="h-6 w-6 text-amber-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold luxury-text">{userPosts.length}</div>
-            <div className="text-sm luxury-muted">Paylaşım</div>
+            <MessageCircle className="h-6 w-6 text-[#BDB1A4] mx-auto mb-2 dark:text-[#C4B8AB]" />
+            <div className="text-2xl font-bold luxury-text dark:text-white">{userPosts.length}</div>
+            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.posts")}</div>
           </CardContent>
         </Card>
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
+        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
           <CardContent className="p-4">
-            <MessageCircle className="h-6 w-6 text-yellow-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold luxury-text">{userReplies.length}</div>
-            <div className="text-sm luxury-muted">Yanıt</div>
+            <MessageCircle className="h-6 w-6 text-[#A89888] mx-auto mb-2 dark:text-[#BDB1A4]" />
+            <div className="text-2xl font-bold luxury-text dark:text-white">{userReplies.length}</div>
+            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.replies")}</div>
           </CardContent>
         </Card>
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
+        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
           <CardContent className="p-4">
-            <Award className="h-6 w-6 text-emerald-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold luxury-text">{userReplies.filter((r) => r.isSolution).length}</div>
-            <div className="text-sm luxury-muted">Çözüm</div>
+            <Award className="h-6 w-6 text-emerald-500 mx-auto mb-2 dark:text-emerald-400" />
+            <div className="text-2xl font-bold luxury-text dark:text-white">{userReplies.filter((r) => r.isSolution).length}</div>
+            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.solutions")}</div>
           </CardContent>
         </Card>
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
+        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
           <CardContent className="p-4">
-            <Heart className="h-6 w-6 text-pink-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold luxury-text">
+            <Heart className="h-6 w-6 text-pink-500 mx-auto mb-2 dark:text-pink-400" />
+            <div className="text-2xl font-bold luxury-text dark:text-white">
               {userReplies.reduce((total, reply) => total + reply.likes, 0)}
             </div>
-            <div className="text-sm luxury-muted">Beğeni</div>
+            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.likes")}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Activity Tabs */}
       <Tabs defaultValue="posts" className="w-full animate-fade-in-up">
-        <TabsList className="grid w-full grid-cols-2 luxury-card rounded-xl p-1">
-          <TabsTrigger value="posts" className="rounded-lg font-medium">
-            Paylaşımlarım ({userPosts.length})
+        <TabsList className="grid w-full grid-cols-2 luxury-card rounded-xl p-1 dark:bg-slate-800">
+          <TabsTrigger value="posts" className="rounded-lg font-medium dark:data-[state=active]:bg-slate-700">
+            {t("profile.myPosts")} ({userPosts.length})
           </TabsTrigger>
-          <TabsTrigger value="replies" className="rounded-lg font-medium">
-            Yanıtlarım ({userReplies.length})
+          <TabsTrigger value="replies" className="rounded-lg font-medium dark:data-[state=active]:bg-slate-700">
+            {t("profile.myReplies")} ({userReplies.length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="posts" className="space-y-4">
           {userPosts.length === 0 ? (
-            <Card className="text-center py-12 border-0 luxury-card luxury-card-hover rounded-2xl">
+            <Card className="text-center py-12 border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
               <CardContent>
-                <MessageCircle className="h-12 w-12 luxury-muted mx-auto mb-4" />
-                <h3 className="text-lg font-medium luxury-text mb-2">Henüz paylaşım yapmadın</h3>
-                <p className="luxury-muted">İlk paylaşımını yaparak topluluğa katıl</p>
+                <MessageCircle className="h-12 w-12 luxury-muted mx-auto mb-4 dark:text-slate-400" />
+                <h3 className="text-lg font-medium luxury-text mb-2 dark:text-white">{t("profile.noPosts")}</h3>
+                <p className="luxury-muted dark:text-slate-400">{t("profile.noPostsHint")}</p>
               </CardContent>
             </Card>
           ) : (
             userPosts.map((post) => (
-              <Card key={post.id} className="border-0 luxury-card luxury-card-hover rounded-2xl">
+              <Card key={post.id} className="border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <Badge className="bg-gradient-to-r from-amber-100 to-amber-200 text-amber-800 border-amber-300 border-2 rounded-full px-3 py-1">
+                    <Badge className="bg-gradient-to-r from-[#F0EBE5] to-[#E8E2DA] text-[#6B6258] border-[#D4C8BB] border-2 rounded-full px-3 py-1 dark:from-[#2E2A25] dark:to-[#332F2B] dark:text-[#E0D6CB] dark:border-[#5A5045]">
                       {post.category}
                     </Badge>
-                    <span className="text-sm luxury-muted">{formatTimeAgo(post.timestamp)}</span>
+                    <span className="text-sm luxury-muted dark:text-slate-400">{formatTimeAgo(post.timestamp)}</span>
                   </div>
-                  <CardTitle className="text-lg luxury-text">{post.title}</CardTitle>
+                  <CardTitle className="text-lg luxury-text dark:text-white">{post.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="luxury-text line-clamp-2 mb-3">{post.content}</p>
-                  <div className="flex items-center gap-4 text-sm luxury-muted">
+                  <p className="luxury-text line-clamp-2 mb-3 dark:text-slate-300">{post.content}</p>
+                  <div className="flex items-center gap-4 text-sm luxury-muted dark:text-slate-400">
                     <div className="flex items-center gap-1">
                       <Heart className="h-4 w-4" />
-                      {post.supportCount} destek
+                      {post.supportCount} {t("profile.support")}
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageCircle className="h-4 w-4" />
-                      {userReplies.filter((r) => r.postId === post.id).length} yanıt
+                      {userReplies.filter((r) => r.postId === post.id).length} {t("profile.reply")}
                     </div>
                   </div>
                 </CardContent>
@@ -324,30 +326,30 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
 
         <TabsContent value="replies" className="space-y-4">
           {userReplies.length === 0 ? (
-            <Card className="text-center py-12 border-0 luxury-card luxury-card-hover rounded-2xl">
+            <Card className="text-center py-12 border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
               <CardContent>
-                <MessageCircle className="h-12 w-12 luxury-muted mx-auto mb-4" />
-                <h3 className="text-lg font-medium luxury-text mb-2">Henüz yanıt yazmadın</h3>
-                <p className="luxury-muted">Başkalarına yardım ederek topluluğa katkıda bulun</p>
+                <MessageCircle className="h-12 w-12 luxury-muted mx-auto mb-4 dark:text-slate-400" />
+                <h3 className="text-lg font-medium luxury-text mb-2 dark:text-white">{t("profile.noReplies")}</h3>
+                <p className="luxury-muted dark:text-slate-400">{t("profile.noRepliesHint")}</p>
               </CardContent>
             </Card>
           ) : (
             userReplies.map((reply) => (
-              <Card key={reply.id} className="border-0 luxury-card luxury-card-hover rounded-2xl">
+              <Card key={reply.id} className="border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm luxury-muted">{formatTimeAgo(reply.timestamp)}</span>
+                    <span className="text-sm luxury-muted dark:text-slate-400">{formatTimeAgo(reply.timestamp)}</span>
                     {reply.isSolution && (
-                      <Badge className="bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-800 border-emerald-300 border-2 rounded-full px-3 py-1">
+                      <Badge className="bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-800 border-emerald-300 border-2 rounded-full px-3 py-1 dark:from-emerald-900 dark:to-emerald-800 dark:text-emerald-100 dark:border-emerald-600">
                         <Award className="h-3 w-3 mr-1" />
-                        Sorun Çözücü! (+5 Comforter)
+                        {t("profile.solutionBadge")}
                       </Badge>
                     )}
                   </div>
-                  <p className="luxury-text mb-3">{reply.content}</p>
-                  <div className="flex items-center gap-1 text-sm luxury-muted">
+                  <p className="luxury-text mb-3 dark:text-slate-300">{reply.content}</p>
+                  <div className="flex items-center gap-1 text-sm luxury-muted dark:text-slate-400">
                     <Heart className="h-4 w-4" />
-                    {reply.likes} beğeni
+                    {reply.likes} {t("profile.likeCount")}
                   </div>
                 </CardContent>
               </Card>
@@ -360,7 +362,7 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
         postId={profile.id}
-        postTitle={`${profile.name} (@${profile.nickname}) kullanıcısının profili`}
+        postTitle={`${profile.name} (@${profile.nickname}) ${t("profile.reportPostTitle")}`}
       />
     </div>
   )

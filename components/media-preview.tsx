@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { ImageIcon, Play, Download, AlertTriangle, Eye, EyeOff, X } from "lucide-react"
+import { useLanguage } from "@/hooks/use-language"
 
 interface MediaPreviewProps {
   media: string
@@ -12,6 +13,7 @@ interface MediaPreviewProps {
 }
 
 export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPreviewProps) {
+  const { t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [isBlurred, setIsBlurred] = useState(isNsfw)
   const [showNsfwWarning, setShowNsfwWarning] = useState(false)
@@ -63,14 +65,14 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
           <div className="relative group cursor-pointer" onClick={handleNsfwClick}>
             <img
               src={getImageUrl(media) || "/placeholder.svg"}
-              alt="Paylaşılan medya"
-              className={`w-full h-48 object-cover rounded-lg border border-stone-200 transition-all duration-300 hover:shadow-md ${
+              alt={t("media.sharedMedia")}
+              className={`w-full h-48 object-cover rounded-lg border border-stone-200 dark:border-stone-700 transition-all duration-300 hover:shadow-md ${
                 isBlurred ? "blur-lg" : ""
               }`}
               onError={(e) => {
                 // Fallback to placeholder if image fails to load
                 const target = e.target as HTMLImageElement
-                target.src = `/placeholder.svg?height=200&width=300&text=${encodeURIComponent("Resim")}`
+                target.src = `/placeholder.svg?height=200&width=300&text=${encodeURIComponent(t("media.image"))}`
               }}
             />
 
@@ -83,7 +85,7 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
                     e.stopPropagation()
                     toggleBlur()
                   }}
-                  className="bg-red-100 text-red-800 hover:bg-red-200 border border-red-300"
+                  className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 border border-red-300"
                 >
                   {isBlurred ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                   <span className="ml-1 text-xs">NSFW</span>
@@ -95,15 +97,15 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
               <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
                 <div className="text-center text-white">
                   <AlertTriangle className="h-8 w-8 mx-auto mb-2" />
-                  <p className="text-sm font-medium">Yetişkin İçeriği</p>
-                  <p className="text-xs">Görüntülemek için tıklayın</p>
+                  <p className="text-sm font-medium">{t("media.nsfwContent")}</p>
+                  <p className="text-xs">{t("media.clickToView")}</p>
                 </div>
               </div>
             )}
 
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-              <div className="bg-white/90 rounded-full p-2">
-                <ImageIcon className="h-6 w-6 text-stone-700" />
+              <div className="bg-white/90 dark:bg-stone-800/90 rounded-full p-2">
+                <ImageIcon className="h-6 w-6 text-stone-700 dark:text-stone-300" />
               </div>
             </div>
           </div>
@@ -112,7 +114,7 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
         {isVideo && (
           <div className="relative group cursor-pointer" onClick={handleNsfwClick}>
             <video
-              className={`w-full h-48 object-cover rounded-lg border border-stone-200 ${isBlurred ? "blur-lg" : ""}`}
+              className={`w-full h-48 object-cover rounded-lg border border-stone-200 dark:border-stone-700 ${isBlurred ? "blur-lg" : ""}`}
               poster={`/placeholder.svg?height=200&width=300&text=Video`}
             >
               <source src={getImageUrl(media)} />
@@ -127,7 +129,7 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
                     e.stopPropagation()
                     toggleBlur()
                   }}
-                  className="bg-red-100 text-red-800 hover:bg-red-200 border border-red-300"
+                  className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 border border-red-300"
                 >
                   {isBlurred ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                   <span className="ml-1 text-xs">NSFW</span>
@@ -144,14 +146,14 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
         )}
 
         {isAudio && (
-          <div className="bg-stone-100 border border-stone-200 rounded-lg p-4">
+          <div className="bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg p-4">
             <div className="flex items-center gap-3">
-              <div className="bg-amber-100 p-2 rounded-full">
-                <Play className="h-5 w-5 text-amber-600" />
+              <div className="bg-[#F0EBE5] dark:bg-[#2E2A25]/30 p-2 rounded-full">
+                <Play className="h-5 w-5 text-[#A89888] dark:text-[#C4B8AB]" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-stone-800">Ses Dosyası</p>
-                <p className="text-sm text-stone-600">{media}</p>
+                <p className="font-medium text-stone-800 dark:text-stone-200">{t("media.audioFile")}</p>
+                <p className="text-sm text-stone-600 dark:text-stone-400">{media}</p>
               </div>
               <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
                 <Play className="h-4 w-4" />
@@ -161,14 +163,14 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
         )}
 
         {!isImage && !isVideo && !isAudio && (
-          <div className="bg-stone-100 border border-stone-200 rounded-lg p-4">
+          <div className="bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg p-4">
             <div className="flex items-center gap-3">
-              <div className="bg-stone-200 p-2 rounded-full">
-                <Download className="h-5 w-5 text-stone-600" />
+              <div className="bg-stone-200 dark:bg-stone-700 p-2 rounded-full">
+                <Download className="h-5 w-5 text-stone-600 dark:text-stone-400" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-stone-800">Dosya</p>
-                <p className="text-sm text-stone-600">{media}</p>
+                <p className="font-medium text-stone-800 dark:text-stone-200">{t("media.file")}</p>
+                <p className="text-sm text-stone-600 dark:text-stone-400">{media}</p>
               </div>
               <Button variant="outline" size="sm">
                 <Download className="h-4 w-4" />
@@ -194,11 +196,11 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
             {isImage && (
               <img
                 src={getImageUrl(media) || "/placeholder.svg"}
-                alt="Paylaşılan medya"
+                alt={t("media.sharedMedia")}
                 className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
-                  target.src = `/placeholder.svg?height=600&width=800&text=${encodeURIComponent("Resim bulunamadı")}`
+                  target.src = `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(t("media.imageNotFound"))}`
                 }}
               />
             )}
@@ -211,9 +213,9 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
 
             {isAudio && (
               <div className="p-8 text-center">
-                <div className="bg-white rounded-lg p-6">
-                  <Play className="h-16 w-16 mx-auto mb-4 text-amber-600" />
-                  <h3 className="text-lg font-medium text-stone-800 mb-4">Ses Dosyası</h3>
+                <div className="bg-white dark:bg-stone-900 rounded-lg p-6">
+                  <Play className="h-16 w-16 mx-auto mb-4 text-[#A89888] dark:text-[#C4B8AB]" />
+                  <h3 className="text-lg font-medium text-stone-800 dark:text-stone-200 mb-4">{t("media.audioFile")}</h3>
                   <audio controls className="w-full">
                     <source src={getImageUrl(media)} />
                   </audio>
@@ -226,29 +228,29 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
 
       {/* NSFW Warning Dialog */}
       <Dialog open={showNsfwWarning} onOpenChange={setShowNsfwWarning}>
-        <DialogContent className="sm:max-w-md bg-white border-0 shadow-2xl">
+        <DialogContent className="sm:max-w-md bg-white dark:bg-stone-900 border-0 shadow-2xl">
           <div className="text-center space-y-4">
-            <div className="bg-red-100 p-4 rounded-full w-fit mx-auto">
-              <AlertTriangle className="h-8 w-8 text-red-600" />
+            <div className="bg-red-100 dark:bg-red-900/30 p-4 rounded-full w-fit mx-auto">
+              <AlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-red-800 mb-2">Yetişkin İçeriği Uyarısı</h3>
-              <p className="text-sm text-red-700">
-                Bu içerik yetişkin materyali içermektedir. Görüntülemek istediğinizden emin misiniz?
+              <h3 className="text-lg font-bold text-red-800 dark:text-red-300 mb-2">{t("media.nsfwWarning")}</h3>
+              <p className="text-sm text-red-700 dark:text-red-400">
+                {t("media.nsfwConfirm")}
               </p>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-              <p className="text-xs text-yellow-800">Bu içeriği görüntülemek tamamen kendi sorumluluğunuzdadır.</p>
+            <div className="bg-[#F8F5F0] dark:bg-[#2E2A25]/20 border border-[#E8E2DA] dark:border-[#5C5248] rounded-lg p-3">
+              <p className="text-xs text-[#6B6258] dark:text-[#D4C8BB]">{t("media.nsfwDisclaimer")}</p>
             </div>
 
             <div className="flex gap-3">
               <Button variant="outline" onClick={() => setShowNsfwWarning(false)} className="flex-1">
-                İptal
+                {t("common.cancel")}
               </Button>
               <Button onClick={confirmViewNsfw} className="flex-1 bg-red-600 hover:bg-red-700 text-white">
-                Evet, Görüntüle
+                {t("media.yesView")}
               </Button>
             </div>
           </div>

@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Settings, Mail, Moon, Sun, Trash2, AlertTriangle, Save, Eye, EyeOff, Shield } from "lucide-react"
+import { Settings, Mail, Moon, Sun, Trash2, AlertTriangle, Save, Eye, EyeOff, Shield, Globe } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import { useLanguage } from "@/hooks/use-language"
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -19,6 +20,7 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: SettingsModalProps) {
   const { user, logout } = useAuth()
+  const { t, language, setLanguage } = useLanguage()
   const [email, setEmail] = useState("")
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -42,9 +44,9 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
       await new Promise((resolve) => setTimeout(resolve, 1000))
       const updatedUser = { ...user, email }
       localStorage.setItem("comfortillo-user", JSON.stringify(updatedUser))
-      alert("E-posta adresiniz başarıyla güncellendi!")
+      alert(t("settings.emailUpdated"))
     } catch (error) {
-      alert("E-posta güncellenirken bir hata oluştu.")
+      alert(t("settings.emailUpdateError"))
     } finally {
       setIsLoading(false)
     }
@@ -52,17 +54,17 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      alert("Lütfen tüm alanları doldurun.")
+      alert(t("settings.fillAllFields"))
       return
     }
 
     if (newPassword !== confirmPassword) {
-      alert("Yeni şifreler eşleşmiyor.")
+      alert(t("settings.passwordMismatch"))
       return
     }
 
     if (newPassword.length < 6) {
-      alert("Yeni şifre en az 6 karakter olmalı.")
+      alert(t("settings.passwordMinLength"))
       return
     }
 
@@ -72,9 +74,9 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
       setCurrentPassword("")
       setNewPassword("")
       setConfirmPassword("")
-      alert("Şifreniz başarıyla değiştirildi!")
+      alert(t("settings.passwordChanged"))
     } catch (error) {
-      alert("Şifre değiştirilirken bir hata oluştu.")
+      alert(t("settings.passwordChangeError"))
     } finally {
       setIsLoading(false)
     }
@@ -84,7 +86,7 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
     if (!user) return
 
     if (deleteConfirmation !== user.email) {
-      alert("E-posta adresinizi doğru yazmadınız.")
+      alert(t("settings.emailMismatch"))
       return
     }
 
@@ -105,9 +107,9 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
 
       logout()
       onClose()
-      alert("Hesabınız başarıyla silindi. Comfortillo'yu kullandığınız için teşekkürler.")
+      alert(t("settings.accountDeleted"))
     } catch (error) {
-      alert("Hesap silinirken bir hata oluştu.")
+      alert(t("settings.accountDeleteError"))
     } finally {
       setIsLoading(false)
     }
@@ -126,47 +128,71 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto luxury-card border-0 shadow-2xl modal-content rounded-2xl">
+      <DialogContent className={`sm:max-w-2xl max-h-[90vh] overflow-y-auto luxury-card border-0 shadow-2xl modal-content rounded-2xl ${
+        darkMode ? "bg-slate-900 text-white" : "bg-white text-slate-900"
+      }`}>
         <DialogHeader className="text-center pb-6">
-          <DialogTitle className="text-3xl font-bold luxury-text flex items-center justify-center gap-3 luxury-text-glow">
-            <Settings className="h-8 w-8 text-amber-500" />
-            Ayarlar
+          <DialogTitle className={`text-3xl font-bold luxury-text flex items-center justify-center gap-3 luxury-text-glow ${
+            darkMode ? "text-[#D4C8BB]" : "text-[#8B8478]"
+          }`}>
+            <Settings className="h-8 w-8 text-[#BDB1A4]" />
+            {t("settings.title")}
           </DialogTitle>
-          <p className="luxury-muted mt-3 font-light">Hesap ayarlarını yönet</p>
+          <p className={`luxury-muted mt-3 font-light ${darkMode ? "text-slate-400" : "text-slate-600"}`}>
+            {t("settings.subtitle")}
+          </p>
         </DialogHeader>
 
         <Tabs defaultValue="account" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 luxury-card rounded-xl p-1">
-            <TabsTrigger value="account" className="rounded-lg font-medium">
-              Hesap
+          <TabsList className={`grid w-full grid-cols-3 luxury-card rounded-xl p-1 ${
+            darkMode ? "bg-slate-800 border border-slate-700" : "bg-white border border-slate-200"
+          }`}>
+            <TabsTrigger value="account" className={`rounded-lg font-medium ${
+              darkMode ? "text-slate-300 data-[state=active]:bg-slate-700 data-[state=active]:text-[#D4C8BB]" : ""
+            }`}>
+              {t("settings.account")}
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="rounded-lg font-medium">
-              Görünüm
+            <TabsTrigger value="appearance" className={`rounded-lg font-medium ${
+              darkMode ? "text-slate-300 data-[state=active]:bg-slate-700 data-[state=active]:text-[#D4C8BB]" : ""
+            }`}>
+              {t("settings.appearance")}
             </TabsTrigger>
-            <TabsTrigger value="danger" className="rounded-lg font-medium">
-              Tehlikeli
+            <TabsTrigger value="danger" className={`rounded-lg font-medium ${
+              darkMode ? "text-slate-300 data-[state=active]:bg-slate-700 data-[state=active]:text-[#D4C8BB]" : ""
+            }`}>
+              {t("settings.danger")}
             </TabsTrigger>
           </TabsList>
 
           {/* Account Settings */}
           <TabsContent value="account" className="space-y-8 mt-6">
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold luxury-text flex items-center gap-3">
+              <h3 className={`text-xl font-semibold luxury-text flex items-center gap-3 ${
+                darkMode ? "text-[#D4C8BB]" : "text-[#8B8478]"
+              }`}>
                 <Mail className="h-6 w-6" />
-                E-posta Ayarları
+                {t("settings.emailSettings")}
               </h3>
 
-              <div className="luxury-card p-6 rounded-xl space-y-4">
+              <div className={`luxury-card p-6 rounded-xl space-y-4 ${
+                darkMode ? "bg-slate-800 border border-slate-700" : "bg-white border border-slate-200"
+              }`}>
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="luxury-text font-medium">
-                    E-posta Adresi
+                  <Label htmlFor="email" className={`luxury-text font-medium ${
+                    darkMode ? "text-slate-300" : "text-slate-700"
+                  }`}>
+                    {t("settings.emailAddress")}
                   </Label>
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="border-luxury-warm focus:border-amber-500 focus:ring-amber-500 rounded-xl luxury-text bg-luxury-beige/50"
+                    className={`border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] rounded-xl luxury-text ${
+                      darkMode
+                        ? "bg-slate-700 border-slate-600 text-white placeholder-slate-400"
+                        : "bg-luxury-beige/50 border-slate-300"
+                    }`}
                   />
                 </div>
 
@@ -178,31 +204,37 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                      Kaydediliyor...
+                      {t("settings.saving")}
                     </div>
                   ) : (
                     <div className="flex items-center">
                       <Save className="h-4 w-4 mr-2" />
-                      E-postayı Güncelle
+                      {t("settings.updateEmail")}
                     </div>
                   )}
                 </Button>
               </div>
             </div>
 
-            <hr className="border-luxury-warm/30" />
+            <hr className={`${darkMode ? "border-slate-700" : "border-luxury-warm/30"}`} />
 
             {/* Password Change */}
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold luxury-text flex items-center gap-3">
+              <h3 className={`text-xl font-semibold luxury-text flex items-center gap-3 ${
+                darkMode ? "text-[#D4C8BB]" : "text-[#8B8478]"
+              }`}>
                 <Shield className="h-6 w-6" />
-                Şifre Değiştir
+                {t("settings.changePassword")}
               </h3>
 
-              <div className="luxury-card p-6 rounded-xl space-y-4">
+              <div className={`luxury-card p-6 rounded-xl space-y-4 ${
+                darkMode ? "bg-slate-800 border border-slate-700" : "bg-white border border-slate-200"
+              }`}>
                 <div className="space-y-2">
-                  <Label htmlFor="current-password" className="luxury-text font-medium">
-                    Mevcut Şifre
+                  <Label htmlFor="current-password" className={`luxury-text font-medium ${
+                    darkMode ? "text-slate-300" : "text-slate-700"
+                  }`}>
+                    {t("settings.currentPassword")}
                   </Label>
                   <div className="relative">
                     <Input
@@ -210,13 +242,21 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
                       type={showPasswords ? "text" : "password"}
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="border-luxury-warm focus:border-amber-500 focus:ring-amber-500 pr-12 rounded-xl luxury-text bg-luxury-beige/50"
+                      className={`border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] pr-12 rounded-xl luxury-text ${
+                        darkMode
+                          ? "bg-slate-700 border-slate-600 text-white placeholder-slate-400"
+                          : "bg-luxury-beige/50 border-slate-300"
+                      }`}
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 luxury-text hover:bg-luxury-warm/20 rounded-lg"
+                      className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 luxury-text rounded-lg ${
+                        darkMode
+                          ? "text-slate-400 hover:bg-slate-600"
+                          : "text-slate-600 hover:bg-luxury-warm/20"
+                      }`}
                       onClick={() => setShowPasswords(!showPasswords)}
                     >
                       {showPasswords ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -225,28 +265,40 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="new-password" className="luxury-text font-medium">
-                    Yeni Şifre
+                  <Label htmlFor="new-password" className={`luxury-text font-medium ${
+                    darkMode ? "text-slate-300" : "text-slate-700"
+                  }`}>
+                    {t("settings.newPassword")}
                   </Label>
                   <Input
                     id="new-password"
                     type={showPasswords ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="border-luxury-warm focus:border-amber-500 focus:ring-amber-500 rounded-xl luxury-text bg-luxury-beige/50"
+                    className={`border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] rounded-xl luxury-text ${
+                      darkMode
+                        ? "bg-slate-700 border-slate-600 text-white placeholder-slate-400"
+                        : "bg-luxury-beige/50 border-slate-300"
+                    }`}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirm-password" className="luxury-text font-medium">
-                    Yeni Şifre Tekrar
+                  <Label htmlFor="confirm-password" className={`luxury-text font-medium ${
+                    darkMode ? "text-slate-300" : "text-slate-700"
+                  }`}>
+                    {t("settings.confirmPassword")}
                   </Label>
                   <Input
                     id="confirm-password"
                     type={showPasswords ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="border-luxury-warm focus:border-amber-500 focus:ring-amber-500 rounded-xl luxury-text bg-luxury-beige/50"
+                    className={`border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] rounded-xl luxury-text ${
+                      darkMode
+                        ? "bg-slate-700 border-slate-600 text-white placeholder-slate-400"
+                        : "bg-luxury-beige/50 border-slate-300"
+                    }`}
                   />
                 </div>
 
@@ -258,10 +310,10 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Değiştiriliyor...
+                      {t("settings.changing")}
                     </div>
                   ) : (
-                    "Şifreyi Değiştir"
+                    t("settings.changePasswordButton")
                   )}
                 </Button>
               </div>
@@ -271,31 +323,99 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
           {/* Appearance Settings */}
           <TabsContent value="appearance" className="space-y-8 mt-6">
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold luxury-text">Görünüm Ayarları</h3>
+              <h3 className={`text-xl font-semibold luxury-text ${
+                darkMode ? "text-[#D4C8BB]" : "text-[#8B8478]"
+              }`}>
+                {t("settings.appearanceSettings")}
+              </h3>
 
-              <div className="luxury-card p-6 rounded-xl">
+              {/* Dark Mode Toggle */}
+              <div className={`luxury-card p-6 rounded-xl ${
+                darkMode ? "bg-slate-800 border border-slate-700" : "bg-white border border-slate-200"
+              }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
                       {darkMode ? <Moon className="h-5 w-5 luxury-muted" /> : <Sun className="h-5 w-5 luxury-muted" />}
-                      <Label className="font-medium luxury-text text-lg">Karanlık Mod</Label>
+                      <Label className={`font-medium text-lg luxury-text ${
+                        darkMode ? "text-slate-300" : "text-slate-700"
+                      }`}>
+                        {t("settings.darkMode")}
+                      </Label>
                     </div>
-                    <p className="text-sm luxury-muted mt-2 font-light">
-                      {darkMode ? "Karanlık tema aktif" : "Aydınlık tema aktif"}
+                    <p className={`text-sm mt-2 font-light ${
+                      darkMode ? "text-slate-400" : "text-slate-600"
+                    }`}>
+                      {darkMode ? t("settings.darkModeActive") : t("settings.lightModeActive")}
                     </p>
                   </div>
                   <Switch
                     checked={darkMode}
                     onCheckedChange={onDarkModeToggle}
-                    className="data-[state=checked]:bg-amber-500"
+                    className="data-[state=checked]:bg-[#BDB1A4]"
                   />
                 </div>
               </div>
 
-              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
-                <p className="text-sm text-amber-800 dark:text-amber-200 font-light">
-                  <strong>Not:</strong> Karanlık mod ayarınız tarayıcınızda saklanır ve bir sonraki ziyaretinizde
-                  hatırlanır.
+              {/* Language Selector */}
+              <div className={`luxury-card p-6 rounded-xl ${
+                darkMode ? "bg-slate-800 border border-slate-700" : "bg-white border border-slate-200"
+              }`}>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <Globe className={`h-5 w-5 ${darkMode ? "text-[#C4B8AB]" : "text-[#A89888]"}`} />
+                      <Label className={`font-medium text-lg luxury-text ${
+                        darkMode ? "text-slate-300" : "text-slate-700"
+                      }`}>
+                        {t("settings.language")}
+                      </Label>
+                    </div>
+                    <p className={`text-sm font-light ${
+                      darkMode ? "text-slate-400" : "text-slate-600"
+                    }`}>
+                      {t("settings.languageDesc")}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setLanguage("tr")}
+                      className={`flex-1 px-4 py-3 rounded-full font-medium transition-all duration-300 ${
+                        language === "tr"
+                          ? "bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white shadow-lg shadow-[#BDB1A4]/50"
+                          : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600 border border-slate-600"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200"
+                      }`}
+                    >
+                      TR
+                    </button>
+                    <button
+                      onClick={() => setLanguage("en")}
+                      className={`flex-1 px-4 py-3 rounded-full font-medium transition-all duration-300 ${
+                        language === "en"
+                          ? "bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white shadow-lg shadow-[#BDB1A4]/50"
+                          : darkMode
+                          ? "bg-slate-700 text-slate-300 hover:bg-slate-600 border border-slate-600"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200"
+                      }`}
+                    >
+                      EN
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`rounded-xl p-4 ${
+                darkMode
+                  ? "bg-[#2E2A25]/30 border border-[#5C5248]"
+                  : "bg-[#F5F0EA] border border-[#D4C8BB]"
+              }`}>
+                <p className={`text-sm font-light ${
+                  darkMode ? "text-[#E0D6CB]" : "text-[#6B6258]"
+                }`}>
+                  <strong>{t("settings.note")}:</strong> {t("settings.darkModeNote")}
                 </p>
               </div>
             </div>
@@ -304,15 +424,27 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
           {/* Danger Zone */}
           <TabsContent value="danger" className="space-y-8 mt-6">
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-red-600 dark:text-red-400 flex items-center gap-3">
+              <h3 className={`text-xl font-semibold flex items-center gap-3 ${
+                darkMode ? "text-red-400" : "text-red-600"
+              }`}>
                 <AlertTriangle className="h-6 w-6" />
-                Tehlikeli İşlemler
+                {t("settings.dangerZone")}
               </h3>
 
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6">
-                <h4 className="font-medium text-red-800 dark:text-red-400 mb-3 text-lg">Hesabı Sil</h4>
-                <p className="text-sm text-red-700 dark:text-red-300 mb-6 font-light leading-relaxed">
-                  Bu işlem geri alınamaz. Hesabınız, tüm paylaşımlarınız ve verileriniz kalıcı olarak silinecek.
+              <div className={`rounded-xl p-6 ${
+                darkMode
+                  ? "bg-red-900/20 border border-red-800"
+                  : "bg-red-50 border border-red-200"
+              }`}>
+                <h4 className={`font-medium mb-3 text-lg ${
+                  darkMode ? "text-red-400" : "text-red-800"
+                }`}>
+                  {t("settings.deleteAccount")}
+                </h4>
+                <p className={`text-sm mb-6 font-light leading-relaxed ${
+                  darkMode ? "text-red-300" : "text-red-700"
+                }`}>
+                  {t("settings.deleteAccountWarning")}
                 </p>
 
                 {!showDeleteWarning ? (
@@ -322,29 +454,43 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
                     className="bg-red-600 hover:bg-red-700 rounded-xl px-6 py-2 font-medium luxury-hover shadow-lg"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Hesabımı Sil
+                    {t("settings.deleteButton")}
                   </Button>
                 ) : (
                   <div className="space-y-6">
-                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
-                      <p className="text-sm text-yellow-800 dark:text-yellow-300 font-medium">
-                        ⚠️ Son Uyarı: Bu işlem geri alınamaz!
+                    <div className={`rounded-xl p-4 ${
+                      darkMode
+                        ? "bg-[#2E2A25]/20 border border-[#5C5248]"
+                        : "bg-[#F8F5F0] border border-[#E8E2DA]"
+                    }`}>
+                      <p className={`text-sm font-medium ${
+                        darkMode ? "text-[#D4C8BB]" : "text-[#6B6258]"
+                      }`}>
+                        ⚠️ {t("settings.finalWarning")}
                       </p>
-                      <p className="text-xs text-yellow-700 dark:text-yellow-400 mt-2 font-light">
-                        Devam etmek için e-posta adresinizi yazın: <strong>{user?.email}</strong>
+                      <p className={`text-xs mt-2 font-light ${
+                        darkMode ? "text-[#C4B8AB]" : "text-[#8B8478]"
+                      }`}>
+                        {t("settings.confirmEmail")} <strong>{user?.email}</strong>
                       </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="delete-confirmation" className="luxury-text font-medium">
-                        E-posta Adresinizi Yazın
+                      <Label htmlFor="delete-confirmation" className={`luxury-text font-medium ${
+                        darkMode ? "text-slate-300" : "text-slate-700"
+                      }`}>
+                        {t("settings.enterEmail")}
                       </Label>
                       <Input
                         id="delete-confirmation"
                         value={deleteConfirmation}
                         onChange={(e) => setDeleteConfirmation(e.target.value)}
                         placeholder={user?.email}
-                        className="border-red-200 focus:border-red-500 focus:ring-red-500 rounded-xl luxury-text bg-luxury-beige/50"
+                        className={`border-red-200 focus:border-red-500 focus:ring-red-500 rounded-xl luxury-text ${
+                          darkMode
+                            ? "bg-slate-700 border-red-900 text-white placeholder-slate-400"
+                            : "bg-luxury-beige/50 border-red-300"
+                        }`}
                       />
                     </div>
 
@@ -356,9 +502,13 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
                           setDeleteConfirmation("")
                         }}
                         disabled={isLoading}
-                        className="flex-1 border-luxury-warm luxury-text hover:bg-luxury-warm/20 rounded-xl font-medium luxury-hover"
+                        className={`flex-1 border-luxury-warm rounded-xl font-medium luxury-hover ${
+                          darkMode
+                            ? "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700"
+                            : "luxury-text hover:bg-luxury-warm/20"
+                        }`}
                       >
-                        İptal
+                        {t("settings.cancel")}
                       </Button>
                       <Button
                         variant="destructive"
@@ -369,12 +519,12 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
                         {isLoading ? (
                           <div className="flex items-center">
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            Siliniyor...
+                            {t("settings.deleting")}
                           </div>
                         ) : (
                           <div className="flex items-center">
                             <Trash2 className="h-4 w-4 mr-2" />
-                            Hesabı Kalıcı Olarak Sil
+                            {t("settings.permanentlyDelete")}
                           </div>
                         )}
                       </Button>
@@ -391,9 +541,13 @@ export function SettingsModal({ isOpen, onClose, darkMode, onDarkModeToggle }: S
             variant="outline"
             onClick={handleClose}
             disabled={isLoading}
-            className="border-luxury-warm luxury-text hover:bg-luxury-warm/20 bg-transparent rounded-xl px-6 py-2 font-medium luxury-hover"
+            className={`border-luxury-warm rounded-xl px-6 py-2 font-medium luxury-hover ${
+              darkMode
+                ? "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700"
+                : "luxury-text hover:bg-luxury-warm/20 bg-transparent"
+            }`}
           >
-            Kapat
+            {t("settings.close")}
           </Button>
         </div>
       </DialogContent>

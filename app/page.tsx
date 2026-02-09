@@ -12,6 +12,7 @@ import { ProfileSettings } from "@/components/profile-settings"
 import { SettingsModal } from "@/components/settings-modal"
 import { AuthModal } from "@/components/auth-modal"
 import { AuthProvider, useAuth } from "@/hooks/use-auth"
+import { LanguageProvider } from "@/hooks/use-language"
 
 export interface Post {
   id: string
@@ -37,7 +38,7 @@ function AppContent() {
   const [darkMode, setDarkMode] = useState(false)
   const { isAuthenticated } = useAuth()
 
-  // Load dark mode preference
+  // Load dark mode preference and apply to <html> element
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("comfortillo-dark-mode")
     if (savedDarkMode) {
@@ -45,6 +46,8 @@ function AppContent() {
       setDarkMode(isDark)
       if (isDark) {
         document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
       }
     }
   }, [])
@@ -64,13 +67,11 @@ function AppContent() {
   }
 
   const handleSectionChange = (section: string) => {
-    // Require authentication for all sections except home and about
     if (!isAuthenticated && (section === "ai-chat" || section === "forum" || section === "profile")) {
       setAuthModal({ isOpen: true, type: "login" })
       return
     }
     setActiveSection(section)
-    // Clear search when changing sections
     setSearchResults(null)
   }
 
@@ -80,7 +81,6 @@ function AppContent() {
 
   const handleSearchResults = (results: Post[]) => {
     setSearchResults(results)
-    // Switch to forum to show results
     if (activeSection !== "forum") {
       setActiveSection("forum")
     }
@@ -111,7 +111,7 @@ function AppContent() {
   }
 
   return (
-    <div className={`min-h-screen bg-luxury-gradient ${darkMode ? "dark" : ""}`}>
+    <div className="min-h-screen bg-luxury-gradient transition-colors duration-500">
       <Header />
       <NavigationBar
         activeSection={activeSection}
@@ -122,7 +122,7 @@ function AppContent() {
         onClearSearch={handleClearSearch}
       />
 
-      <main className="container mx-auto px-6 py-12 max-w-5xl">{renderContent()}</main>
+      <main className="container mx-auto px-6 py-12 max-w-5xl" role="main">{renderContent()}</main>
 
       <AuthModal
         isOpen={authModal.isOpen}
@@ -144,8 +144,10 @@ function AppContent() {
 
 export default function HomePage() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </LanguageProvider>
   )
 }

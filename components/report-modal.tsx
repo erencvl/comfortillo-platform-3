@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { AlertTriangle, Send } from "lucide-react"
+import { useLanguage } from "@/hooks/use-language"
 
 interface ReportModalProps {
   isOpen: boolean
@@ -18,19 +19,20 @@ interface ReportModalProps {
 }
 
 export function ReportModal({ isOpen, onClose, postId, postTitle }: ReportModalProps) {
+  const { t } = useLanguage()
   const [reportType, setReportType] = useState("")
   const [reportDescription, setReportDescription] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const reportTypes = [
-    { id: "harassment", label: "Taciz ve Zorbalık", description: "Kişisel saldırı, tehdit veya taciz içeriği" },
-    { id: "illegal", label: "Yasa Dışı Maddeler", description: "Uyuşturucu, silah veya yasa dışı aktiviteler" },
-    { id: "spam", label: "Spam ve Reklam", description: "İstenmeyen reklam veya spam içerik" },
-    { id: "inappropriate", label: "Uygunsuz İçerik", description: "Topluluk kurallarına aykırı içerik" },
-    { id: "misinformation", label: "Yanlış Bilgi", description: "Zararlı veya yanıltıcı bilgi paylaşımı" },
-    { id: "violence", label: "Şiddet", description: "Şiddet içeren veya teşvik eden içerik" },
-    { id: "hate", label: "Nefret Söylemi", description: "Ayrımcılık veya nefret içeren ifadeler" },
-    { id: "other", label: "Diğer", description: "Yukarıdakilerden farklı bir sorun" },
+    { id: "harassment", label: t("report.type.harassment"), description: t("report.type.harassmentDesc") },
+    { id: "illegal", label: t("report.type.illegal"), description: t("report.type.illegalDesc") },
+    { id: "spam", label: t("report.type.spam"), description: t("report.type.spamDesc") },
+    { id: "inappropriate", label: t("report.type.inappropriate"), description: t("report.type.inappropriateDesc") },
+    { id: "misinformation", label: t("report.type.misinformation"), description: t("report.type.misinformationDesc") },
+    { id: "violence", label: t("report.type.violence"), description: t("report.type.violenceDesc") },
+    { id: "hate", label: t("report.type.hate"), description: t("report.type.hateDesc") },
+    { id: "other", label: t("report.type.other"), description: t("report.type.otherDesc") },
   ]
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,10 +69,10 @@ export function ReportModal({ isOpen, onClose, postId, postTitle }: ReportModalP
       onClose()
 
       // Show success message (you could use a toast here)
-      alert("Raporunuz başarıyla gönderildi. Moderatörlerimiz en kısa sürede inceleyecek.")
+      alert(t("report.submitSuccess"))
     } catch (error) {
       console.error("Report submission error:", error)
-      alert("Rapor gönderilirken bir hata oluştu. Lütfen tekrar deneyin.")
+      alert(t("report.submitError"))
     } finally {
       setIsSubmitting(false)
     }
@@ -86,35 +88,35 @@ export function ReportModal({ isOpen, onClose, postId, postTitle }: ReportModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-0 shadow-2xl">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-0 shadow-2xl dark:bg-slate-800 dark:border-slate-700">
         <DialogHeader className="text-center pb-4">
-          <DialogTitle className="text-2xl font-bold text-red-800 flex items-center justify-center gap-2">
-            <AlertTriangle className="h-6 w-6 text-red-600" />
-            Paylaşımı Bildir
+          <DialogTitle className="text-2xl font-bold text-red-800 flex items-center justify-center gap-2 dark:text-red-400">
+            <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+            {t("report.title")}
           </DialogTitle>
-          <p className="text-gray-600 mt-2">Bu paylaşımda bir sorun mu var? Moderatörlerimize bildirin.</p>
+          <p className="text-gray-600 mt-2 dark:text-slate-400">{t("report.subtitle")}</p>
         </DialogHeader>
 
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
-          <h4 className="font-medium text-gray-800 mb-2">Bildirilen Paylaşım:</h4>
-          <p className="text-sm text-gray-600 line-clamp-2">{postTitle}</p>
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 dark:bg-slate-700 dark:border-slate-600">
+          <h4 className="font-medium text-gray-800 mb-2 dark:text-white">{t("report.reportedPost")}:</h4>
+          <p className="text-sm text-gray-600 line-clamp-2 dark:text-slate-300">{postTitle}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
-            <Label className="text-sm font-medium text-gray-700">Sorun türünü seçin:</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t("report.type")}:</Label>
             <RadioGroup value={reportType} onValueChange={setReportType}>
               {reportTypes.map((type) => (
                 <div
                   key={type.id}
-                  className="flex items-start space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-start space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors dark:border-slate-600 dark:hover:bg-slate-700"
                 >
-                  <RadioGroupItem value={type.id} id={type.id} className="mt-1" />
+                  <RadioGroupItem value={type.id} id={type.id} className="mt-1 dark:text-blue-400" />
                   <div className="flex-1">
-                    <Label htmlFor={type.id} className="font-medium text-gray-800 cursor-pointer">
+                    <Label htmlFor={type.id} className="font-medium text-gray-800 cursor-pointer dark:text-white">
                       {type.label}
                     </Label>
-                    <p className="text-sm text-gray-600 mt-1">{type.description}</p>
+                    <p className="text-sm text-gray-600 mt-1 dark:text-slate-400">{type.description}</p>
                   </div>
                 </div>
               ))}
@@ -122,32 +124,32 @@ export function ReportModal({ isOpen, onClose, postId, postTitle }: ReportModalP
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium text-gray-700">
-              Durumu açıklayın <span className="text-red-500">*</span>
+            <Label htmlFor="description" className="text-sm font-medium text-gray-700 dark:text-slate-200">
+              {t("report.description")} <span className="text-red-500">*</span>
             </Label>
             <Textarea
               id="description"
               value={reportDescription}
               onChange={(e) => setReportDescription(e.target.value)}
-              placeholder="Lütfen sorunu detaylı bir şekilde açıklayın. Bu bilgi moderatörlerimizin daha hızlı karar vermesine yardımcı olacak..."
-              className="border-gray-200 focus:border-red-500 focus:ring-red-500 resize-none"
+              placeholder={t("report.descPlaceholder")}
+              className="border-gray-200 focus:border-red-500 focus:ring-red-500 resize-none dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-red-400"
               rows={4}
               maxLength={500}
               required
             />
-            <div className="text-xs text-gray-500 text-right">{reportDescription.length}/500</div>
+            <div className="text-xs text-gray-500 text-right dark:text-slate-400">{reportDescription.length}/500</div>
           </div>
 
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="bg-[#F8F5F0] border border-[#E8E2DA] rounded-lg p-4 dark:bg-[#2E2A25]/20 dark:border-[#5C5248]">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
-              <div className="text-sm text-yellow-800">
-                <p className="font-medium mb-1">Önemli Bilgiler:</p>
+              <AlertTriangle className="h-5 w-5 text-[#A89888] mt-0.5 flex-shrink-0 dark:text-[#BDB1A4]" />
+              <div className="text-sm text-[#6B6258] dark:text-[#E0D6CB]">
+                <p className="font-medium mb-1">{t("report.info")}</p>
                 <ul className="space-y-1 text-xs">
-                  <li>• Raporunuz anonim olarak moderatörlerimize iletilecek</li>
-                  <li>• Yanlış raporlama hesabınızın askıya alınmasına neden olabilir</li>
-                  <li>• Acil durumlar için lütfen yerel yetkililerle iletişime geçin</li>
-                  <li>• Moderatörlerimiz 24-48 saat içinde inceleme yapacak</li>
+                  <li>• {t("report.infoPoint1")}</li>
+                  <li>• {t("report.falseWarning")}</li>
+                  <li>• {t("report.infoPoint3")}</li>
+                  <li>• {t("report.infoPoint4")}</li>
                 </ul>
               </div>
             </div>
@@ -159,24 +161,24 @@ export function ReportModal({ isOpen, onClose, postId, postTitle }: ReportModalP
               variant="outline"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
+              className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
             >
-              İptal
+              {t("report.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting || !reportType || !reportDescription.trim()}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white shadow-lg"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white shadow-lg dark:bg-red-700 dark:hover:bg-red-800"
             >
               {isSubmitting ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Gönderiliyor...
+                  {t("report.submitting")}
                 </div>
               ) : (
                 <div className="flex items-center">
                   <Send className="h-4 w-4 mr-2" />
-                  Raporu Gönder
+                  {t("report.submit")}
                 </div>
               )}
             </Button>

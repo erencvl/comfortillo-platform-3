@@ -3,57 +3,67 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Phone, AlertTriangle } from "lucide-react"
+import { useLanguage } from "@/hooks/use-language"
 
 export function EmergencyResources() {
+  const { t } = useLanguage()
+
   const emergencyContacts = [
     {
-      name: "İntihar Önleme Hattı",
+      name: t("emergency.suicide.name"),
       number: "182",
-      description: "7/24 ücretsiz destek hattı",
+      description: t("emergency.suicide.desc"),
       urgent: true,
     },
     {
-      name: "Sağlık Bakanlığı ALO 184",
+      name: t("emergency.health.name"),
       number: "184",
-      description: "Psikolojik destek hattı",
+      description: t("emergency.health.desc"),
       urgent: false,
     },
     {
-      name: "Türk Psikologlar Derneği",
+      name: t("emergency.psychologists.name"),
       number: "0312 419 61 19",
-      description: "Profesyonel psikolojik destek",
+      description: t("emergency.psychologists.desc"),
       urgent: false,
     },
   ]
 
   return (
-    <Card className="border-red-200 bg-red-50">
+    <Card className="border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center text-red-800 text-lg">
+        <CardTitle className="flex items-center text-red-800 dark:text-red-200 text-lg">
           <AlertTriangle className="h-5 w-5 mr-2" />
-          Acil Durum Kaynakları
+          {t("emergency.title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-sm text-red-700 mb-4">
-          Kendine zarar verme düşüncen varsa veya acil yardıma ihtiyacın varsa, lütfen hemen aşağıdaki kaynaklardan
-          birine ulaş:
+        <p className="text-sm text-red-700 dark:text-red-300 mb-4">
+          {t("emergency.warning")}
         </p>
 
         {emergencyContacts.map((contact, index) => (
           <div
             key={index}
-            className={`p-3 rounded-lg ${contact.urgent ? "bg-red-100 border border-red-300" : "bg-white border border-red-200"}`}
+            className={`p-3 rounded-lg ${
+              contact.urgent
+                ? "bg-red-100 border border-red-300 dark:bg-red-900 dark:border-red-700"
+                : "bg-white border border-red-200 dark:bg-gray-800 dark:border-red-800"
+            }`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium text-red-800">{contact.name}</h4>
-                <p className="text-sm text-red-600">{contact.description}</p>
+                <h4 className="font-medium text-red-800 dark:text-red-200">
+                  {contact.name}
+                </h4>
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {contact.description}
+                </p>
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                className="border-red-300 text-red-700 hover:bg-red-100 bg-transparent"
+                className="border-red-300 text-red-700 hover:bg-red-100 bg-transparent dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900"
                 onClick={() => window.open(`tel:${contact.number}`)}
               >
                 <Phone className="h-4 w-4 mr-1" />
@@ -63,10 +73,9 @@ export function EmergencyResources() {
           </div>
         ))}
 
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
-            <strong>Hatırla:</strong> Profesyonel yardım almak güçlülük işaretidir. Sen değerlisin ve yardımı hak
-            ediyorsun.
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-950 dark:border-blue-900">
+          <p className="text-sm text-blue-800 dark:text-blue-200">
+            <strong>{t("emergency.reminder")}</strong>
           </p>
         </div>
       </CardContent>

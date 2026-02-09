@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/hooks/use-language"
 
 interface ChatSuggestionsProps {
   onSuggestionClick: (suggestion: string) => void
@@ -8,13 +9,15 @@ interface ChatSuggestionsProps {
 }
 
 export function ChatSuggestions({ onSuggestionClick, isVisible }: ChatSuggestionsProps) {
+  const { t } = useLanguage()
+
   const suggestions = [
-    "Kendimi çok yalnız hissediyorum",
-    "Stresle nasıl başa çıkabilirim?",
-    "Kaygılarım beni tüketiyor",
-    "Ailemle sorunlarım var",
-    "Motivasyonumu kaybettim",
-    "Uyku sorunları yaşıyorum",
+    t("suggestions.1"),
+    t("suggestions.2"),
+    t("suggestions.3"),
+    t("suggestions.4"),
+    t("suggestions.5"),
+    t("suggestions.6"),
   ]
 
   if (!isVisible) return null
@@ -22,7 +25,7 @@ export function ChatSuggestions({ onSuggestionClick, isVisible }: ChatSuggestion
   return (
     <div className="p-6 border-t border-luxury-warm/30 luxury-bg">
       <p className="text-sm luxury-muted mb-4 font-medium">
-        Nasıl başlayacağını bilmiyor musun? Bu önerilerden birini seçebilirsin:
+        {t("suggestions.title")}
       </p>
       <div className="grid grid-cols-1 gap-3">
         {suggestions.map((suggestion, index) => (

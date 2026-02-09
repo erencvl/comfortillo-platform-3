@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Camera, X, Plus, Save, User, AlertTriangle, Shield, ImageIcon } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import { useLanguage } from "@/hooks/use-language"
 
 interface UserProfile {
   id: string
@@ -40,6 +41,7 @@ interface ProfileSettingsProps {
 
 export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
   const { user, updateUser } = useAuth()
+  const { t } = useLanguage()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [newInterest, setNewInterest] = useState("")
@@ -56,8 +58,8 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
           name: user.name,
           nickname: user.name.split(" ")[0],
           age: 25,
-          city: "İstanbul",
-          bio: "Henüz bir bio eklenmedi.",
+          city: t("profile.defaultCity"),
+          bio: t("profile.defaultBio"),
           interests: [],
           joinDate: user.joinDate,
           postsCount: 0,
@@ -220,22 +222,22 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-0 shadow-2xl">
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-0 shadow-2xl dark:bg-slate-800 dark:border-slate-700">
           <DialogHeader className="text-center pb-4">
-            <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
-              <User className="h-6 w-6 text-blue-500" />
-              Profil Ayarları
+            <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2 dark:text-white">
+              <User className="h-6 w-6 text-[#BDB1A4] dark:text-[#C4B8AB]" />
+              {t("settings.title")}
             </DialogTitle>
-            <p className="text-gray-600 mt-2">Profil bilgilerini düzenle ve kişiselleştir</p>
+            <p className="text-gray-600 mt-2 dark:text-slate-400">{t("settings.subtitle")}</p>
           </DialogHeader>
 
           <div className="space-y-6">
             {/* Profile Banner */}
             <div className="space-y-2">
-              <Label>Profil Banner</Label>
+              <Label className="dark:text-slate-200">{t("settings.banner")}</Label>
               <div className="relative">
                 <div
-                  className="h-24 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors"
+                  className="h-24 bg-gradient-to-r from-[#C4B8AB] via-[#BDB1A4] to-[#A89888] rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors dark:border-slate-600 dark:hover:border-slate-500"
                   style={{
                     backgroundImage: profile.profileBanner ? `url(${profile.profileBanner})` : undefined,
                     backgroundSize: "cover",
@@ -252,16 +254,16 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Banner fotoğrafını değiştirmek için tıkla</p>
+                <p className="text-xs text-gray-500 mt-1 dark:text-slate-400">{t("settings.bannerHint")}</p>
               </div>
             </div>
 
             {/* Profile Photo */}
             <div className="text-center">
               <div className="relative inline-block">
-                <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
+                <Avatar className="w-24 h-24 border-4 border-white shadow-lg dark:border-slate-700">
                   <AvatarImage src={profile.profilePhoto || "/placeholder.svg"} alt={profile.name} />
-                  <AvatarFallback className="text-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                  <AvatarFallback className="text-xl bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white dark:from-[#8B8478] dark:to-[#4A4039]">
                     {profile.name
                       .split(" ")
                       .map((n) => n[0])
@@ -269,7 +271,7 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                       .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 -right-2 bg-blue-500 rounded-full p-2 shadow-lg cursor-pointer hover:bg-blue-600 transition-colors">
+                <div className="absolute -bottom-2 -right-2 bg-[#BDB1A4] rounded-full p-2 shadow-lg cursor-pointer hover:bg-[#A89888] transition-colors dark:bg-[#8B8478] dark:hover:bg-[#6B6258]">
                   <Camera className="h-4 w-4 text-white" />
                   <input
                     type="file"
@@ -279,83 +281,83 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                   />
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mt-2">Profil fotoğrafını değiştirmek için kameraya tıkla</p>
+              <p className="text-sm text-gray-500 mt-2 dark:text-slate-400">{t("settings.photoHint")}</p>
             </div>
 
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">İsim</Label>
+                <Label htmlFor="name" className="dark:text-slate-200">{t("settings.name")}</Label>
                 <Input
                   id="name"
                   value={profile.name}
                   onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  placeholder="Adınız ve soyadınız"
-                  className="border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder={t("settings.namePlaceholder")}
+                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="nickname">Takma Ad</Label>
+                <Label htmlFor="nickname" className="dark:text-slate-200">{t("settings.nickname")}</Label>
                 <Input
                   id="nickname"
                   value={profile.nickname}
                   onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
-                  placeholder="Takma adınız"
-                  className="border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder={t("settings.nicknamePlaceholder")}
+                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="age">Yaş</Label>
+                <Label htmlFor="age" className="dark:text-slate-200">{t("settings.age")}</Label>
                 <Input
                   id="age"
                   value={profile.age || ""}
                   onChange={handleAgeChange}
-                  placeholder="Yaşınız"
-                  className="border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder={t("settings.agePlaceholder")}
+                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
                   maxLength={3}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="city">Yaşadığı Şehir</Label>
+                <Label htmlFor="city" className="dark:text-slate-200">{t("settings.city")}</Label>
                 <Input
                   id="city"
                   value={profile.city}
                   onChange={(e) => setProfile({ ...profile, city: e.target.value })}
-                  placeholder="Şehriniz"
-                  className="border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder={t("settings.cityPlaceholder")}
+                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
                 />
               </div>
             </div>
 
             {/* Bio */}
             <div className="space-y-2">
-              <Label htmlFor="bio">Hakkında</Label>
+              <Label htmlFor="bio" className="dark:text-slate-200">{t("settings.bio")}</Label>
               <Textarea
                 id="bio"
                 value={profile.bio}
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                placeholder="Kendiniz hakkında kısa bir açıklama yazın..."
-                className="border-gray-200 focus:border-blue-500 focus:ring-blue-500 resize-none"
+                placeholder={t("settings.bioPlaceholder")}
+                className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] resize-none dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
                 rows={3}
                 maxLength={300}
               />
-              <div className="text-xs text-gray-500 text-right">{profile.bio.length}/300</div>
+              <div className="text-xs text-gray-500 text-right dark:text-slate-400">{profile.bio.length}/300</div>
             </div>
 
             {/* Interests */}
             <div className="space-y-3">
-              <Label>İlgi Alanları</Label>
+              <Label className="dark:text-slate-200">{t("settings.interests")}</Label>
 
               {/* Add Interest */}
               <div className="flex gap-2">
                 <Input
                   value={newInterest}
                   onChange={(e) => setNewInterest(e.target.value)}
-                  placeholder="Yeni ilgi alanı ekle..."
-                  className="flex-1 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder={t("settings.interestPlaceholder")}
+                  className="flex-1 border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
                   maxLength={20}
                   onKeyPress={(e) => {
                     if (e.key === "Enter") {
@@ -368,7 +370,7 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                   type="button"
                   onClick={handleAddInterest}
                   disabled={!newInterest.trim()}
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                  className="bg-[#BDB1A4] hover:bg-[#A89888] text-white dark:bg-[#8B8478] dark:hover:bg-[#6B6258]"
                   size="sm"
                 >
                   <Plus className="h-4 w-4" />
@@ -379,14 +381,14 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
               {profile.interests.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {profile.interests.map((interest, index) => (
-                    <Badge key={index} className="bg-blue-100 text-blue-800 border-0 pr-1 flex items-center gap-1">
+                    <Badge key={index} className="bg-[#F0EBE5] text-[#6B6258] border-0 pr-1 flex items-center gap-1 dark:bg-[#2E2A25] dark:text-[#E0D6CB]">
                       {interest}
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => handleRemoveInterest(interest)}
-                        className="h-4 w-4 p-0 hover:bg-blue-200 rounded-full"
+                        className="h-4 w-4 p-0 hover:bg-[#E8E2DA] rounded-full dark:hover:bg-[#6B6258]"
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -395,26 +397,26 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                 </div>
               )}
 
-              <p className="text-xs text-gray-500">
-                İlgi alanlarınızı ekleyerek benzer ilgilere sahip kişilerle bağlantı kurabilirsiniz
+              <p className="text-xs text-gray-500 dark:text-slate-400">
+                {t("settings.interestHint")}
               </p>
             </div>
 
             {/* NSFW Settings */}
             <div className="space-y-3">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 dark:text-slate-200">
                 <Shield className="h-4 w-4" />
-                İçerik Ayarları
+                {t("settings.contentSettings")}
               </Label>
 
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 dark:bg-slate-700 dark:border-slate-600">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-800">Yetişkin İçeriği (NSFW)</h4>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <h4 className="font-medium text-gray-800 dark:text-white">{t("settings.nsfw")}</h4>
+                    <p className="text-sm text-gray-600 mt-1 dark:text-slate-300">
                       {profile.age < 18
-                        ? "18 yaşından küçük kullanıcılar için yetişkin içeriği devre dışıdır"
-                        : "Yetişkin içeriği görüntüleme ve paylaşma izni"}
+                        ? t("settings.nsfwDisabledUnder18")
+                        : t("settings.nsfwDescription")}
                     </p>
                   </div>
                   <Switch
@@ -425,11 +427,11 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                 </div>
 
                 {profile.age < 18 && (
-                  <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <div className="flex items-center gap-2 text-yellow-800">
+                  <div className="mt-3 p-3 bg-[#F8F5F0] border border-[#E8E2DA] rounded-lg dark:bg-[#2E2A25]/20 dark:border-[#5C5248]">
+                    <div className="flex items-center gap-2 text-[#6B6258] dark:text-[#E0D6CB]">
                       <AlertTriangle className="h-4 w-4" />
                       <span className="text-sm font-medium">
-                        18 yaşından küçük kullanıcılar yetişkin içeriği görüntüleyemez
+                        {t("settings.under18Warning")}
                       </span>
                     </div>
                   </div>
@@ -438,10 +440,9 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
             </div>
 
             {/* Privacy Notice */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-sm text-blue-800">
-                <strong>Gizlilik:</strong> Profil bilgilerin sadece seninle paylaştığın kadarıyla görünür. İstediğin
-                zaman bu bilgileri değiştirebilir veya gizleyebilirsin.
+            <div className="bg-[#F5F0EA] border border-[#D4C8BB] rounded-lg p-4 dark:bg-[#2E2A25]/20 dark:border-[#8B8478]">
+              <p className="text-sm text-[#6B6258] dark:text-[#E0D6CB]">
+                <strong>{t("settings.privacy")}:</strong> {t("settings.privacyText")}
               </p>
             </div>
 
@@ -452,24 +453,24 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                 variant="outline"
                 onClick={onClose}
                 disabled={isLoading}
-                className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
+                className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
               >
-                İptal
+                {t("settings.cancel")}
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
+                className="flex-1 bg-gradient-to-r from-[#C4B8AB] to-[#A89888] hover:from-[#B5A999] hover:to-[#9E9285] text-[#3D352C] shadow-lg dark:from-[#8B8478] dark:to-[#6B6258] dark:hover:from-[#7D7268] dark:hover:to-[#5C5248]"
               >
                 {isLoading ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Kaydediliyor...
+                    {t("settings.saving")}
                   </div>
                 ) : (
                   <div className="flex items-center">
                     <Save className="h-4 w-4 mr-2" />
-                    Kaydet
+                    {t("settings.save")}
                   </div>
                 )}
               </Button>
@@ -480,48 +481,47 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
 
       {/* NSFW Warning Dialog */}
       <Dialog open={showNsfwWarning} onOpenChange={setShowNsfwWarning}>
-        <DialogContent className="sm:max-w-md bg-white border-0 shadow-2xl">
+        <DialogContent className="sm:max-w-md bg-white border-0 shadow-2xl dark:bg-slate-800 dark:border-slate-700">
           <DialogHeader className="text-center pb-4">
-            <DialogTitle className="text-xl font-bold text-red-800 flex items-center justify-center gap-2">
-              <AlertTriangle className="h-6 w-6 text-red-600" />
-              Yetişkin İçeriği Uyarısı
+            <DialogTitle className="text-xl font-bold text-red-800 flex items-center justify-center gap-2 dark:text-red-400">
+              <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+              {t("settings.nsfwWarningTitle")}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-sm text-red-800 leading-relaxed">
-                <strong>Dikkat:</strong> Yetişkin içeriği (NSFW) özelliğini etkinleştirmek üzeresiniz. Bu özellik:
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 dark:bg-red-900/20 dark:border-red-700">
+              <p className="text-sm text-red-800 leading-relaxed dark:text-red-200">
+                <strong>{t("settings.warning")}:</strong> {t("settings.nsfwWarningText")}
               </p>
-              <ul className="mt-2 text-sm text-red-700 space-y-1 ml-4">
-                <li>• Yetişkin içerikli paylaşımları görmenizi sağlar</li>
-                <li>• Kendi paylaşımlarınızı NSFW olarak işaretlemenize izin verir</li>
-                <li>• 18 yaş altı kullanıcılardan gizlenir</li>
-                <li>• Topluluk kurallarına uygun olmalıdır</li>
+              <ul className="mt-2 text-sm text-red-700 space-y-1 ml-4 dark:text-red-300">
+                <li>• {t("settings.nsfwPoint1")}</li>
+                <li>• {t("settings.nsfwPoint2")}</li>
+                <li>• {t("settings.nsfwPoint3")}</li>
+                <li>• {t("settings.nsfwPoint4")}</li>
               </ul>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-800">
-                <strong>Sorumluluk:</strong> Bu içerikleri görüntülemek ve paylaşmak tamamen kendi sorumluluğunuzdadır.
-                Uygunsuz içerik paylaşımı hesabınızın askıya alınmasına neden olabilir.
+            <div className="bg-[#F8F5F0] border border-[#E8E2DA] rounded-lg p-4 dark:bg-[#2E2A25]/20 dark:border-[#5C5248]">
+              <p className="text-sm text-[#6B6258] dark:text-[#E0D6CB]">
+                <strong>{t("settings.responsibility")}:</strong> {t("settings.responsibilityText")}
               </p>
             </div>
 
-            <p className="text-center text-gray-700 font-medium">
-              Bu özelliği etkinleştirmek istediğinizden emin misiniz?
+            <p className="text-center text-gray-700 font-medium dark:text-slate-300">
+              {t("settings.nsfwConfirm")}
             </p>
 
             <div className="flex gap-3">
               <Button
                 variant="outline"
                 onClick={() => setShowNsfwWarning(false)}
-                className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50"
+                className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
               >
-                İptal
+                {t("settings.cancel")}
               </Button>
-              <Button onClick={confirmNsfwEnable} className="flex-1 bg-red-600 hover:bg-red-700 text-white">
-                Evet, Etkinleştir
+              <Button onClick={confirmNsfwEnable} className="flex-1 bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800">
+                {t("settings.enableYes")}
               </Button>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, X } from "lucide-react"
+import { useLanguage } from "@/hooks/use-language"
 import type { Post } from "@/app/page"
 
 interface SearchBarProps {
@@ -16,6 +17,7 @@ interface SearchBarProps {
 export function SearchBar({ onSearchResults, onClearSearch }: SearchBarProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
+  const { t } = useLanguage()
 
   const handleSearch = async (query: string) => {
     if (!query.trim()) {
@@ -61,16 +63,17 @@ export function SearchBar({ onSearchResults, onClearSearch }: SearchBarProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="relative">
+    <form onSubmit={handleSubmit} className="relative" aria-label={t("search.placeholder")}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
         <Input
           type="text"
-          placeholder="Paylaşımlarda ara..."
+          placeholder={t("search.placeholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-20 border-luxury-warm focus:border-amber-500 focus:ring-amber-500 rounded-full luxury-text bg-luxury-beige/50"
+          className="pl-10 pr-20 border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] rounded-full luxury-text bg-luxury-beige/50"
           disabled={isSearching}
+          aria-label={t("search.placeholder")}
         />
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
           {searchQuery && (
@@ -90,7 +93,7 @@ export function SearchBar({ onSearchResults, onClearSearch }: SearchBarProps) {
             disabled={isSearching || !searchQuery.trim()}
             className="luxury-button-primary rounded-full px-3 py-1 text-xs"
           >
-            {isSearching ? "..." : "Ara"}
+            {isSearching ? "..." : t("search.button")}
           </Button>
         </div>
       </div>

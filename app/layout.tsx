@@ -9,7 +9,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Comfortillo - Duygusal Destek Platformu",
   description: "Güvenli ve anonim duygusal destek topluluğu",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -18,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="tr">
+    <html lang="tr" suppressHydrationWarning>
       <body className={inter.className}>
         {children}
         <Toaster />

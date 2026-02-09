@@ -56,7 +56,7 @@ module.exports = {
 },
         "luxury-warm": "#f4f1eb",
         "luxury-beige": "#f9f6f0",
-        "luxury-gold": "#d4af37",
+        "luxury-gold": "#BDB1A4",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -100,7 +100,7 @@ module.exports = {
         "scale-in": "scale-in 0.3s ease-out",
       },
       backgroundImage: {
-        "luxury-gradient": "linear-gradient(135deg, #f9f6f0 0%, #f4f1eb 50%, #ede8e0 100%)",
+        "luxury-gradient": "linear-gradient(135deg, #FAF7F3 0%, #F4F0EA 50%, #EDE7DF 100%)",
       },
     },
   },
