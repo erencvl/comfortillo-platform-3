@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Plus, Heart, MessageCircle, Calendar, Users, Search, Trophy } from "lucide-react"
+import { Plus, MessageCircle, Search, Trophy } from "lucide-react"
 import { CreatePostModal } from "@/components/create-post-modal"
 import { PostCard } from "@/components/post-card"
 import { Leaderboard } from "@/components/leaderboard"
@@ -262,39 +262,6 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
             </Card>
           )}
 
-          {/* Stats Section */}
-          {!searchResults && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in-up" role="region" aria-label="Forum statistics">
-              <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
-                <CardContent className="p-6">
-                  <Users className="h-8 w-8 text-[#A89888] mx-auto mb-3" />
-                  <div className="text-3xl font-bold luxury-text">1,247</div>
-                  <div className="text-sm luxury-muted font-medium">{t("forum.supporters")}</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
-                <CardContent className="p-6">
-                  <MessageCircle className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
-                  <div className="text-3xl font-bold luxury-text">3,891</div>
-                  <div className="text-sm luxury-muted font-medium">{t("forum.posts")}</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
-                <CardContent className="p-6">
-                  <Heart className="h-8 w-8 text-rose-600 mx-auto mb-3" />
-                  <div className="text-3xl font-bold luxury-text">12,456</div>
-                  <div className="text-sm luxury-muted font-medium">{t("forum.support")}</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl">
-                <CardContent className="p-6">
-                  <Calendar className="h-8 w-8 text-violet-600 mx-auto mb-3" />
-                  <div className="text-3xl font-bold luxury-text">24/7</div>
-                  <div className="text-sm luxury-muted font-medium">{t("forum.active")}</div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
 
           {/* Create Post Button */}
           <div className="flex justify-center animate-scale-in">

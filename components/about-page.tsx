@@ -38,13 +38,6 @@ export function AboutPage() {
     },
   ]
 
-  const stats = [
-    { number: "10,000+", label: t("about.impact.supported") },
-    { number: "50,000+", label: t("about.impact.shared") },
-    { number: "24/7", label: t("about.impact.nonstop") },
-    { number: "100%", label: t("about.impact.safe") },
-  ]
-
   return (
     <div className="max-w-4xl mx-auto space-y-12">
       {/* Hero Section */}
@@ -108,25 +101,15 @@ export function AboutPage() {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <Card className="border-0 luxury-card bg-gradient-to-r from-[#F0EBE5] via-[#F0EBE5] to-[#E8E2DA] dark:from-[#2E2A25]/40 dark:via-[#2E2A25]/40 dark:to-[#2E2A25]/40 luxury-card-hover rounded-2xl animate-scale-in">
-        <CardContent className="p-8">
-          <h2 className="text-3xl font-bold text-center mb-8 luxury-text luxury-text-glow" aria-label="Our impact statistics">
-            {t("about.impact.title")}
+      {/* Prototype Notice */}
+      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
+        <CardContent className="p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4 luxury-text luxury-text-glow">
+            {t("about.prototype.title")}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="text-center"
-                style={{ animationDelay: `${index * 0.1}s` }}
-                aria-label={`${stat.label}: ${stat.number}`}
-              >
-                <div className="text-3xl font-bold mb-2 luxury-text">{stat.number}</div>
-                <div className="text-sm luxury-muted font-medium">{stat.label}</div>
-              </div>
-            ))}
-          </div>
+          <p className="luxury-muted leading-relaxed font-light max-w-2xl mx-auto">
+            {t("about.prototype.desc")}
+          </p>
         </CardContent>
       </Card>
 
@@ -195,28 +178,16 @@ export function AboutPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-2 gap-6">
-            <div aria-label="Data security information">
+            <div aria-label="Local data storage">
               <h4 className="font-semibold luxury-text mb-2">{t("about.security.data.title")}</h4>
               <p className="luxury-muted text-sm font-light">
                 {t("about.security.data.desc")}
               </p>
             </div>
-            <div aria-label="Anonymity protection">
+            <div aria-label="Anonymity">
               <h4 className="font-semibold luxury-text mb-2">{t("about.security.anon.title")}</h4>
               <p className="luxury-muted text-sm font-light">
                 {t("about.security.anon.desc")}
-              </p>
-            </div>
-            <div aria-label="Community moderation">
-              <h4 className="font-semibold luxury-text mb-2">{t("about.security.mod.title")}</h4>
-              <p className="luxury-muted text-sm font-light">
-                {t("about.security.mod.desc")}
-              </p>
-            </div>
-            <div aria-label="Emergency support">
-              <h4 className="font-semibold luxury-text mb-2">{t("about.security.emergency.title")}</h4>
-              <p className="luxury-muted text-sm font-light">
-                {t("about.security.emergency.desc")}
               </p>
             </div>
           </div>
@@ -230,14 +201,9 @@ export function AboutPage() {
           <p className="luxury-muted mb-6 font-light">
             {t("about.contact.desc")}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <div className="text-sm luxury-muted" aria-label="Email contact information">
-              <strong>{t("about.contact.email")}:</strong> destek@comfortillo.com
-            </div>
-            <div className="text-sm luxury-muted" aria-label="Support availability">
-              <strong>{t("about.contact.support")}:</strong> {t("about.contact.supportAvailability")}
-            </div>
-          </div>
+          <p className="text-sm luxury-muted">
+            {t("about.contact.prototypeNote")}
+          </p>
         </CardContent>
       </Card>
     </div>

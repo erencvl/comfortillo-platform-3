@@ -49,11 +49,11 @@ export function WelcomeSection() {
           </div>
           <div
             className="flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-full border border-purple-200 dark:border-purple-800"
-            aria-label="24/7 support badge"
+            aria-label="AI companion badge"
           >
             <Sparkles className="h-4 w-4 text-purple-600" aria-hidden="true" />
             <span className="text-purple-800 dark:text-purple-200 font-medium">
-              {t("welcome.badge.support")}
+              {t("welcome.badge.ai")}
             </span>
           </div>
         </div>
@@ -148,22 +148,9 @@ export function WelcomeSection() {
             <p className="text-lg luxury-muted mb-8 max-w-2xl mx-auto">
               {t("welcome.cta.desc")}
             </p>
-            <div className="flex items-center justify-center gap-4">
-              <div
-                className="flex items-center gap-2 text-sm luxury-muted"
-                aria-label="Active members count"
-              >
-                <Heart className="h-4 w-4 text-pink-500" aria-hidden="true" />
-                <span>1,247+ {t("welcome.cta.members")}</span>
-              </div>
-              <div
-                className="flex items-center gap-2 text-sm luxury-muted"
-                aria-label="Total posts count"
-              >
-                <MessageCircle className="h-4 w-4 text-blue-500" aria-hidden="true" />
-                <span>3,891+ {t("welcome.cta.posts")}</span>
-              </div>
-            </div>
+            <p className="text-sm luxury-muted">
+              {t("welcome.cta.prototypeNote")}
+            </p>
           </CardContent>
         </Card>
       </div>
