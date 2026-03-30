@@ -61,9 +61,12 @@ export function NavigationBar({
           {!collapsed && (
             <button onClick={() => handleNav("home")} className="flex items-center gap-3 group flex-1 min-w-0">
               <div className="relative flex-shrink-0">
-                <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-20 blur-md group-hover:opacity-35 transition-opacity duration-500" />
-                <div className="relative w-9 h-9 bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/25 rounded-2xl flex items-center justify-center">
-                  <Heart className="h-4.5 w-4.5 text-primary" />
+                <div className="absolute -inset-2 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-25 blur-lg group-hover:opacity-45 transition-opacity duration-500" />
+                <div
+                  className="relative w-9 h-9 bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/25 rounded-2xl flex items-center justify-center"
+                  style={{ animation: "logoGlow 3s ease-in-out infinite" }}
+                >
+                  <Heart className="h-4 w-4 text-primary group-hover:scale-110 transition-transform duration-300" />
                 </div>
               </div>
               <div className="text-left min-w-0">
@@ -77,8 +80,11 @@ export function NavigationBar({
 
           {collapsed && (
             <button onClick={() => handleNav("home")} className="relative group flex-shrink-0">
-              <div className="absolute -inset-1.5 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-20 blur-md group-hover:opacity-35 transition-opacity duration-500" />
-              <div className="relative w-9 h-9 bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/25 rounded-2xl flex items-center justify-center">
+              <div className="absolute -inset-2 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-25 blur-lg group-hover:opacity-45 transition-opacity duration-500" />
+              <div
+                className="relative w-9 h-9 bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/25 rounded-2xl flex items-center justify-center"
+                style={{ animation: "logoGlow 3s ease-in-out infinite" }}
+              >
                 <Heart className="h-4 w-4 text-primary" />
               </div>
             </button>
@@ -98,7 +104,7 @@ export function NavigationBar({
 
         {/* Nav items */}
         <nav className={`flex-1 py-4 overflow-y-auto space-y-0.5 ${collapsed ? "px-2" : "px-3"}`}>
-          {navItems.map((item) => {
+          {navItems.map((item, i) => {
             const Icon = item.icon
             const isActive = activeSection === item.id
 
@@ -108,15 +114,16 @@ export function NavigationBar({
                   key={item.id}
                   onClick={() => handleNav(item.id)}
                   title={item.label}
-                  className={`w-full flex items-center justify-center p-2.5 rounded-xl transition-all duration-250 group relative ${
+                  className={`w-full flex items-center justify-center p-2.5 rounded-xl transition-all duration-300 group relative animate-nav-item ${
                     isActive
-                      ? "bg-primary/15 shadow-sm shadow-primary/20"
-                      : "hover:bg-secondary/60"
+                      ? "bg-primary/15 shadow-md shadow-primary/25"
+                      : "hover:bg-secondary/70 hover:scale-105"
                   }`}
+                  style={{ animationDelay: `${i * 55}ms` }}
                 >
-                  <Icon className={`h-4.5 w-4.5 ${isActive ? "text-primary" : item.color} transition-colors`} />
+                  <Icon className={`h-4.5 w-4.5 transition-all duration-300 ${isActive ? "text-primary scale-110" : `${item.color} group-hover:scale-110`}`} />
                   {isActive && (
-                    <span className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-primary animate-pulse" />
+                    <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                   )}
                 </button>
               )
@@ -126,14 +133,17 @@ export function NavigationBar({
               <button
                 key={item.id}
                 onClick={() => handleNav(item.id)}
-                className={`nav-item w-full text-left ${isActive ? "active" : ""}`}
+                className={`nav-item w-full text-left animate-nav-item group ${isActive ? "active" : ""}`}
+                style={{ animationDelay: `${i * 55}ms` }}
               >
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
                   isActive
-                    ? "bg-primary/15 shadow-sm shadow-primary/20"
-                    : "bg-secondary/60 group-hover:bg-secondary"
-                }`}>
-                  <Icon className={`h-4 w-4 ${isActive ? "text-primary" : item.color} transition-colors`} />
+                    ? "bg-primary/15 shadow-md shadow-primary/25"
+                    : "bg-secondary/60 group-hover:bg-secondary group-hover:scale-105"
+                }`}
+                style={isActive ? { animation: "iconGlow 2.5s ease-in-out infinite" } : undefined}
+                >
+                  <Icon className={`h-4 w-4 transition-all duration-300 ${isActive ? "text-primary" : `${item.color} group-hover:scale-110`}`} />
                 </div>
                 <span className="font-medium sidebar-label">{item.label}</span>
                 {isActive && (

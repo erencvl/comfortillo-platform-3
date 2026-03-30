@@ -130,7 +130,8 @@ function AppContent() {
 
         {/* Page content */}
         <main
-          className="flex-1 container mx-auto px-4 md:px-6 py-8 max-w-5xl pb-24 lg:pb-10"
+          key={activeSection}
+          className="flex-1 container mx-auto px-4 md:px-6 py-8 max-w-5xl pb-24 lg:pb-10 animate-page-enter"
           role="main"
         >
           {renderContent()}

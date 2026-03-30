@@ -254,19 +254,23 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
 
       {/* Category Filter */}
       {!searchResults && (
-        <div className="flex flex-wrap gap-2 animate-fade-in-up" role="region" aria-label="Category filter">
-          {categories.map((cat) => (
+        <div className="flex flex-wrap gap-2" role="region" aria-label="Category filter">
+          {categories.map((cat, i) => (
             <button
               key={cat.value}
               onClick={() => setSelectedCategory(cat.value)}
-              className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-250 border ${
+              className={`animate-filter-pill rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300 border relative overflow-hidden ${
                 selectedCategory === cat.value
-                  ? "bg-primary/12 text-primary border-primary/35 shadow-sm shadow-primary/10"
-                  : "text-muted-foreground border-border/60 hover:text-foreground hover:bg-secondary/60 hover:border-border"
+                  ? "bg-primary/15 text-primary border-primary/40 shadow-md shadow-primary/20 scale-105"
+                  : "text-muted-foreground border-border/60 hover:text-foreground hover:bg-secondary/70 hover:border-primary/20 hover:scale-105 hover:shadow-sm"
               }`}
+              style={{ animationDelay: `${i * 40}ms` }}
               aria-pressed={selectedCategory === cat.value}
             >
-              {cat.label}
+              {selectedCategory === cat.value && (
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/10 via-pink-500/10 to-primary/10" style={{ animation: "shimmer 3s ease-in-out infinite" }} />
+              )}
+              <span className="relative">{cat.label}</span>
             </button>
           ))}
         </div>

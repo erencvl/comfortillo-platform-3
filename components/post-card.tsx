@@ -139,9 +139,13 @@ export function PostCard({
   }
 
   return (
-    <Card className="border-0 luxury-card luxury-card-hover rounded-2xl transition-all duration-400 overflow-hidden">
+    <Card className="border-0 luxury-card luxury-card-hover rounded-2xl transition-all duration-400 overflow-hidden group/card">
       {/* Category left accent stripe */}
       <div className={`absolute left-0 top-0 bottom-0 w-[3px] rounded-full ${getCategoryAccent(post.category)} opacity-70`} />
+      {/* Shine sweep on hover */}
+      <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden rounded-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent" />
+      </div>
       <CardHeader className="pb-3 pl-5">
         <div className="flex items-start justify-between">
           <div className="flex-1">
