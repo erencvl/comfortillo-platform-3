@@ -13,27 +13,23 @@ export function ComforterBadge({ points, showPoints = true, size = "md" }: Comfo
   const level = getComforterLevel(points)
 
   const sizeClasses = {
-    sm: "text-xs px-3 py-1.5",
-    md: "text-sm px-4 py-2",
-    lg: "text-base px-6 py-3",
+    sm: "text-[10px] px-2 py-0.5",
+    md: "text-xs px-2.5 py-1",
+    lg: "text-sm px-4 py-1.5",
   }
 
   return (
     <Badge
       className={`
-        ${level.bgColor} 
-        ${level.color} 
-        ${level.borderColor} 
-        ${level.textEffect} 
-        ${level.animation}
+        bg-primary/10 text-primary border border-primary/20
         ${sizeClasses[size]}
-        border-2 shadow-lg hover:shadow-xl transition-all duration-500 luxury-badge rounded-full backdrop-blur-sm
+        shadow-sm hover:shadow-md transition-all duration-300 rounded-full backdrop-blur-sm font-medium
       `}
       title={level.description}
     >
-      <span className="mr-2 text-lg animate-pulse">{level.icon}</span>
+      <span className="mr-1">{level.icon}</span>
       {level.name}
-      {showPoints && <span className="ml-2 font-bold opacity-80">{points} Comforter</span>}
+      {showPoints && <span className="ml-1.5 font-bold opacity-70">{points}</span>}
     </Badge>
   )
 }

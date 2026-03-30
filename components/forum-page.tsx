@@ -73,10 +73,8 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
     }
   }, [])
 
-  // Add useEffect to listen for user updates and refresh posts/replies
   useEffect(() => {
     const handleUserUpdate = () => {
-      // Reload posts and replies when user data changes
       const savedPosts = localStorage.getItem("comfortillo-posts")
       if (savedPosts) {
         const parsedPosts = JSON.parse(savedPosts)
@@ -90,10 +88,7 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
     }
 
     window.addEventListener("userUpdated", handleUserUpdate)
-
-    return () => {
-      window.removeEventListener("userUpdated", handleUserUpdate)
-    }
+    return () => window.removeEventListener("userUpdated", handleUserUpdate)
   }, [])
 
   const handleCreatePost = (newPost: Omit<Post, "id" | "timestamp" | "supportCount">) => {
@@ -214,28 +209,44 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
     searchResults || (selectedCategory === "all" ? posts : posts.filter((post) => post.category === selectedCategory))
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center animate-fade-in-up" role="region" aria-label={t("forum.title")}>
-        <h1 className="text-4xl font-bold luxury-text mb-6 luxury-text-glow">
+        <h1 className="text-4xl font-bold text-foreground mb-3 tracking-tight">
           {searchResults ? t("forum.searchResults") : t("forum.title")}
         </h1>
-        <p className="text-xl luxury-muted max-w-3xl mx-auto leading-relaxed font-light">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           {searchResults
             ? `${searchResults.length} ${t("forum.resultsFound")}`
             : t("forum.subtitle")}
         </p>
       </div>
 
-      {/* Toggle Leaderboard Button */}
-      <div className="flex justify-center animate-scale-in">
+      {/* Action Buttons */}
+      <div className="flex items-center justify-center gap-3 animate-scale-in">
+        <Button
+          onClick={() => {
+            if (!isAuthenticated) {
+              onAuthRequired()
+              return
+            }
+            setIsCreateModalOpen(true)
+          }}
+          className="luxury-button-primary rounded-full px-8 py-3 text-sm font-semibold shadow-lg"
+          size="lg"
+          aria-label={t("forum.createPost")}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          {t("forum.createPost")}
+        </Button>
+
         <Button
           variant="outline"
           onClick={() => setShowLeaderboard(!showLeaderboard)}
-          className="luxury-button-category rounded-full px-8 py-3 font-medium text-lg shadow-lg"
+          className="rounded-full px-6 py-3 text-sm font-medium border-border/60 hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all duration-300"
           aria-label={showLeaderboard ? t("forum.showForum") : t("forum.showLeaderboard")}
         >
-          <Trophy className="h-5 w-5 mr-3" />
+          <Trophy className="h-4 w-4 mr-2" />
           {showLeaderboard ? t("forum.showForum") : t("forum.showLeaderboard")}
         </Button>
       </div>
@@ -248,11 +259,11 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
         <>
           {/* Search Results Info */}
           {searchResults && (
-            <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 luxury-text">
-                  <Search className="h-6 w-6 text-[#A89888]" />
-                  <span className="font-medium text-lg" role="status">
+            <Card className="border-0 luxury-card rounded-xl animate-scale-in">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2.5 text-foreground">
+                  <Search className="h-4 w-4 text-primary" />
+                  <span className="font-medium text-sm" role="status">
                     {searchResults.length === 0
                       ? t("forum.emptySearchAction")
                       : `${searchResults.length} ${t("forum.posts")}`}
@@ -262,41 +273,20 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
             </Card>
           )}
 
-
-          {/* Create Post Button */}
-          <div className="flex justify-center animate-scale-in">
-            <Button
-              onClick={() => {
-                if (!isAuthenticated) {
-                  onAuthRequired()
-                  return
-                }
-                setIsCreateModalOpen(true)
-              }}
-              className="luxury-button-primary rounded-full px-12 py-4 text-lg font-semibold shadow-2xl luxury-hover transform transition-all duration-500"
-              size="lg"
-              aria-label={t("forum.createPost")}
-            >
-              <Plus className="h-6 w-6 mr-3" />
-              {t("forum.createPost")}
-            </Button>
-          </div>
-
           {/* Category Filter */}
           {!searchResults && (
-            <div className="flex flex-wrap gap-3 justify-center animate-fade-in-up" role="region" aria-label="Category filter">
-              {categories.map((cat, index) => (
+            <div className="flex flex-wrap gap-2 justify-center animate-fade-in-up" role="region" aria-label="Category filter">
+              {categories.map((cat) => (
                 <Button
                   key={cat.value}
-                  variant={selectedCategory === cat.value ? "default" : "outline"}
+                  variant="ghost"
                   onClick={() => setSelectedCategory(cat.value)}
-                  className={`rounded-full transition-all duration-500 font-medium px-6 py-2 luxury-hover ${
+                  className={`rounded-full transition-all duration-300 text-xs font-medium px-4 py-1.5 ${
                     selectedCategory === cat.value
-                      ? "luxury-button-category active shadow-lg scale-105"
-                      : "luxury-button-category"
+                      ? "bg-primary/10 text-primary border border-primary/30 shadow-sm"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/80 border border-transparent"
                   }`}
                   size="sm"
-                  style={{ animationDelay: `${index * 0.1}s` }}
                   aria-pressed={selectedCategory === cat.value}
                 >
                   {cat.label}
@@ -305,16 +295,18 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
             </div>
           )}
 
-          {/* Posts Grid */}
-          <div className="space-y-8" role="region" aria-label="Forum posts">
+          {/* Posts */}
+          <div className="space-y-5" role="region" aria-label="Forum posts">
             {displayPosts.length === 0 ? (
-              <Card className="text-center py-16 border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
+              <Card className="text-center py-16 border-0 luxury-card rounded-2xl animate-scale-in">
                 <CardContent>
-                  <MessageCircle className="h-16 w-16 text-[#C4B8AB] mx-auto mb-6" />
-                  <h3 className="text-2xl font-medium luxury-text mb-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                    <MessageCircle className="h-8 w-8 text-primary/50" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     {searchResults ? t("forum.emptySearch") : t("forum.emptyCategory")}
                   </h3>
-                  <p className="luxury-muted text-lg font-light">
+                  <p className="text-muted-foreground text-sm">
                     {searchResults
                       ? t("forum.emptySearchAction")
                       : t("forum.emptyAction")}
@@ -323,7 +315,7 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
               </Card>
             ) : (
               displayPosts.map((post, index) => (
-                <div key={post.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div key={post.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 0.08}s` }}>
                   <PostCard
                     post={post}
                     onSupport={handleSupportPost}

@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Shield, Users, MessageCircle, Clock } from "lucide-react"
+import { Heart, Shield, Users, MessageCircle, Clock, ArrowRight } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 
 export function AboutPage() {
@@ -12,29 +12,63 @@ export function AboutPage() {
       icon: Shield,
       title: t("about.feature.anonymous.title"),
       description: t("about.feature.anonymous.desc"),
-      color: "from-[#F0EBE5] to-[#E8E2DA] dark:from-[#2E2A25]/30 dark:to-[#332F2B]/30",
-      iconColor: "text-[#A89888] dark:text-[#C4B8AB]",
+      color: "text-emerald-500",
+      bg: "from-emerald-500/10 to-emerald-600/5",
+      borderColor: "border-emerald-500/10",
     },
     {
       icon: Users,
       title: t("about.feature.community.title"),
       description: t("about.feature.community.desc"),
-      color: "from-[#F0EBE5] to-[#E8E2DA] dark:from-[#2E2A25]/30 dark:to-[#332F2B]/30",
-      iconColor: "text-[#A89888] dark:text-[#C4B8AB]",
+      color: "text-blue-500",
+      bg: "from-blue-500/10 to-blue-600/5",
+      borderColor: "border-blue-500/10",
     },
     {
       icon: MessageCircle,
       title: t("about.feature.ai.title"),
       description: t("about.feature.ai.desc"),
-      color: "from-orange-100 to-orange-200 dark:from-orange-900/30 dark:to-orange-800/30",
-      iconColor: "text-orange-600 dark:text-orange-400",
+      color: "text-primary",
+      bg: "from-primary/10 to-pink-500/5",
+      borderColor: "border-primary/10",
     },
     {
       icon: Clock,
       title: t("about.feature.access.title"),
       description: t("about.feature.access.desc"),
-      color: "from-[#F0EBE5] to-[#E8E2DA] dark:from-[#2E2A25]/30 dark:to-[#332F2B]/30",
-      iconColor: "text-[#A89888] dark:text-[#C4B8AB]",
+      color: "text-amber-500",
+      bg: "from-amber-500/10 to-orange-500/5",
+      borderColor: "border-amber-500/10",
+    },
+  ]
+
+  const steps = [
+    {
+      icon: MessageCircle,
+      color: "text-primary",
+      bg: "from-primary/10 to-pink-500/5",
+      borderColor: "border-primary/10",
+      titleKey: "about.step1.title",
+      descKey: "about.step1.desc",
+      step: "01",
+    },
+    {
+      icon: Users,
+      color: "text-blue-500",
+      bg: "from-blue-500/10 to-blue-600/5",
+      borderColor: "border-blue-500/10",
+      titleKey: "about.step2.title",
+      descKey: "about.step2.desc",
+      step: "02",
+    },
+    {
+      icon: Heart,
+      color: "text-pink-500",
+      bg: "from-pink-500/10 to-pink-600/5",
+      borderColor: "border-pink-500/10",
+      titleKey: "about.step3.title",
+      descKey: "about.step3.desc",
+      step: "03",
     },
   ]
 
@@ -43,27 +77,31 @@ export function AboutPage() {
       {/* Hero Section */}
       <div className="text-center animate-fade-in-up">
         <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="bg-gradient-to-br from-[#D4C8BB] via-[#E8E2DA] to-[#C4B8AB] p-4 rounded-2xl shadow-lg luxury-card-hover" aria-label="Comfortillo logo">
-            <Heart className="h-10 w-10 text-[#6B6258]" />
+          <div className="relative">
+            <div className="absolute -inset-2 bg-gradient-to-r from-primary to-pink-500 rounded-2xl opacity-15 blur-lg" />
+            <div className="relative bg-gradient-to-br from-primary/10 to-pink-500/10 p-3.5 rounded-xl border border-primary/20" aria-label="Comfortillo logo">
+              <Heart className="h-8 w-8 text-primary" />
+            </div>
           </div>
-          <div>
-            <h1 className="text-4xl font-bold luxury-text luxury-text-glow">{t("about.title")}</h1>
-            <p className="luxury-muted mt-2 font-light">{t("about.tagline")}</p>
+          <div className="text-left">
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">{t("about.title")}</h1>
+            <p className="text-muted-foreground text-sm mt-0.5">{t("about.tagline")}</p>
           </div>
         </div>
 
-        <p className="text-xl luxury-muted max-w-3xl mx-auto leading-relaxed font-light">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           {t("about.intro")}
         </p>
       </div>
 
       {/* Mission Section */}
-      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center luxury-text">{t("about.mission.title")}</CardTitle>
+      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-pink-500/5" />
+        <CardHeader className="relative">
+          <CardTitle className="text-xl text-center text-foreground font-bold">{t("about.mission.title")}</CardTitle>
         </CardHeader>
-        <CardContent className="text-center">
-          <p className="text-lg luxury-text leading-relaxed font-light">
+        <CardContent className="text-center relative">
+          <p className="text-base text-foreground/80 leading-relaxed max-w-2xl mx-auto">
             {t("about.mission.desc")}
           </p>
         </CardContent>
@@ -71,27 +109,26 @@ export function AboutPage() {
 
       {/* Features Grid */}
       <div className="animate-fade-in-up">
-        <h2 className="text-3xl font-bold text-center luxury-text mb-8 luxury-text-glow" aria-label="Why choose Comfortillo">
+        <h2 className="text-2xl font-bold text-center text-foreground mb-6 tracking-tight">
           {t("about.why.title")}
         </h2>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
               <Card
                 key={index}
-                className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-                aria-label={`Feature: ${feature.title}`}
+                className="border-0 luxury-card luxury-card-hover rounded-xl animate-fade-in-up group"
+                style={{ animationDelay: `${index * 0.08}s` }}
               >
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className={`bg-gradient-to-br ${feature.color} p-3 rounded-2xl flex-shrink-0 shadow-lg`} aria-hidden="true">
-                      <Icon className={`h-6 w-6 ${feature.iconColor}`} />
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-3.5">
+                    <div className={`bg-gradient-to-br ${feature.bg} p-2.5 rounded-xl border ${feature.borderColor} flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className={`h-5 w-5 ${feature.color}`} />
                     </div>
                     <div>
-                      <h3 className="font-semibold luxury-text mb-2 text-lg">{feature.title}</h3>
-                      <p className="luxury-muted text-sm leading-relaxed font-light">{feature.description}</p>
+                      <h3 className="font-semibold text-foreground mb-1 text-sm">{feature.title}</h3>
+                      <p className="text-muted-foreground text-xs leading-relaxed">{feature.description}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -101,92 +138,70 @@ export function AboutPage() {
         </div>
       </div>
 
+      {/* How It Works */}
+      <div className="animate-fade-in-up">
+        <h2 className="text-2xl font-bold text-center text-foreground mb-6 tracking-tight">
+          {t("about.howItWorks.title")}
+        </h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {steps.map((step, index) => {
+            const Icon = step.icon
+            return (
+              <Card
+                key={index}
+                className="border-0 luxury-card luxury-card-hover rounded-xl text-center animate-scale-in group relative overflow-hidden"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="absolute top-3 right-3 text-4xl font-black text-foreground/[0.03]">{step.step}</div>
+                <CardContent className="p-6 relative">
+                  <div className={`bg-gradient-to-br ${step.bg} p-3 rounded-xl w-fit mx-auto mb-3 border ${step.borderColor} group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className={`h-6 w-6 ${step.color}`} />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-1.5 text-sm">{t(step.titleKey)}</h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed">
+                    {t(step.descKey)}
+                  </p>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+      </div>
+
       {/* Prototype Notice */}
-      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
-        <CardContent className="p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4 luxury-text luxury-text-glow">
+      <Card className="border-0 luxury-card rounded-2xl animate-scale-in overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5" />
+        <CardContent className="p-8 text-center relative">
+          <h2 className="text-xl font-bold mb-3 text-foreground">
             {t("about.prototype.title")}
           </h2>
-          <p className="luxury-muted leading-relaxed font-light max-w-2xl mx-auto">
+          <p className="text-muted-foreground leading-relaxed text-sm max-w-2xl mx-auto">
             {t("about.prototype.desc")}
           </p>
         </CardContent>
       </Card>
 
-      {/* How It Works */}
-      <div className="animate-fade-in-up">
-        <h2 className="text-3xl font-bold text-center luxury-text mb-8 luxury-text-glow" aria-label="How it works process">
-          {t("about.howItWorks.title")}
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <Card
-            className="border-0 luxury-card luxury-card-hover rounded-2xl text-center animate-scale-in"
-            aria-label="Step 1: Share your feelings"
-          >
-            <CardContent className="p-6">
-              <div className="bg-gradient-to-br from-[#F0EBE5] to-[#E8E2DA] dark:from-[#2E2A25]/30 dark:to-[#332F2B]/30 p-4 rounded-2xl w-fit mx-auto mb-4 shadow-lg" aria-hidden="true">
-                <MessageCircle className="h-8 w-8 text-[#A89888] dark:text-[#C4B8AB]" />
-              </div>
-              <h3 className="font-semibold luxury-text mb-2 text-lg">{t("about.step1.title")}</h3>
-              <p className="luxury-muted text-sm font-light leading-relaxed">
-                {t("about.step1.desc")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="border-0 luxury-card luxury-card-hover rounded-2xl text-center animate-scale-in"
-            style={{ animationDelay: "0.1s" }}
-            aria-label="Step 2: Connect with community and AI support"
-          >
-            <CardContent className="p-6">
-              <div className="bg-gradient-to-br from-[#F0EBE5] to-[#E8E2DA] dark:from-[#2E2A25]/30 dark:to-[#332F2B]/30 p-4 rounded-2xl w-fit mx-auto mb-4 shadow-lg" aria-hidden="true">
-                <Users className="h-8 w-8 text-[#A89888] dark:text-[#C4B8AB]" />
-              </div>
-              <h3 className="font-semibold luxury-text mb-2 text-lg">{t("about.step2.title")}</h3>
-              <p className="luxury-muted text-sm font-light leading-relaxed">
-                {t("about.step2.desc")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="border-0 luxury-card luxury-card-hover rounded-2xl text-center animate-scale-in"
-            style={{ animationDelay: "0.2s" }}
-            aria-label="Step 3: Begin your emotional healing journey"
-          >
-            <CardContent className="p-6">
-              <div className="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/30 dark:to-orange-800/30 p-4 rounded-2xl w-fit mx-auto mb-4 shadow-lg" aria-hidden="true">
-                <Heart className="h-8 w-8 text-orange-600 dark:text-orange-400" />
-              </div>
-              <h3 className="font-semibold luxury-text mb-2 text-lg">{t("about.step3.title")}</h3>
-              <p className="luxury-muted text-sm font-light leading-relaxed">
-                {t("about.step3.desc")}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
       {/* Safety & Privacy */}
-      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in">
+      <Card className="border-0 luxury-card rounded-2xl animate-scale-in">
         <CardHeader>
-          <CardTitle className="text-2xl text-center luxury-text flex items-center justify-center gap-2">
-            <Shield className="h-6 w-6 text-[#A89888]" aria-hidden="true" />
+          <CardTitle className="text-xl text-center text-foreground flex items-center justify-center gap-2 font-bold">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <Shield className="h-4 w-4 text-emerald-500" />
+            </div>
             {t("about.security.title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div aria-label="Local data storage">
-              <h4 className="font-semibold luxury-text mb-2">{t("about.security.data.title")}</h4>
-              <p className="luxury-muted text-sm font-light">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-secondary/40 border border-border/30">
+              <h4 className="font-semibold text-foreground mb-1.5 text-sm">{t("about.security.data.title")}</h4>
+              <p className="text-muted-foreground text-xs leading-relaxed">
                 {t("about.security.data.desc")}
               </p>
             </div>
-            <div aria-label="Anonymity">
-              <h4 className="font-semibold luxury-text mb-2">{t("about.security.anon.title")}</h4>
-              <p className="luxury-muted text-sm font-light">
+            <div className="p-4 rounded-xl bg-secondary/40 border border-border/30">
+              <h4 className="font-semibold text-foreground mb-1.5 text-sm">{t("about.security.anon.title")}</h4>
+              <p className="text-muted-foreground text-xs leading-relaxed">
                 {t("about.security.anon.desc")}
               </p>
             </div>
@@ -197,11 +212,11 @@ export function AboutPage() {
       {/* Contact */}
       <Card className="border-0 luxury-card luxury-card-hover rounded-2xl text-center animate-scale-in">
         <CardContent className="p-8">
-          <h2 className="text-2xl font-bold luxury-text mb-4">{t("about.contact.title")}</h2>
-          <p className="luxury-muted mb-6 font-light">
+          <h2 className="text-xl font-bold text-foreground mb-3">{t("about.contact.title")}</h2>
+          <p className="text-muted-foreground mb-4 text-sm">
             {t("about.contact.desc")}
           </p>
-          <p className="text-sm luxury-muted">
+          <p className="text-xs text-muted-foreground/60">
             {t("about.contact.prototypeNote")}
           </p>
         </CardContent>

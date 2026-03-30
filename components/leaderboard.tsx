@@ -53,81 +53,80 @@ export function Leaderboard() {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Crown className="h-6 w-6 text-[#BDB1A4] animate-pulse" />
+        return <Crown className="h-5 w-5 text-amber-500" />
       case 2:
-        return <Trophy className="h-6 w-6 text-gray-400 animate-bounce" />
+        return <Trophy className="h-5 w-5 text-gray-400" />
       case 3:
-        return <Medal className="h-6 w-6 text-orange-500 animate-pulse" />
+        return <Medal className="h-5 w-5 text-orange-500" />
       default:
-        return <Award className="h-5 w-5 text-gray-400" />
+        return <span className="text-xs font-bold text-muted-foreground w-5 text-center">{rank}</span>
     }
   }
 
-  const getRankBg = (rank: number) => {
+  const getRankStyle = (rank: number) => {
     switch (rank) {
       case 1:
-        return "bg-gradient-to-r from-[#F0EBE5] to-[#F0EBE5] border-[#E0D6CB] shadow-lg dark:from-[#2E2A25]/30 dark:to-[#2E2A25]/30 dark:border-[#5C5248]"
+        return "bg-amber-500/5 border-amber-500/20 hover:border-amber-500/40"
       case 2:
-        return "bg-gradient-to-r from-gray-100 to-slate-100 border-gray-300 shadow-md dark:from-gray-800/30 dark:to-slate-800/30 dark:border-gray-600"
+        return "bg-secondary/40 border-border/40 hover:border-border/60"
       case 3:
-        return "bg-gradient-to-r from-orange-100 to-red-100 border-orange-300 shadow-md dark:from-orange-900/30 dark:to-red-900/30 dark:border-orange-700"
+        return "bg-orange-500/5 border-orange-500/15 hover:border-orange-500/30"
       default:
-        return "luxury-card border-luxury-warm"
+        return "bg-background border-border/30 hover:border-border/50"
     }
   }
 
   return (
-    <Card className="border-0 luxury-card luxury-card-hover rounded-2xl animate-fade-in-up">
-      <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-bold luxury-text flex items-center justify-center gap-3 luxury-text-glow">
-          <Trophy className="h-8 w-8 text-[#BDB1A4] animate-bounce" />
+    <Card className="border-0 luxury-card rounded-2xl animate-fade-in-up">
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="text-2xl font-bold text-foreground flex items-center justify-center gap-2.5 tracking-tight">
+          <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+            <Trophy className="h-4.5 w-4.5 text-amber-500" />
+          </div>
           {t("leaderboard.title")}
         </CardTitle>
-        <p className="luxury-muted text-lg font-light">{t("leaderboard.subtitle")}</p>
+        <p className="text-muted-foreground text-sm">{t("leaderboard.subtitle")}</p>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2.5 px-4 pb-5">
         {topUsers.length === 0 ? (
-          <div className="text-center py-12 luxury-muted">
-            <Trophy className="h-16 w-16 mx-auto mb-6 text-[#D4C8BB] animate-pulse" />
-            <p className="text-lg font-medium">{t("leaderboard.empty")}</p>
-            <p className="text-sm font-light">{t("leaderboard.emptyAction")}</p>
+          <div className="text-center py-12">
+            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
+              <Trophy className="h-8 w-8 text-amber-500/40" />
+            </div>
+            <p className="text-base font-medium text-foreground mb-1">{t("leaderboard.empty")}</p>
+            <p className="text-sm text-muted-foreground">{t("leaderboard.emptyAction")}</p>
           </div>
         ) : (
           topUsers.map((user, index) => (
-            <Card
+            <div
               key={user.id}
-              className={`${getRankBg(index + 1)} border-2 transition-all duration-500 hover:shadow-xl luxury-card-hover rounded-2xl animate-scale-in`}
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className={`${getRankStyle(index + 1)} border rounded-xl p-3.5 transition-all duration-300 hover:shadow-sm animate-fade-in-up flex items-center gap-4`}
+              style={{ animationDelay: `${index * 0.06}s` }}
             >
-              <CardContent className="p-6">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-4">
-                    {getRankIcon(index + 1)}
-                    <span className="font-bold text-2xl luxury-text">#{index + 1}</span>
-                  </div>
+              <div className="flex items-center justify-center w-8">
+                {getRankIcon(index + 1)}
+              </div>
 
-                  <Avatar className="w-16 h-16 border-4 border-white shadow-lg luxury-card-hover">
-                    <AvatarImage src={user.profilePhoto || "/placeholder.svg"} alt={user.name} />
-                    <AvatarFallback className="bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white font-bold text-lg">
-                      {user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+              <Avatar className="w-10 h-10 border-2 border-background shadow-sm">
+                <AvatarImage src={user.profilePhoto || "/placeholder.svg"} alt={user.name} />
+                <AvatarFallback className="bg-gradient-to-br from-primary to-pink-500 text-white font-bold text-xs">
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
 
-                  <div className="flex-1">
-                    <h4 className="font-bold luxury-text text-lg">{user.name}</h4>
-                    <p className="text-sm luxury-muted font-medium">@{user.nickname}</p>
-                  </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-foreground text-sm truncate">{user.name}</h4>
+                <p className="text-xs text-muted-foreground">@{user.nickname}</p>
+              </div>
 
-                  <div className="text-right">
-                    <ComforterBadge points={user.comforterPoints} size="md" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              <div className="flex-shrink-0">
+                <ComforterBadge points={user.comforterPoints} size="md" />
+              </div>
+            </div>
           ))
         )}
       </CardContent>

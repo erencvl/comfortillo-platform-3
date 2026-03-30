@@ -53,17 +53,45 @@ export function PostCard({
     }
   }
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      loneliness: "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border-blue-300 dark:from-blue-900 dark:to-blue-800 dark:text-blue-100 dark:border-blue-600",
-      stress: "bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300 dark:from-red-900 dark:to-red-800 dark:text-red-100 dark:border-red-600",
-      family: "bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-green-300 dark:from-green-900 dark:to-green-800 dark:text-green-100 dark:border-green-600",
-      relationships: "bg-gradient-to-r from-pink-100 to-pink-200 text-pink-800 border-pink-300 dark:from-pink-900 dark:to-pink-800 dark:text-pink-100 dark:border-pink-600",
-      anxiety: "bg-gradient-to-r from-[#F8F5F0] to-[#F0EBE5] text-[#8B8478] border-[#E0D6CB] dark:from-[#2E2A25] dark:to-[#332F2B] dark:text-[#E0D6CB] dark:border-[#5C5248]",
-      depression: "bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border-purple-300 dark:from-purple-900 dark:to-purple-800 dark:text-purple-100 dark:border-purple-600",
-      other: "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border-gray-300 dark:from-gray-900 dark:to-gray-800 dark:text-gray-100 dark:border-gray-600",
+  const getCategoryStyle = (category: string) => {
+    const styles: Record<string, { bg: string; text: string; border: string }> = {
+      loneliness: {
+        bg: "bg-blue-500/10 dark:bg-blue-500/15",
+        text: "text-blue-600 dark:text-blue-400",
+        border: "border-blue-500/20",
+      },
+      stress: {
+        bg: "bg-red-500/10 dark:bg-red-500/15",
+        text: "text-red-600 dark:text-red-400",
+        border: "border-red-500/20",
+      },
+      family: {
+        bg: "bg-emerald-500/10 dark:bg-emerald-500/15",
+        text: "text-emerald-600 dark:text-emerald-400",
+        border: "border-emerald-500/20",
+      },
+      relationships: {
+        bg: "bg-pink-500/10 dark:bg-pink-500/15",
+        text: "text-pink-600 dark:text-pink-400",
+        border: "border-pink-500/20",
+      },
+      anxiety: {
+        bg: "bg-amber-500/10 dark:bg-amber-500/15",
+        text: "text-amber-600 dark:text-amber-400",
+        border: "border-amber-500/20",
+      },
+      depression: {
+        bg: "bg-purple-500/10 dark:bg-purple-500/15",
+        text: "text-purple-600 dark:text-purple-400",
+        border: "border-purple-500/20",
+      },
+      other: {
+        bg: "bg-secondary",
+        text: "text-muted-foreground",
+        border: "border-border",
+      },
     }
-    return colors[category] || "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border-gray-300 dark:from-gray-900 dark:to-gray-800 dark:text-gray-100 dark:border-gray-600"
+    return styles[category] || styles.other
   }
 
   const getCategoryLabel = (category: string) => {
@@ -95,37 +123,38 @@ export function PostCard({
   }
 
   const canDelete = user && post.authorId === user.id
+  const catStyle = getCategoryStyle(post.category)
 
   return (
-    <Card className="border-0 luxury-card luxury-card-hover rounded-2xl transition-all duration-500 hover:shadow-2xl">
-      <CardHeader className="pb-4">
+    <Card className="border-0 luxury-card luxury-card-hover rounded-2xl transition-all duration-400">
+      <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-2.5 mb-3">
               <Badge
-                className={`${getCategoryColor(post.category)} border-2 px-3 py-1 font-medium rounded-full shadow-sm`}
+                className={`${catStyle.bg} ${catStyle.text} border ${catStyle.border} px-2.5 py-0.5 text-xs font-semibold rounded-full`}
               >
                 {getCategoryLabel(post.category)}
               </Badge>
               {post.isNsfw && (
-                <Badge className="bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300 border-2 px-3 py-1 font-medium rounded-full">
+                <Badge className="bg-red-500/10 text-red-500 border border-red-500/20 px-2.5 py-0.5 text-xs font-semibold rounded-full">
                   NSFW
                 </Badge>
               )}
-              <div className="flex items-center text-sm luxury-muted">
+              <div className="flex items-center text-xs text-muted-foreground ml-auto">
                 <Clock className="h-3 w-3 mr-1" />
                 {formatTimeAgo(post.timestamp)}
               </div>
             </div>
-            <h3 className="text-xl font-bold luxury-text leading-tight hover:text-[#8B8478] transition-colors duration-300">
+            <h3 className="text-lg font-semibold text-foreground leading-snug group-hover:text-primary transition-colors duration-300">
               {post.title}
             </h3>
           </div>
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0 space-y-6">
-        <p className="luxury-text leading-relaxed text-base">{post.content}</p>
+      <CardContent className="pt-0 space-y-4">
+        <p className="text-foreground/80 leading-relaxed text-sm">{post.content}</p>
 
         {post.media && (
           <div>
@@ -134,44 +163,44 @@ export function PostCard({
         )}
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-luxury-warm/30">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between pt-3 border-t border-border/50">
+          <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleSupport}
-              className="luxury-text hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-all duration-300 rounded-xl px-4 py-2 luxury-hover"
+              className="text-muted-foreground hover:text-pink-500 hover:bg-pink-500/10 transition-all duration-300 rounded-xl px-3 py-1.5 text-xs"
               aria-label={t("post.support")}
             >
-              <Heart className="h-5 w-5 mr-2" />
-              <span className="font-medium">{post.supportCount}</span>
-              <span className="ml-1">{t("post.support")}</span>
+              <Heart className="h-4 w-4 mr-1.5" />
+              <span className="font-semibold">{post.supportCount}</span>
+              <span className="ml-1 hidden sm:inline">{t("post.support")}</span>
             </Button>
 
             <Button
               variant="ghost"
               size="sm"
               onClick={handleToggleReplies}
-              className="luxury-text hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 rounded-xl px-4 py-2 luxury-hover"
+              className="text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 rounded-xl px-3 py-1.5 text-xs"
               aria-label={t("post.reply")}
             >
-              <MessageCircle className="h-5 w-5 mr-2" />
-              <span className="font-medium">{replies.length}</span>
-              <span className="ml-1">{t("post.reply")}</span>
-              {showReplies ? <ChevronUp className="h-4 w-4 ml-2" /> : <ChevronDown className="h-4 w-4 ml-2" />}
+              <MessageCircle className="h-4 w-4 mr-1.5" />
+              <span className="font-semibold">{replies.length}</span>
+              <span className="ml-1 hidden sm:inline">{t("post.reply")}</span>
+              {showReplies ? <ChevronUp className="h-3.5 w-3.5 ml-1.5" /> : <ChevronDown className="h-3.5 w-3.5 ml-1.5" />}
             </Button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {canDelete && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleDelete}
-                className="luxury-text hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 rounded-xl px-3 py-2 luxury-hover"
+                className="text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 rounded-xl px-2 py-1.5"
                 aria-label="Delete post"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-3.5 w-3.5" />
               </Button>
             )}
 
@@ -179,17 +208,17 @@ export function PostCard({
               variant="ghost"
               size="sm"
               onClick={() => setShowReportModal(true)}
-              className="luxury-text hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 rounded-xl px-3 py-2 luxury-hover"
+              className="text-muted-foreground hover:text-amber-500 hover:bg-amber-500/10 transition-all duration-300 rounded-xl px-2 py-1.5"
               aria-label="Report post"
             >
-              <AlertTriangle className="h-4 w-4" />
+              <AlertTriangle className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
 
         {/* Replies Section */}
         {showReplies && (
-          <div className="mt-6 pt-6 border-t border-luxury-warm/30 animate-fade-in-up">
+          <div className="mt-4 pt-4 border-t border-border/50 animate-fade-in-up">
             <NestedReplySystem
               postId={post.id}
               replies={replies}

@@ -28,14 +28,11 @@ export function SearchBar({ onSearchResults, onClearSearch }: SearchBarProps) {
     setIsSearching(true)
 
     try {
-      // Simulate search delay
       await new Promise((resolve) => setTimeout(resolve, 500))
 
-      // Get all posts from localStorage
       const savedPosts = localStorage.getItem("comfortillo-posts")
       const allPosts: Post[] = savedPosts ? JSON.parse(savedPosts) : []
 
-      // Filter posts based on search query
       const filteredPosts = allPosts.filter(
         (post) =>
           post.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -65,24 +62,24 @@ export function SearchBar({ onSearchResults, onClearSearch }: SearchBarProps) {
   return (
     <form onSubmit={handleSubmit} className="relative" aria-label={t("search.placeholder")}>
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
         <Input
           type="text"
           placeholder={t("search.placeholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-20 border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] rounded-full luxury-text bg-luxury-beige/50"
+          className="pl-9 pr-20 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30 h-9"
           disabled={isSearching}
           aria-label={t("search.placeholder")}
         />
-        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+        <div className="absolute right-1.5 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
           {searchQuery && (
             <Button
               type="button"
               variant="ghost"
               size="sm"
               onClick={handleClear}
-              className="h-6 w-6 p-0 hover:bg-gray-200 rounded-full"
+              className="h-6 w-6 p-0 hover:bg-secondary rounded-full"
             >
               <X className="h-3 w-3" />
             </Button>
@@ -91,7 +88,7 @@ export function SearchBar({ onSearchResults, onClearSearch }: SearchBarProps) {
             type="submit"
             size="sm"
             disabled={isSearching || !searchQuery.trim()}
-            className="luxury-button-primary rounded-full px-3 py-1 text-xs"
+            className="luxury-button-primary rounded-lg px-2.5 py-1 text-[10px] h-6"
           >
             {isSearching ? "..." : t("search.button")}
           </Button>

@@ -190,43 +190,40 @@ export function AIChatPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div className="text-center animate-fade-in-up">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="bg-gradient-to-br from-[#D4C8BB] via-[#E8E2DA] to-[#C4B8AB] p-3 rounded-2xl shadow-lg">
-            <Bot
-              className="h-8 w-8 text-[#6B6258]"
-              aria-label={t("aiChat.title")}
-            />
+          <div className="relative">
+            <div className="absolute -inset-2 bg-gradient-to-r from-primary to-pink-500 rounded-2xl opacity-15 blur-lg" />
+            <div className="relative bg-gradient-to-br from-primary/10 to-pink-500/10 p-3 rounded-xl border border-primary/20">
+              <Bot className="h-7 w-7 text-primary" aria-label={t("aiChat.title")} />
+            </div>
           </div>
-          <div>
-            <h1
-              className="text-3xl font-bold luxury-text luxury-text-glow"
-              aria-label={t("aiChat.title")}
-            >
+          <div className="text-left">
+            <h1 className="text-2xl font-bold text-foreground tracking-tight" aria-label={t("aiChat.title")}>
               {t("aiChat.title")}
             </h1>
-            <p className="luxury-muted font-light">{t("aiChat.subtitle")}</p>
+            <p className="text-sm text-muted-foreground">{t("aiChat.subtitle")}</p>
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-4 text-sm">
+        <div className="flex items-center justify-center gap-2 text-xs">
           <Badge
-            className="bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-800 border-emerald-300 border-2 rounded-full px-3 py-1"
+            className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-full px-2.5 py-0.5 font-medium"
             aria-label={t("aiChat.badge.active")}
           >
             <Sparkles className="h-3 w-3 mr-1" />
             {t("aiChat.badge.active")}
           </Badge>
           <Badge
-            className="bg-gradient-to-r from-[#F0EBE5] to-[#E8E2DA] text-[#6B6258] border-[#D4C8BB] border-2 rounded-full px-3 py-1"
+            className="bg-primary/10 text-primary border border-primary/20 rounded-full px-2.5 py-0.5 font-medium"
             aria-label={t("aiChat.badge.anonymous")}
           >
             {t("aiChat.badge.anonymous")}
           </Badge>
           <Badge
-            className="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 border-orange-300 border-2 rounded-full px-3 py-1"
+            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-full px-2.5 py-0.5 font-medium"
             aria-label={t("aiChat.badge.nonjudgmental")}
           >
             {t("aiChat.badge.nonjudgmental")}
@@ -239,17 +236,17 @@ export function AIChatPage() {
 
       {/* Chat Interface */}
       <Card
-        className="border-0 luxury-card luxury-card-hover rounded-2xl animate-scale-in"
+        className="border-0 luxury-card rounded-2xl animate-scale-in overflow-hidden"
         aria-label={t("aiChat.chatTitle")}
       >
-        <CardHeader className="border-b border-luxury-warm/30">
+        <CardHeader className="border-b border-border/40 py-3 px-5">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg luxury-text">{t("aiChat.chatTitle")}</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground">{t("aiChat.chatTitle")}</CardTitle>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={clearChat}
-              className="luxury-text hover:text-red-600 border-luxury-warm bg-transparent rounded-xl luxury-hover"
+              className="text-xs text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg px-2.5 py-1 transition-colors"
               aria-label={t("aiChat.clearChat")}
             >
               {t("aiChat.clearChat")}
@@ -260,7 +257,7 @@ export function AIChatPage() {
         <CardContent className="p-0">
           {/* Messages */}
           <div
-            className="h-[500px] overflow-y-auto p-4 space-y-4"
+            className="h-[480px] overflow-y-auto p-4 space-y-4"
             role="log"
             aria-live="polite"
             aria-label="Chat messages"
@@ -268,60 +265,50 @@ export function AIChatPage() {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex items-start gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+                className={`flex items-start gap-2.5 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 role="article"
                 aria-label={`${message.role === "user" ? "User" : "AI assistant"} message at ${formatTime(message.timestamp)}`}
               >
                 <div
-                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm ${
+                  className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center ${
                     message.role === "user"
-                      ? "bg-gradient-to-br from-[#D4C8BB] to-[#BDB1A4]"
-                      : "bg-gradient-to-br from-[#D4C8BB] via-[#E8E2DA] to-[#C4B8AB]"
+                      ? "bg-gradient-to-br from-primary to-pink-500 shadow-md shadow-primary/20"
+                      : "bg-gradient-to-br from-primary/10 to-pink-500/10 border border-primary/20"
                   }`}
                   aria-hidden="true"
                 >
                   {message.role === "user" ? (
-                    <User className="h-4 w-4 text-[#3D352C]" />
+                    <User className="h-3.5 w-3.5 text-white" />
                   ) : (
-                    <Heart className="h-4 w-4 text-[#6B6258]" />
+                    <Heart className="h-3.5 w-3.5 text-primary" />
                   )}
                 </div>
 
-                <div className={`max-w-[70%] ${message.role === "user" ? "text-right" : "text-left"}`}>
+                <div className={`max-w-[75%] ${message.role === "user" ? "text-right" : "text-left"}`}>
                   <div
-                    className={`rounded-2xl px-4 py-3 ${
+                    className={`rounded-2xl px-4 py-2.5 text-sm ${
                       message.role === "user"
-                        ? "bg-gradient-to-r from-[#F0EBE5] to-[#E8E2DA] text-[#3D352C]"
-                        : "luxury-card luxury-text"
+                        ? "bg-gradient-to-r from-primary to-pink-500 text-white shadow-md shadow-primary/15"
+                        : "bg-secondary/80 text-foreground border border-border/30"
                     }`}
                   >
                     <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
                   </div>
-                  <p className="text-xs luxury-muted mt-1 px-2">{formatTime(message.timestamp)}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1 px-1">{formatTime(message.timestamp)}</p>
                 </div>
               </div>
             ))}
 
             {isLoading && (
-              <div
-                className="flex items-start gap-3"
-                role="status"
-                aria-label="AI is typing"
-              >
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[#D4C8BB] via-[#E8E2DA] to-[#C4B8AB] flex items-center justify-center shadow-sm">
-                  <Heart className="h-4 w-4 text-[#6B6258]" />
+              <div className="flex items-start gap-2.5" role="status" aria-label="AI is typing">
+                <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-gradient-to-br from-primary/10 to-pink-500/10 border border-primary/20 flex items-center justify-center">
+                  <Heart className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <div className="luxury-card rounded-2xl px-4 py-3">
+                <div className="bg-secondary/80 border border-border/30 rounded-2xl px-4 py-3">
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-[#C4B8AB] rounded-full animate-bounce"></div>
-                    <div
-                      className="w-2 h-2 bg-[#C4B8AB] rounded-full animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 bg-[#C4B8AB] rounded-full animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
+                    <div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" />
+                    <div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
+                    <div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
                   </div>
                 </div>
               </div>
@@ -333,31 +320,27 @@ export function AIChatPage() {
           <ChatSuggestions onSuggestionClick={handleSuggestionClick} isVisible={messages.length <= 1} />
 
           {/* Input */}
-          <div className="border-t border-luxury-warm/30 p-4">
-            <form
-              onSubmit={handleSubmit}
-              className="flex gap-3"
-              aria-label="Chat message form"
-            >
+          <div className="border-t border-border/40 p-3">
+            <form onSubmit={handleSubmit} className="flex gap-2" aria-label="Chat message form">
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t("aiChat.placeholder")}
                 disabled={isLoading}
-                className="flex-1 border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] rounded-full luxury-text bg-luxury-beige/50"
+                className="flex-1 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
                 maxLength={500}
                 aria-label="Message input"
               />
               <Button
                 type="submit"
                 disabled={isLoading || !input.trim()}
-                className="luxury-button-primary rounded-full px-6 luxury-hover shadow-lg"
+                className="luxury-button-primary rounded-xl px-4"
                 aria-label="Send message"
               >
                 <Send className="h-4 w-4" />
               </Button>
             </form>
-            <p className="text-xs luxury-muted mt-2 text-center">
+            <p className="text-[10px] text-muted-foreground/60 mt-1.5 text-center">
               {t("aiChat.footer")}
             </p>
           </div>

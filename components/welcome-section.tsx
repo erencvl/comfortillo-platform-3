@@ -8,51 +8,56 @@ export function WelcomeSection() {
   const { t } = useLanguage()
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12">
+    <div className="max-w-4xl mx-auto space-y-16">
       {/* Hero Section */}
       <div className="text-center animate-fade-in-up">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div
-            className="bg-gradient-to-br from-[#D4C8BB] via-[#E8E2DA] to-[#C4B8AB] p-4 rounded-3xl shadow-xl luxury-card-hover"
-            aria-label="Comfortillo welcome icon"
-          >
-            <Heart className="h-12 w-12 text-[#6B6258]" aria-hidden="true" />
+        {/* Floating Heart Icon with Glow */}
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="relative group">
+            <div className="absolute -inset-3 bg-gradient-to-r from-primary via-pink-500 to-primary rounded-3xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-700 animate-pulse" />
+            <div
+              className="relative bg-gradient-to-br from-primary/15 to-pink-500/15 p-5 rounded-2xl border border-primary/20 luxury-card-hover"
+              aria-label="Comfortillo welcome icon"
+            >
+              <Heart className="h-10 w-10 text-primary" aria-hidden="true" />
+            </div>
           </div>
         </div>
 
-        <h1 className="text-5xl font-bold luxury-text mb-6 luxury-text-glow">
-          {t("welcome.title")}
+        <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
+          <span className="luxury-name-fade">{t("welcome.title")}</span>
         </h1>
 
-        <p className="text-xl luxury-muted max-w-3xl mx-auto leading-relaxed font-light mb-8">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
           {t("welcome.subtitle")}
         </p>
 
-        <div className="flex items-center justify-center gap-4 text-sm mb-12" role="region" aria-label="Welcome badges">
+        {/* Badge Pills */}
+        <div className="flex items-center justify-center gap-3 flex-wrap mb-12" role="region" aria-label="Welcome badges">
           <div
-            className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-full border border-emerald-200 dark:border-emerald-800"
+            className="flex items-center gap-2 bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20"
             aria-label="100% anonymous badge"
           >
-            <Shield className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-            <span className="text-emerald-800 dark:text-emerald-200 font-medium">
+            <Shield className="h-4 w-4 text-emerald-500" aria-hidden="true" />
+            <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">
               {t("welcome.badge.anonymous")}
             </span>
           </div>
           <div
-            className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-800"
+            className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20"
             aria-label="Safe community badge"
           >
-            <Users className="h-4 w-4 text-blue-600" aria-hidden="true" />
-            <span className="text-blue-800 dark:text-blue-200 font-medium">
+            <Users className="h-4 w-4 text-primary" aria-hidden="true" />
+            <span className="text-primary text-sm font-medium">
               {t("welcome.badge.safe")}
             </span>
           </div>
           <div
-            className="flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-full border border-purple-200 dark:border-purple-800"
+            className="flex items-center gap-2 bg-pink-500/10 px-4 py-2 rounded-full border border-pink-500/20"
             aria-label="AI companion badge"
           >
-            <Sparkles className="h-4 w-4 text-purple-600" aria-hidden="true" />
-            <span className="text-purple-800 dark:text-purple-200 font-medium">
+            <Sparkles className="h-4 w-4 text-pink-500" aria-hidden="true" />
+            <span className="text-pink-600 dark:text-pink-400 text-sm font-medium">
               {t("welcome.badge.ai")}
             </span>
           </div>
@@ -60,95 +65,82 @@ export function WelcomeSection() {
       </div>
 
       {/* Features Grid */}
-      <div className="grid md:grid-cols-2 gap-8 animate-fade-in-up" role="region" aria-label="Features">
-        <Card className="border-0 luxury-card luxury-card-hover rounded-2xl">
-          <CardContent className="p-8">
-            <div className="flex items-center gap-4 mb-4">
-              <div
-                className="bg-gradient-to-br from-blue-100 to-blue-200 p-3 rounded-xl"
-                aria-hidden="true"
-              >
-                <MessageCircle className="h-6 w-6 text-blue-600" aria-hidden="true" />
-              </div>
-              <h3 className="text-xl font-semibold luxury-text">
-                {t("welcome.feature.forum.title")}
-              </h3>
-            </div>
-            <p className="luxury-muted leading-relaxed">
-              {t("welcome.feature.forum.desc")}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 luxury-card luxury-card-hover rounded-2xl">
-          <CardContent className="p-8">
-            <div className="flex items-center gap-4 mb-4">
-              <div
-                className="bg-gradient-to-br from-[#F0EBE5] to-[#E8E2DA] p-3 rounded-xl"
-                aria-hidden="true"
-              >
-                <Sparkles className="h-6 w-6 text-[#A89888]" aria-hidden="true" />
-              </div>
-              <h3 className="text-xl font-semibold luxury-text">
-                {t("welcome.feature.ai.title")}
-              </h3>
-            </div>
-            <p className="luxury-muted leading-relaxed">
-              {t("welcome.feature.ai.desc")}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 luxury-card luxury-card-hover rounded-2xl">
-          <CardContent className="p-8">
-            <div className="flex items-center gap-4 mb-4">
-              <div
-                className="bg-gradient-to-br from-emerald-100 to-emerald-200 p-3 rounded-xl"
-                aria-hidden="true"
-              >
-                <Shield className="h-6 w-6 text-emerald-600" aria-hidden="true" />
-              </div>
-              <h3 className="text-xl font-semibold luxury-text">
-                {t("welcome.feature.privacy.title")}
-              </h3>
-            </div>
-            <p className="luxury-muted leading-relaxed">
-              {t("welcome.feature.privacy.desc")}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 luxury-card luxury-card-hover rounded-2xl">
-          <CardContent className="p-8">
-            <div className="flex items-center gap-4 mb-4">
-              <div
-                className="bg-gradient-to-br from-purple-100 to-purple-200 p-3 rounded-xl"
-                aria-hidden="true"
-              >
-                <Star className="h-6 w-6 text-purple-600" aria-hidden="true" />
-              </div>
-              <h3 className="text-xl font-semibold luxury-text">
-                {t("welcome.feature.professional.title")}
-              </h3>
-            </div>
-            <p className="luxury-muted leading-relaxed">
-              {t("welcome.feature.professional.desc")}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid md:grid-cols-2 gap-5" role="region" aria-label="Features">
+        {[
+          {
+            icon: MessageCircle,
+            color: "text-blue-500",
+            bg: "from-blue-500/10 to-blue-600/5",
+            borderColor: "border-blue-500/10",
+            titleKey: "welcome.feature.forum.title",
+            descKey: "welcome.feature.forum.desc",
+            delay: "0s",
+          },
+          {
+            icon: Sparkles,
+            color: "text-primary",
+            bg: "from-primary/10 to-pink-500/5",
+            borderColor: "border-primary/10",
+            titleKey: "welcome.feature.ai.title",
+            descKey: "welcome.feature.ai.desc",
+            delay: "0.1s",
+          },
+          {
+            icon: Shield,
+            color: "text-emerald-500",
+            bg: "from-emerald-500/10 to-emerald-600/5",
+            borderColor: "border-emerald-500/10",
+            titleKey: "welcome.feature.privacy.title",
+            descKey: "welcome.feature.privacy.desc",
+            delay: "0.2s",
+          },
+          {
+            icon: Star,
+            color: "text-amber-500",
+            bg: "from-amber-500/10 to-orange-500/5",
+            borderColor: "border-amber-500/10",
+            titleKey: "welcome.feature.professional.title",
+            descKey: "welcome.feature.professional.desc",
+            delay: "0.3s",
+          },
+        ].map((feature) => {
+          const Icon = feature.icon
+          return (
+            <Card
+              key={feature.titleKey}
+              className="border-0 luxury-card luxury-card-hover rounded-2xl animate-fade-in-up group"
+              style={{ animationDelay: feature.delay }}
+            >
+              <CardContent className="p-7">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className={`bg-gradient-to-br ${feature.bg} p-2.5 rounded-xl border ${feature.borderColor} group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className={`h-5 w-5 ${feature.color}`} aria-hidden="true" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {t(feature.titleKey)}
+                  </h3>
+                </div>
+                <p className="text-muted-foreground leading-relaxed text-sm pl-[52px]">
+                  {t(feature.descKey)}
+                </p>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
       {/* Call to Action */}
-      <div className="text-center animate-fade-in-up">
-        <Card className="border-0 luxury-card luxury-card-hover rounded-2xl bg-gradient-to-r from-[#F5F0EA] to-[#F8F5F0] dark:from-[#2E2A25]/20 dark:to-[#2E2A25]/20">
-          <CardContent className="p-12">
-            <h2 className="text-3xl font-bold luxury-text mb-4">
+      <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+        <Card className="border-0 luxury-card luxury-card-hover rounded-2xl overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-pink-500/5" />
+          <CardContent className="relative p-12 text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
               {t("welcome.cta.title")}
             </h2>
-            <p className="text-lg luxury-muted mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               {t("welcome.cta.desc")}
             </p>
-            <p className="text-sm luxury-muted">
+            <p className="text-sm text-muted-foreground/60">
               {t("welcome.cta.prototypeNote")}
             </p>
           </CardContent>

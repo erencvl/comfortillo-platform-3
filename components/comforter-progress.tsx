@@ -18,61 +18,62 @@ export function ComforterProgress({ points }: ComforterProgressProps) {
 
   if (!nextLevel) {
     return (
-      <div className="luxury-card p-6 rounded-2xl space-y-4">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <Crown className="h-6 w-6 text-[#BDB1A4]" />
-          <span className="text-lg luxury-text font-semibold">{t("comforter.maxLevel")} 🎉</span>
+      <div className="bg-secondary/40 border border-border/30 p-5 rounded-xl space-y-3">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <Crown className="h-5 w-5 text-amber-500" />
+          <span className="text-sm text-foreground font-semibold">{t("comforter.maxLevel")}</span>
         </div>
 
-        <div className="flex items-center justify-center mb-4">
-          <Badge
-            className={`${currentLevel.bgColor} ${currentLevel.color} ${currentLevel.textEffect} luxury-badge border-0 px-6 py-3 text-lg`}
-          >
-            <span className="mr-3 text-xl animate-pulse">{currentLevel.icon}</span>
+        <div className="flex items-center justify-center mb-3">
+          <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-full px-3 py-1 text-sm font-medium">
+            <span className="mr-1.5">{currentLevel.icon}</span>
             {currentLevel.name}
           </Badge>
         </div>
 
-        <Progress value={100} className="h-4 luxury-progress rounded-full" />
-        <div className="text-center text-sm luxury-muted italic font-light">"{currentLevel.description}"</div>
+        <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-primary to-pink-500 rounded-full w-full" />
+        </div>
+        <div className="text-center text-xs text-muted-foreground italic">"{currentLevel.description}"</div>
       </div>
     )
   }
 
   return (
-    <div className="luxury-card p-6 rounded-2xl space-y-6">
-      <h3 className="text-xl font-semibold luxury-text text-center mb-4">{t("comforter.progress")}</h3>
+    <div className="bg-secondary/40 border border-border/30 p-5 rounded-xl space-y-4">
+      <h3 className="text-sm font-semibold text-foreground text-center">{t("comforter.progress")}</h3>
 
-      {/* Current and Next Level Display */}
-      <div className="flex items-center justify-between mb-4">
+      {/* Current and Next Level */}
+      <div className="flex items-center justify-between">
         <div className="text-center">
-          <Badge
-            className={`${currentLevel.bgColor} ${currentLevel.color} ${currentLevel.textEffect} luxury-badge border-0 px-4 py-2 mb-2`}
-          >
-            <span className="mr-2">{currentLevel.icon}</span>
+          <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-full px-2.5 py-0.5 text-xs font-medium mb-1">
+            <span className="mr-1">{currentLevel.icon}</span>
             {currentLevel.name}
           </Badge>
-          <div className="text-xs luxury-muted font-medium">{points} Comforter</div>
+          <div className="text-[10px] text-muted-foreground">{points} Comforter</div>
         </div>
 
-        <ArrowRight className="h-6 w-6 luxury-muted animate-pulse" />
+        <ArrowRight className="h-4 w-4 text-muted-foreground" />
 
         <div className="text-center">
-          <Badge
-            className={`${nextLevel.bgColor} ${nextLevel.color} ${nextLevel.textEffect} luxury-badge border-0 px-4 py-2 mb-2 opacity-70`}
-          >
-            <span className="mr-2">{nextLevel.icon}</span>
+          <Badge className="bg-secondary text-muted-foreground border border-border/40 rounded-full px-2.5 py-0.5 text-xs font-medium mb-1 opacity-60">
+            <span className="mr-1">{nextLevel.icon}</span>
             {nextLevel.name}
           </Badge>
-          <div className="text-xs luxury-muted font-medium">{nextLevel.minPoints} Comforter</div>
+          <div className="text-[10px] text-muted-foreground">{nextLevel.minPoints} Comforter</div>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="space-y-3">
-        <Progress value={progress} className="h-4 luxury-progress rounded-full" />
+      <div className="space-y-1.5">
+        <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-primary to-pink-500 rounded-full transition-all duration-700 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
 
-        <div className="flex justify-between text-sm luxury-muted">
+        <div className="flex justify-between text-[10px] text-muted-foreground">
           <span>{currentLevel.minPoints}</span>
           <span className="font-medium">
             {nextLevel.minPoints - points} {t("comforter.pointsNeeded")} {nextLevel.name} {t("comforter.toReach")}
@@ -81,9 +82,9 @@ export function ComforterProgress({ points }: ComforterProgressProps) {
         </div>
       </div>
 
-      {/* Current Level Description */}
+      {/* Description */}
       <div className="text-center">
-        <div className="text-sm luxury-muted italic font-light">"{currentLevel.description}"</div>
+        <div className="text-xs text-muted-foreground italic">"{currentLevel.description}"</div>
       </div>
     </div>
   )

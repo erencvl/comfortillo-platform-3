@@ -75,192 +75,199 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md bg-white dark:bg-slate-950 border-0 shadow-2xl">
-          <DialogHeader className="text-center pb-4">
-            <DialogTitle className="text-2xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-2">
-              <Heart className="h-6 w-6 text-pink-500" />
-              {t("auth.welcomeTitle")}
-            </DialogTitle>
-            <p className="text-gray-600 dark:text-gray-300 mt-2">{t("auth.welcomeSubtitle")}</p>
-          </DialogHeader>
-
-          <Tabs defaultValue={defaultTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 dark:bg-slate-800">
-              <TabsTrigger value="login" className="dark:data-[state=active]:bg-slate-700">{t("auth.login")}</TabsTrigger>
-              <TabsTrigger value="register" className="dark:data-[state=active]:bg-slate-700">{t("auth.register")}</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="login-email" className="dark:text-gray-200">{t("auth.email")}</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="login-email"
-                      type="email"
-                      placeholder={t("auth.emailPlaceholder")}
-                      value={loginData.email}
-                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
-                      required
-                    />
-                  </div>
+        <DialogContent className="sm:max-w-[420px] bg-background border border-border/50 shadow-2xl shadow-primary/5 rounded-2xl p-0 overflow-hidden">
+          {/* Header with gradient */}
+          <div className="bg-gradient-to-r from-primary/10 via-pink-500/10 to-primary/10 px-6 pt-8 pb-5">
+            <DialogHeader className="text-center">
+              <DialogTitle className="text-xl font-bold text-foreground flex items-center justify-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-pink-500 flex items-center justify-center shadow-md shadow-primary/20">
+                  <Heart className="h-4.5 w-4.5 text-white" />
                 </div>
+                {t("auth.welcomeTitle")}
+              </DialogTitle>
+              <p className="text-muted-foreground text-sm mt-2">{t("auth.welcomeSubtitle")}</p>
+            </DialogHeader>
+          </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="login-password" className="dark:text-gray-200">{t("auth.password")}</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="login-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder={t("auth.passwordPlaceholder")}
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                      className="pl-10 pr-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent dark:hover:bg-slate-800"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
+          <div className="px-6 pb-6">
+            <Tabs defaultValue={defaultTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-5 bg-secondary/60 rounded-xl p-1 border border-border/30">
+                <TabsTrigger value="login" className="rounded-lg text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">{t("auth.login")}</TabsTrigger>
+                <TabsTrigger value="register" className="rounded-lg text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">{t("auth.register")}</TabsTrigger>
+              </TabsList>
 
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-[#C4B8AB] to-[#A89888] hover:from-[#B5A999] hover:to-[#9E9285] text-[#3D352C]"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      {t("auth.logging")}
+              <TabsContent value="login">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="login-email" className="text-xs font-semibold text-foreground">{t("auth.email")}</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="login-email"
+                        type="email"
+                        placeholder={t("auth.emailPlaceholder")}
+                        value={loginData.email}
+                        onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                        className="pl-10 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
+                        required
+                      />
                     </div>
-                  ) : (
-                    t("auth.loginButton")
-                  )}
-                </Button>
+                  </div>
 
-                <div className="text-center">
-                  <Button variant="link" className="text-sm text-[#9E9285] hover:text-[#8B8478]">
-                    {t("auth.forgotPassword")}
+                  <div className="space-y-1.5">
+                    <Label htmlFor="login-password" className="text-xs font-semibold text-foreground">{t("auth.password")}</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="login-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder={t("auth.passwordPlaceholder")}
+                        value={loginData.password}
+                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                        className="pl-10 pr-10 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full luxury-button-primary rounded-xl py-2.5 text-sm font-semibold"
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-2" />
+                        {t("auth.logging")}
+                      </div>
+                    ) : (
+                      t("auth.loginButton")
+                    )}
                   </Button>
-                </div>
-              </form>
-            </TabsContent>
 
-            <TabsContent value="register">
-              <form onSubmit={handleRegister} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="register-name" className="dark:text-gray-200">{t("auth.name")}</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="register-name"
-                      type="text"
-                      placeholder={t("auth.namePlaceholder")}
-                      value={registerData.name}
-                      onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
-                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="register-email" className="dark:text-gray-200">{t("auth.email")}</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="register-email"
-                      type="email"
-                      placeholder={t("auth.emailPlaceholder")}
-                      value={registerData.email}
-                      onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="register-password" className="dark:text-gray-200">{t("auth.password")}</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="register-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder={t("auth.newPasswordPlaceholder")}
-                      value={registerData.password}
-                      onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                      className="pl-10 pr-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent dark:hover:bg-slate-800"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
+                  <div className="text-center">
+                    <Button variant="link" className="text-xs text-primary hover:text-primary/80 p-0">
+                      {t("auth.forgotPassword")}
                     </Button>
                   </div>
-                </div>
+                </form>
+              </TabsContent>
 
-                <div className="space-y-2">
-                  <Label htmlFor="register-confirm-password" className="dark:text-gray-200">{t("auth.confirmPassword")}</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="register-confirm-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder={t("auth.confirmPasswordPlaceholder")}
-                      value={registerData.confirmPassword}
-                      onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
-                      className="pl-10 border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-[#BDB1A4] focus:ring-[#BDB1A4]"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-[#C4B8AB] to-[#A89888] hover:from-[#B5A999] hover:to-[#9E9285] text-[#3D352C]"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      {t("auth.registering")}
+              <TabsContent value="register">
+                <form onSubmit={handleRegister} className="space-y-3.5">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="register-name" className="text-xs font-semibold text-foreground">{t("auth.name")}</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="register-name"
+                        type="text"
+                        placeholder={t("auth.namePlaceholder")}
+                        value={registerData.name}
+                        onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                        className="pl-10 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
+                        required
+                      />
                     </div>
-                  ) : (
-                    t("auth.registerButton")
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
+                  </div>
 
-          <div className="mt-6 p-4 bg-[#F5F0EA] dark:bg-[#2A2725]/30 border border-[#D4C8BB] dark:border-[#4A4540] rounded-lg">
-            <p className="text-sm text-[#6B6258] dark:text-[#C4B8AB] text-center">
-              {t("auth.reminder")}
-            </p>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="register-email" className="text-xs font-semibold text-foreground">{t("auth.email")}</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="register-email"
+                        type="email"
+                        placeholder={t("auth.emailPlaceholder")}
+                        value={registerData.email}
+                        onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                        className="pl-10 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="register-password" className="text-xs font-semibold text-foreground">{t("auth.password")}</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="register-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder={t("auth.newPasswordPlaceholder")}
+                        value={registerData.password}
+                        onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                        className="pl-10 pr-10 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="register-confirm-password" className="text-xs font-semibold text-foreground">{t("auth.confirmPassword")}</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="register-confirm-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder={t("auth.confirmPasswordPlaceholder")}
+                        value={registerData.confirmPassword}
+                        onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+                        className="pl-10 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full luxury-button-primary rounded-xl py-2.5 text-sm font-semibold"
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-2" />
+                        {t("auth.registering")}
+                      </div>
+                    ) : (
+                      t("auth.registerButton")
+                    )}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
+
+            <div className="mt-5 p-3 bg-primary/5 border border-primary/10 rounded-xl">
+              <p className="text-xs text-muted-foreground text-center">
+                {t("auth.reminder")}
+              </p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

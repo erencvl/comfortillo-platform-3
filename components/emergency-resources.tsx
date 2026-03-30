@@ -30,51 +30,53 @@ export function EmergencyResources() {
   ]
 
   return (
-    <Card className="border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center text-red-800 dark:text-red-200 text-lg">
-          <AlertTriangle className="h-5 w-5 mr-2" />
+    <Card className="border border-red-500/20 bg-red-500/5 rounded-2xl overflow-hidden">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center text-red-600 dark:text-red-400 text-base font-bold">
+          <div className="w-7 h-7 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center mr-2">
+            <AlertTriangle className="h-4 w-4" />
+          </div>
           {t("emergency.title")}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <p className="text-sm text-red-700 dark:text-red-300 mb-4">
+      <CardContent className="space-y-2.5">
+        <p className="text-xs text-red-600/80 dark:text-red-400/80 mb-3">
           {t("emergency.warning")}
         </p>
 
         {emergencyContacts.map((contact, index) => (
           <div
             key={index}
-            className={`p-3 rounded-lg ${
+            className={`p-3 rounded-xl ${
               contact.urgent
-                ? "bg-red-100 border border-red-300 dark:bg-red-900 dark:border-red-700"
-                : "bg-white border border-red-200 dark:bg-gray-800 dark:border-red-800"
+                ? "bg-red-500/10 border border-red-500/20"
+                : "bg-background/60 border border-border/40"
             }`}
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-medium text-red-800 dark:text-red-200">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h4 className="font-semibold text-foreground text-sm">
                   {contact.name}
                 </h4>
-                <p className="text-sm text-red-600 dark:text-red-400">
+                <p className="text-xs text-muted-foreground">
                   {contact.description}
                 </p>
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                className="border-red-300 text-red-700 hover:bg-red-100 bg-transparent dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900"
+                className="border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/10 bg-transparent rounded-lg text-xs flex-shrink-0"
                 onClick={() => window.open(`tel:${contact.number}`)}
               >
-                <Phone className="h-4 w-4 mr-1" />
+                <Phone className="h-3 w-3 mr-1" />
                 {contact.number}
               </Button>
             </div>
           </div>
         ))}
 
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-950 dark:border-blue-900">
-          <p className="text-sm text-blue-800 dark:text-blue-200">
+        <div className="p-2.5 bg-primary/5 border border-primary/10 rounded-xl mt-3">
+          <p className="text-xs text-muted-foreground">
             <strong>{t("emergency.reminder")}</strong>
           </p>
         </div>

@@ -46,7 +46,6 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
 
   useEffect(() => {
     if (user && isOpen) {
-      // Load user profile to check NSFW settings
       const savedProfile = localStorage.getItem(`comfortillo-profile-${user.id}`)
       if (savedProfile) {
         setUserProfile(JSON.parse(savedProfile))
@@ -61,7 +60,6 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
       return
     }
 
-    // Content moderation
     const titleModeration = moderateTitle(title)
     if (!titleModeration.isAllowed) {
       setModerationError(titleModeration.reason || t("createPost.titleNotAllowed"))
@@ -77,7 +75,6 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
     setModerationError("")
     setIsSubmitting(true)
 
-    // Simulate submission delay for better UX
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     onSubmit({
@@ -89,7 +86,6 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
       authorId: user?.id,
     })
 
-    // Reset form
     setTitle("")
     setCategory("")
     setContent("")
@@ -114,8 +110,6 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // In a real app, you'd upload to a service and get a URL
-      // For now, we'll just store the filename
       setMedia(file.name)
     }
   }
@@ -124,20 +118,25 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-950 border-0 shadow-2xl">
-        <DialogHeader className="text-center pb-4">
-          <DialogTitle className="text-2xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-2">
-            <Heart className="h-6 w-6 text-pink-500" />
-            {t("createPost.title")}
-          </DialogTitle>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">
-            {t("createPost.anonymousNote")}
-          </p>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto bg-background border border-border/50 shadow-2xl shadow-primary/5 rounded-2xl p-0">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-primary/10 via-pink-500/10 to-primary/10 px-6 pt-6 pb-4">
+          <DialogHeader className="text-center">
+            <DialogTitle className="text-lg font-bold text-foreground flex items-center justify-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-pink-500 flex items-center justify-center shadow-md shadow-primary/20">
+                <Heart className="h-4 w-4 text-white" />
+              </div>
+              {t("createPost.title")}
+            </DialogTitle>
+            <p className="text-muted-foreground text-xs mt-1.5">
+              {t("createPost.anonymousNote")}
+            </p>
+          </DialogHeader>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+        <form onSubmit={handleSubmit} className="space-y-4 px-6 pb-6">
+          <div className="space-y-1.5">
+            <Label htmlFor="title" className="text-xs font-semibold text-foreground">
               {t("createPost.titleLabel")}
             </Label>
             <Input
@@ -145,24 +144,24 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder={t("createPost.titlePlaceholder")}
-              className="border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-blue-500 focus:ring-blue-500 rounded-lg"
+              className="border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30"
               maxLength={100}
               required
             />
-            <div className="text-xs text-gray-500 dark:text-gray-400 text-right">{title.length}/100</div>
+            <div className="text-[10px] text-muted-foreground text-right">{title.length}/100</div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="category" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+          <div className="space-y-1.5">
+            <Label htmlFor="category" className="text-xs font-semibold text-foreground">
               {t("createPost.category")}
             </Label>
             <Select value={category} onValueChange={setCategory} required>
-              <SelectTrigger className="border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-blue-500 focus:ring-blue-500 rounded-lg">
+              <SelectTrigger className="border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30">
                 <SelectValue placeholder={t("createPost.selectCategory")} />
               </SelectTrigger>
-              <SelectContent className="dark:bg-slate-900">
+              <SelectContent className="bg-background border-border/50 rounded-xl">
                 {categories.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value} className="dark:text-white">
+                  <SelectItem key={cat.value} value={cat.value} className="text-sm">
                     {cat.label}
                   </SelectItem>
                 ))}
@@ -170,8 +169,8 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="content" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+          <div className="space-y-1.5">
+            <Label htmlFor="content" className="text-xs font-semibold text-foreground">
               {t("createPost.content")}
             </Label>
             <Textarea
@@ -179,84 +178,77 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder={t("createPost.contentPlaceholder")}
-              className="border-gray-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:border-blue-500 focus:ring-blue-500 rounded-lg min-h-[150px] resize-none"
+              className="border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-secondary/30 min-h-[120px] resize-none"
               maxLength={2000}
               required
             />
-            <div className="text-xs text-gray-500 dark:text-gray-400 text-right">{content.length}/2000</div>
+            <div className="text-[10px] text-muted-foreground text-right">{content.length}/2000</div>
           </div>
 
           {/* NSFW Toggle */}
-          <div className="space-y-3">
-            <div className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                    <Label className="font-medium text-gray-800 dark:text-gray-200">{t("createPost.nsfwToggle")}</Label>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {!canUseNsfw
-                      ? t("createPost.nsfwRequirement")
-                      : t("createPost.nsfwQuestion")}
-                  </p>
+          <div className="p-3.5 bg-secondary/40 border border-border/30 rounded-xl space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-1.5">
+                  <Shield className="h-3.5 w-3.5 text-muted-foreground" />
+                  <Label className="text-xs font-semibold text-foreground">{t("createPost.nsfwToggle")}</Label>
                 </div>
-                <Switch checked={isNsfw} onCheckedChange={setIsNsfw} disabled={!canUseNsfw} />
+                <p className="text-[10px] text-muted-foreground mt-0.5">
+                  {!canUseNsfw ? t("createPost.nsfwRequirement") : t("createPost.nsfwQuestion")}
+                </p>
               </div>
-
-              {!canUseNsfw && (
-                <div className="mt-3 p-3 bg-[#F8F5F0] dark:bg-[#2E2A25]/20 border border-[#E8E2DA] dark:border-[#5C5248] rounded-lg">
-                  <div className="flex items-center gap-2 text-[#6B6258] dark:text-[#E0D6CB]">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="text-sm">
-                      {userProfile && userProfile.age < 18
-                        ? t("createPost.nsfwUnder18")
-                        : t("createPost.nsfwEnable")}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {isNsfw && (
-                <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                  <div className="flex items-center gap-2 text-red-800 dark:text-red-200">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="text-sm font-medium">
-                      {t("createPost.nsfwMarked")}
-                    </span>
-                  </div>
-                </div>
-              )}
+              <Switch checked={isNsfw} onCheckedChange={setIsNsfw} disabled={!canUseNsfw} />
             </div>
+
+            {!canUseNsfw && (
+              <div className="p-2.5 bg-amber-500/5 border border-amber-500/15 rounded-lg">
+                <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
+                  <AlertTriangle className="h-3 w-3" />
+                  <span className="text-[10px]">
+                    {userProfile && userProfile.age < 18 ? t("createPost.nsfwUnder18") : t("createPost.nsfwEnable")}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {isNsfw && (
+              <div className="p-2.5 bg-red-500/5 border border-red-500/15 rounded-lg">
+                <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
+                  <AlertTriangle className="h-3 w-3" />
+                  <span className="text-[10px] font-medium">{t("createPost.nsfwMarked")}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {moderationError && (
-            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">{moderationError}</div>
+            <div className="text-xs text-red-600 dark:text-red-400 bg-red-500/5 border border-red-500/15 rounded-xl p-3">{moderationError}</div>
           )}
 
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">{t("createPost.media")}</Label>
-            <div className="border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-lg p-6 text-center hover:border-gray-300 dark:hover:border-slate-600 transition-colors">
+          {/* Media Upload */}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold text-foreground">{t("createPost.media")}</Label>
+            <div className="border border-dashed border-border/60 rounded-xl p-4 text-center hover:border-primary/40 transition-colors">
               {media ? (
-                <div className="flex items-center justify-between bg-gray-50 dark:bg-slate-800 rounded-lg p-3">
+                <div className="flex items-center justify-between bg-secondary/40 rounded-lg p-2.5">
                   <div className="flex items-center">
-                    <Upload className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">{media}</span>
+                    <Upload className="h-3.5 w-3.5 text-muted-foreground mr-2" />
+                    <span className="text-xs text-foreground">{media}</span>
                   </div>
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
                     onClick={() => setMedia("")}
-                    className="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400"
+                    className="text-muted-foreground hover:text-red-500 h-6 w-6 p-0"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               ) : (
                 <div>
-                  <Upload className="h-8 w-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t("createPost.mediaHint")}</p>
+                  <Upload className="h-6 w-6 text-muted-foreground/50 mx-auto mb-1.5" />
+                  <p className="text-[10px] text-muted-foreground mb-1">{t("createPost.mediaHint")}</p>
                   <input
                     type="file"
                     accept="image/*,audio/*,video/*"
@@ -266,7 +258,7 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
                   />
                   <Label
                     htmlFor="media-upload"
-                    className="cursor-pointer text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium"
+                    className="cursor-pointer text-primary hover:text-primary/80 text-xs font-medium"
                   >
                     {t("createPost.selectFile")}
                   </Label>
@@ -275,35 +267,35 @@ export function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalPr
             </div>
           </div>
 
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <p className="text-sm text-blue-800 dark:text-blue-200">
+          <div className="bg-primary/5 border border-primary/10 rounded-xl p-3">
+            <p className="text-[10px] text-muted-foreground">
               {t("createPost.reminder")}
             </p>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-2.5 pt-2">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="flex-1 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 bg-transparent"
+              className="flex-1 text-muted-foreground hover:text-foreground hover:bg-secondary/80 rounded-xl text-sm"
             >
               {t("createPost.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting || !title.trim() || !category || !content.trim()}
-              className="flex-1 bg-gradient-to-r from-[#C4B8AB] to-[#A89888] hover:from-[#B5A999] hover:to-[#9E9285] text-[#3D352C] shadow-lg"
+              className="flex-1 luxury-button-primary rounded-xl text-sm font-semibold"
             >
               {isSubmitting ? (
                 <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white/30 border-t-white mr-2" />
                   {t("createPost.submitting")}
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <Send className="h-4 w-4 mr-2" />
+                  <Send className="h-3.5 w-3.5 mr-1.5" />
                   {t("createPost.submit")}
                 </div>
               )}

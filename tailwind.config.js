@@ -52,11 +52,12 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         gray: {
-  850: "#2e2e2e",
-},
-        "luxury-warm": "#f4f1eb",
-        "luxury-beige": "#f9f6f0",
-        "luxury-gold": "#BDB1A4",
+          850: "#2e2e2e",
+        },
+        // Modern color tokens
+        "luxury-warm": "hsl(var(--cf-border))",
+        "luxury-beige": "hsl(var(--cf-surface))",
+        "luxury-gold": "hsl(var(--cf-primary))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -73,34 +74,24 @@ module.exports = {
           to: { height: 0 },
         },
         "fade-in-up": {
-          "0%": {
-            opacity: "0",
-            transform: "translateY(20px)",
-          },
-          "100%": {
-            opacity: "1",
-            transform: "translateY(0)",
-          },
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "scale-in": {
-          "0%": {
-            opacity: "0",
-            transform: "scale(0.95)",
-          },
-          "100%": {
-            opacity: "1",
-            transform: "scale(1)",
-          },
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "slide-in-right": {
+          "0%": { opacity: "0", transform: "translateX(20px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in-up": "fade-in-up 0.6s ease-out",
-        "scale-in": "scale-in 0.3s ease-out",
-      },
-      backgroundImage: {
-        "luxury-gradient": "linear-gradient(135deg, #FAF7F3 0%, #F4F0EA 50%, #EDE7DF 100%)",
+        "fade-in-up": "fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "scale-in": "scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "slide-in-right": "slide-in-right 0.5s cubic-bezier(0.22, 1, 0.36, 1) both",
       },
     },
   },

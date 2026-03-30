@@ -123,10 +123,10 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
   if (!profile || !user) {
     return (
       <div className="max-w-4xl mx-auto">
-        <Card className="text-center py-12 luxury-card rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+        <Card className="text-center py-12 luxury-card rounded-2xl">
           <CardContent>
-            <User className="h-12 w-12 luxury-muted mx-auto mb-4 dark:text-slate-400" />
-            <p className="luxury-muted dark:text-slate-400">{t("profile.loading")}</p>
+            <User className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground">{t("profile.loading")}</p>
           </CardContent>
         </Card>
       </div>
@@ -136,23 +136,28 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Profile Banner */}
-      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl overflow-hidden animate-fade-in-up dark:bg-slate-800 dark:border-slate-700">
+      <Card className="border-0 luxury-card luxury-card-hover rounded-2xl overflow-hidden animate-fade-in-up">
         <div className="relative">
+          {/* Banner with gradient */}
           <div
-            className="h-32 bg-gradient-to-r from-[#C4B8AB] via-[#BDB1A4] to-[#A89888] dark:from-[#6B6258] dark:via-[#7D7268] dark:to-[#6B6258]"
+            className="h-36 bg-gradient-to-r from-primary via-pink-500 to-primary"
             style={{
               backgroundImage: profile.profileBanner ? `url(${profile.profileBanner})` : undefined,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
-          />
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+          </div>
 
-          <CardContent className="relative -mt-16 p-8">
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-              <div className="relative">
-                <Avatar className="w-32 h-32 border-4 border-white shadow-lg dark:border-slate-700">
+          <CardContent className="relative -mt-16 p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-5">
+              {/* Avatar */}
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary to-pink-500 rounded-full opacity-50 group-hover:opacity-70 blur-sm transition-opacity" />
+                <Avatar className="relative w-28 h-28 border-4 border-background shadow-xl">
                   <AvatarImage src={profile.profilePhoto || "/placeholder.svg"} alt={profile.name} />
-                  <AvatarFallback className="text-2xl bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white dark:from-[#6B6258] dark:to-[#4A4039]">
+                  <AvatarFallback className="text-xl bg-gradient-to-br from-primary to-pink-500 text-white font-bold">
                     {profile.name
                       .split(" ")
                       .map((n) => n[0])
@@ -160,77 +165,81 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
                       .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 -right-2 bg-[#BDB1A4] rounded-full p-2 shadow-lg dark:bg-[#8B8478]">
-                  <Camera className="h-4 w-4 text-white" />
+                <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1.5 shadow-lg shadow-primary/30">
+                  <Camera className="h-3 w-3 text-white" />
                 </div>
               </div>
 
+              {/* Info */}
               <div className="flex-1 text-center md:text-left">
-                <div className="mb-4">
-                  <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
-                    <h1 className="text-3xl font-bold luxury-text dark:text-white">{profile.name}</h1>
+                <div className="mb-3">
+                  <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+                    <h1 className="text-2xl font-bold text-foreground">{profile.name}</h1>
                     <ComforterBadge points={profile.comforterPoints} />
                   </div>
-                  <p className="text-lg luxury-muted mb-2 dark:text-slate-400">@{profile.nickname}</p>
-                  <p className="luxury-text leading-relaxed dark:text-slate-300">{profile.bio}</p>
+                  <p className="text-sm text-muted-foreground mb-2">@{profile.nickname}</p>
+                  <p className="text-foreground/80 text-sm leading-relaxed">{profile.bio}</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
-                    <Calendar className="h-4 w-4" />
+                <div className="grid grid-cols-2 gap-3 mb-4 text-xs">
+                  <div className="flex items-center justify-center md:justify-start gap-1.5 text-muted-foreground">
+                    <Calendar className="h-3.5 w-3.5" />
                     <span>{profile.age}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
-                    <MapPin className="h-4 w-4" />
+                  <div className="flex items-center justify-center md:justify-start gap-1.5 text-muted-foreground">
+                    <MapPin className="h-3.5 w-3.5" />
                     <span>{profile.city}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
-                    <Clock className="h-4 w-4" />
+                  <div className="flex items-center justify-center md:justify-start gap-1.5 text-muted-foreground">
+                    <Clock className="h-3.5 w-3.5" />
                     <span>{t("profile.joinedDate")}: {formatDate(profile.joinDate)}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-2 luxury-muted dark:text-slate-400">
-                    <User className="h-4 w-4" />
+                  <div className="flex items-center justify-center md:justify-start gap-1.5 text-muted-foreground">
+                    <User className="h-3.5 w-3.5" />
                     <span>@{profile.nickname}</span>
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <h3 className="text-sm font-medium luxury-text mb-2 dark:text-white">{t("profile.interests")}</h3>
+                {/* Interests */}
+                <div className="mb-4">
+                  <h3 className="text-xs font-semibold text-foreground mb-2">{t("profile.interests")}</h3>
                   {profile.interests.length > 0 ? (
-                    <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                    <div className="flex flex-wrap gap-1.5 justify-center md:justify-start">
                       {profile.interests.map((interest, index) => (
                         <Badge
                           key={index}
-                          className="bg-gradient-to-r from-[#F0EBE5] to-[#E8E2DA] text-[#6B6258] border-[#D4C8BB] border-2 rounded-full px-3 py-1 dark:from-[#2E2A25] dark:to-[#332F2B] dark:text-[#E0D6CB] dark:border-[#5A5045]"
+                          className="bg-primary/10 text-primary border border-primary/20 rounded-full px-2.5 py-0.5 text-xs font-medium"
                         >
                           {interest}
                         </Badge>
                       ))}
                     </div>
                   ) : (
-                    <p className="luxury-muted text-sm text-center md:text-left dark:text-slate-400">{t("profile.noInterests")}</p>
+                    <p className="text-muted-foreground text-xs text-center md:text-left">{t("profile.noInterests")}</p>
                   )}
                 </div>
 
-                <div className="mb-6">
+                {/* Progress */}
+                <div className="mb-5">
                   <ComforterProgress points={profile.comforterPoints} />
                 </div>
 
-                <div className="flex gap-3">
+                {/* Actions */}
+                <div className="flex gap-2">
                   <Button
                     onClick={onEditProfile}
-                    className="luxury-button-primary rounded-xl px-6 py-2 font-medium luxury-hover shadow-lg"
+                    className="luxury-button-primary rounded-xl px-5 py-2 text-sm font-semibold"
                   >
-                    <Settings className="h-4 w-4 mr-2" />
+                    <Settings className="h-3.5 w-3.5 mr-1.5" />
                     {t("profile.editProfile")}
                   </Button>
 
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     onClick={() => setShowReportModal(true)}
-                    className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 bg-transparent rounded-xl px-6 py-2 font-medium luxury-hover dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-xl px-4 py-2 text-sm font-medium transition-colors"
                   >
-                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
                     {t("profile.report")}
                   </Button>
                 </div>
@@ -241,80 +250,71 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
       </Card>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in-up">
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
-          <CardContent className="p-4">
-            <MessageCircle className="h-6 w-6 text-[#BDB1A4] mx-auto mb-2 dark:text-[#C4B8AB]" />
-            <div className="text-2xl font-bold luxury-text dark:text-white">{userPosts.length}</div>
-            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.posts")}</div>
-          </CardContent>
-        </Card>
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
-          <CardContent className="p-4">
-            <MessageCircle className="h-6 w-6 text-[#A89888] mx-auto mb-2 dark:text-[#BDB1A4]" />
-            <div className="text-2xl font-bold luxury-text dark:text-white">{userReplies.length}</div>
-            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.replies")}</div>
-          </CardContent>
-        </Card>
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
-          <CardContent className="p-4">
-            <Award className="h-6 w-6 text-emerald-500 mx-auto mb-2 dark:text-emerald-400" />
-            <div className="text-2xl font-bold luxury-text dark:text-white">{userReplies.filter((r) => r.isSolution).length}</div>
-            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.solutions")}</div>
-          </CardContent>
-        </Card>
-        <Card className="text-center border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
-          <CardContent className="p-4">
-            <Heart className="h-6 w-6 text-pink-500 mx-auto mb-2 dark:text-pink-400" />
-            <div className="text-2xl font-bold luxury-text dark:text-white">
-              {userReplies.reduce((total, reply) => total + reply.likes, 0)}
-            </div>
-            <div className="text-sm luxury-muted dark:text-slate-400">{t("profile.likes")}</div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+        {[
+          { icon: MessageCircle, value: userPosts.length, label: t("profile.posts"), color: "text-primary" },
+          { icon: MessageCircle, value: userReplies.length, label: t("profile.replies"), color: "text-blue-500" },
+          { icon: Award, value: userReplies.filter((r) => r.isSolution).length, label: t("profile.solutions"), color: "text-emerald-500" },
+          { icon: Heart, value: userReplies.reduce((total, reply) => total + reply.likes, 0), label: t("profile.likes"), color: "text-pink-500" },
+        ].map((stat, i) => {
+          const Icon = stat.icon
+          return (
+            <Card key={i} className="text-center border-0 luxury-card luxury-card-hover rounded-xl">
+              <CardContent className="p-4">
+                <div className={`w-9 h-9 rounded-xl bg-current/10 flex items-center justify-center mx-auto mb-2`}>
+                  <Icon className={`h-4 w-4 ${stat.color}`} />
+                </div>
+                <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                <div className="text-xs text-muted-foreground">{stat.label}</div>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
       {/* Activity Tabs */}
-      <Tabs defaultValue="posts" className="w-full animate-fade-in-up">
-        <TabsList className="grid w-full grid-cols-2 luxury-card rounded-xl p-1 dark:bg-slate-800">
-          <TabsTrigger value="posts" className="rounded-lg font-medium dark:data-[state=active]:bg-slate-700">
+      <Tabs defaultValue="posts" className="w-full animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+        <TabsList className="grid w-full grid-cols-2 bg-secondary/60 rounded-xl p-1 border border-border/30">
+          <TabsTrigger value="posts" className="rounded-lg text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">
             {t("profile.myPosts")} ({userPosts.length})
           </TabsTrigger>
-          <TabsTrigger value="replies" className="rounded-lg font-medium dark:data-[state=active]:bg-slate-700">
+          <TabsTrigger value="replies" className="rounded-lg text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">
             {t("profile.myReplies")} ({userReplies.length})
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="posts" className="space-y-4">
+        <TabsContent value="posts" className="space-y-3 mt-4">
           {userPosts.length === 0 ? (
-            <Card className="text-center py-12 border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+            <Card className="text-center py-12 border-0 luxury-card rounded-2xl">
               <CardContent>
-                <MessageCircle className="h-12 w-12 luxury-muted mx-auto mb-4 dark:text-slate-400" />
-                <h3 className="text-lg font-medium luxury-text mb-2 dark:text-white">{t("profile.noPosts")}</h3>
-                <p className="luxury-muted dark:text-slate-400">{t("profile.noPostsHint")}</p>
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <MessageCircle className="h-7 w-7 text-primary/50" />
+                </div>
+                <h3 className="text-base font-semibold text-foreground mb-1">{t("profile.noPosts")}</h3>
+                <p className="text-muted-foreground text-sm">{t("profile.noPostsHint")}</p>
               </CardContent>
             </Card>
           ) : (
             userPosts.map((post) => (
-              <Card key={post.id} className="border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
-                <CardHeader className="pb-3">
+              <Card key={post.id} className="border-0 luxury-card luxury-card-hover rounded-xl">
+                <CardHeader className="pb-2 p-4">
                   <div className="flex items-center justify-between">
-                    <Badge className="bg-gradient-to-r from-[#F0EBE5] to-[#E8E2DA] text-[#6B6258] border-[#D4C8BB] border-2 rounded-full px-3 py-1 dark:from-[#2E2A25] dark:to-[#332F2B] dark:text-[#E0D6CB] dark:border-[#5A5045]">
+                    <Badge className="bg-primary/10 text-primary border border-primary/20 rounded-full px-2.5 py-0.5 text-xs font-medium">
                       {post.category}
                     </Badge>
-                    <span className="text-sm luxury-muted dark:text-slate-400">{formatTimeAgo(post.timestamp)}</span>
+                    <span className="text-xs text-muted-foreground">{formatTimeAgo(post.timestamp)}</span>
                   </div>
-                  <CardTitle className="text-lg luxury-text dark:text-white">{post.title}</CardTitle>
+                  <CardTitle className="text-sm font-semibold text-foreground">{post.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="luxury-text line-clamp-2 mb-3 dark:text-slate-300">{post.content}</p>
-                  <div className="flex items-center gap-4 text-sm luxury-muted dark:text-slate-400">
+                <CardContent className="p-4 pt-0">
+                  <p className="text-foreground/70 line-clamp-2 mb-2 text-sm">{post.content}</p>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
-                      <Heart className="h-4 w-4" />
+                      <Heart className="h-3.5 w-3.5" />
                       {post.supportCount} {t("profile.support")}
                     </div>
                     <div className="flex items-center gap-1">
-                      <MessageCircle className="h-4 w-4" />
+                      <MessageCircle className="h-3.5 w-3.5" />
                       {userReplies.filter((r) => r.postId === post.id).length} {t("profile.reply")}
                     </div>
                   </div>
@@ -324,31 +324,33 @@ export function ProfilePage({ onEditProfile }: ProfilePageProps) {
           )}
         </TabsContent>
 
-        <TabsContent value="replies" className="space-y-4">
+        <TabsContent value="replies" className="space-y-3 mt-4">
           {userReplies.length === 0 ? (
-            <Card className="text-center py-12 border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+            <Card className="text-center py-12 border-0 luxury-card rounded-2xl">
               <CardContent>
-                <MessageCircle className="h-12 w-12 luxury-muted mx-auto mb-4 dark:text-slate-400" />
-                <h3 className="text-lg font-medium luxury-text mb-2 dark:text-white">{t("profile.noReplies")}</h3>
-                <p className="luxury-muted dark:text-slate-400">{t("profile.noRepliesHint")}</p>
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <MessageCircle className="h-7 w-7 text-primary/50" />
+                </div>
+                <h3 className="text-base font-semibold text-foreground mb-1">{t("profile.noReplies")}</h3>
+                <p className="text-muted-foreground text-sm">{t("profile.noRepliesHint")}</p>
               </CardContent>
             </Card>
           ) : (
             userReplies.map((reply) => (
-              <Card key={reply.id} className="border-0 luxury-card luxury-card-hover rounded-2xl dark:bg-slate-800 dark:border-slate-700">
+              <Card key={reply.id} className="border-0 luxury-card luxury-card-hover rounded-xl">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm luxury-muted dark:text-slate-400">{formatTimeAgo(reply.timestamp)}</span>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-muted-foreground">{formatTimeAgo(reply.timestamp)}</span>
                     {reply.isSolution && (
-                      <Badge className="bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-800 border-emerald-300 border-2 rounded-full px-3 py-1 dark:from-emerald-900 dark:to-emerald-800 dark:text-emerald-100 dark:border-emerald-600">
+                      <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-full px-2 py-0.5 text-xs font-medium">
                         <Award className="h-3 w-3 mr-1" />
                         {t("profile.solutionBadge")}
                       </Badge>
                     )}
                   </div>
-                  <p className="luxury-text mb-3 dark:text-slate-300">{reply.content}</p>
-                  <div className="flex items-center gap-1 text-sm luxury-muted dark:text-slate-400">
-                    <Heart className="h-4 w-4" />
+                  <p className="text-foreground/80 mb-2 text-sm">{reply.content}</p>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Heart className="h-3.5 w-3.5" />
                     {reply.likes} {t("profile.likeCount")}
                   </div>
                 </CardContent>
