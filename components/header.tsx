@@ -21,15 +21,15 @@ export function Header({
   onClearSearch,
   activeSection,
 }: HeaderProps) {
-  const { language, setLanguage } = useLanguage()
+  const { language, setLanguage, t } = useLanguage()
 
   const sectionTitles: Record<string, string> = {
-    home: "Ana Sayfa",
-    forum: "Topluluk Forumu",
-    "ai-chat": "AI Destekçin",
-    about: "Hakkımızda",
-    profile: "Profilim",
-    leaderboard: "Liderboard",
+    home: t("section.home"),
+    forum: t("section.forum"),
+    "ai-chat": t("section.aiChat"),
+    about: t("section.about"),
+    profile: t("section.profile"),
+    leaderboard: t("section.leaderboard"),
   }
 
   return (

@@ -100,7 +100,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
         <div className="flex justify-center mb-7 animate-fade-in-up">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full liquid-glass text-sm font-semibold">
             <FlaskConical className="h-3.5 w-3.5 text-primary" />
-            <span className="text-foreground/80">Prototip Sürüm</span>
+            <span className="text-foreground/80">{t("welcome.prototypeBadge")}</span>
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
           </div>
         </div>
@@ -112,7 +112,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
               className="text-foreground block animate-hero-word"
               style={{ animationDelay: "100ms" }}
             >
-              Yalnız
+              {t("welcome.hero.line1")}
             </span>
             <span
               className="block animate-hero-word animate-glow-pulse"
@@ -124,7 +124,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              Değilsin.
+              {t("welcome.hero.line2")}
             </span>
           </h1>
         </div>
@@ -148,7 +148,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
             className="luxury-button-primary rounded-2xl px-8 py-3 text-base font-bold h-auto group"
           >
             <Heart className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
-            Topluluğa Katıl
+            {t("welcome.joinCta")}
             <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Button
@@ -157,7 +157,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
             size="lg"
             className="rounded-2xl px-8 py-3 text-base font-semibold h-auto border-border/60 hover:bg-secondary/60 hover:border-primary/30 transition-all duration-300"
           >
-            Giriş Yap
+            {t("nav.login")}
           </Button>
         </div>
 
@@ -167,9 +167,9 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
           style={{ animationDelay: "750ms" }}
         >
           {[
-            { icon: Lock,         text: "Anonim",    color: "text-violet-500  bg-violet-500/8  border-violet-500/20"  },
-            { icon: Zap,          text: "Ücretsiz",  color: "text-amber-500   bg-amber-500/8   border-amber-500/20"   },
-            { icon: FlaskConical, text: "Prototip",  color: "text-emerald-500 bg-emerald-500/8 border-emerald-500/20" },
+            { icon: Lock,         text: t("welcome.trust.anonymous"), color: "text-violet-500  bg-violet-500/8  border-violet-500/20"  },
+            { icon: Zap,          text: t("welcome.trust.free"),      color: "text-amber-500   bg-amber-500/8   border-amber-500/20"   },
+            { icon: FlaskConical, text: t("welcome.trust.prototype"), color: "text-emerald-500 bg-emerald-500/8 border-emerald-500/20" },
           ].map(({ icon: Icon, text, color }) => (
             <div key={text} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold ${color}`}>
               <Icon className="h-3.5 w-3.5" />
@@ -185,11 +185,11 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
       <section>
         <div className="text-center mb-10 animate-fade-in-up">
           <h2 className="text-3xl md:text-4xl font-black text-foreground mb-3">
-            Neden{" "}
+            {t("welcome.whyTitle")}{" "}
             <span className="gradient-text">Comfortillo?</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Duygusal destek için ihtiyacın olan her şey, tek bir güvenli alanda.
+            {t("welcome.whyDesc")}
           </p>
         </div>
 
@@ -265,7 +265,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
                 className="luxury-button-primary rounded-2xl px-10 py-3 text-base font-bold h-auto group"
               >
                 <Sparkles className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
-                Hemen Başla
+                {t("welcome.startNow")}
               </Button>
             </div>
 

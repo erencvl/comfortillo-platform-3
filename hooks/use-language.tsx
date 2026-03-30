@@ -31,6 +31,16 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Welcome Section
     "welcome.title": "Comfortillo'ya Hoş Geldin",
+    "welcome.hero.line1": "Yalnız",
+    "welcome.hero.line2": "Değilsin.",
+    "welcome.prototypeBadge": "Prototip Sürüm",
+    "welcome.joinCta": "Topluluğa Katıl",
+    "welcome.startNow": "Hemen Başla",
+    "welcome.trust.anonymous": "Anonim",
+    "welcome.trust.free": "Ücretsiz",
+    "welcome.trust.prototype": "Prototip",
+    "welcome.whyTitle": "Neden",
+    "welcome.whyDesc": "Duygusal destek için ihtiyacın olan her şey, tek bir güvenli alanda.",
     "welcome.subtitle": "Burada güvendesin. Duygularını paylaş, anlayışlı bir topluluktan destek al. Sen yalnız değilsin ve her zaman birisi seni dinlemeye hazır.",
     "welcome.badge.anonymous": "100% Anonim",
     "welcome.badge.safe": "Güvenli Topluluk",
@@ -46,6 +56,12 @@ const translations: Record<Language, Record<string, string>> = {
     "welcome.cta.title": "Başlamaya Hazır mısın?",
     "welcome.cta.desc": "Bu prototip platformu keşfet. Duygusal destek konseptini deneyimle.",
     "welcome.cta.prototypeNote": "Bu bir prototip projedir — üniversite başvurusu kapsamında geliştirilmiştir.",
+    "section.home": "Ana Sayfa",
+    "section.forum": "Topluluk Forumu",
+    "section.aiChat": "AI Destekçin",
+    "section.about": "Hakkımızda",
+    "section.profile": "Profilim",
+    "section.leaderboard": "Liderboard",
 
     // AI Chat
     "aiChat.title": "AI Destekçin",
@@ -423,6 +439,16 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Welcome Section
     "welcome.title": "Welcome to Comfortillo",
+    "welcome.hero.line1": "You Are",
+    "welcome.hero.line2": "Not Alone.",
+    "welcome.prototypeBadge": "Prototype Version",
+    "welcome.joinCta": "Join Community",
+    "welcome.startNow": "Get Started",
+    "welcome.trust.anonymous": "Anonymous",
+    "welcome.trust.free": "Free",
+    "welcome.trust.prototype": "Prototype",
+    "welcome.whyTitle": "Why",
+    "welcome.whyDesc": "Everything you need for emotional support, in one safe space.",
     "welcome.subtitle": "You are safe here. Share your feelings, get support from an understanding community. You are not alone and someone is always ready to listen.",
     "welcome.badge.anonymous": "100% Anonymous",
     "welcome.badge.safe": "Safe Community",
@@ -438,6 +464,12 @@ const translations: Record<Language, Record<string, string>> = {
     "welcome.cta.title": "Ready to Start?",
     "welcome.cta.desc": "Explore this prototype platform. Experience the emotional support concept.",
     "welcome.cta.prototypeNote": "This is a prototype project — developed as part of a university application.",
+    "section.home": "Home",
+    "section.forum": "Community Forum",
+    "section.aiChat": "AI Companion",
+    "section.about": "About",
+    "section.profile": "My Profile",
+    "section.leaderboard": "Leaderboard",
 
     // AI Chat
     "aiChat.title": "Your AI Companion",
