@@ -2,8 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ══════════════════════════════════════════════════════
+   CSS @property — smooth gradient position animation
+   (allows background radial-gradient centers to morph)
+══════════════════════════════════════════════════════ */
+@property --a1x { syntax: '<percentage>'; initial-value: 8%;  inherits: false; }
+@property --a1y { syntax: '<percentage>'; initial-value: 15%; inherits: false; }
+@property --a2x { syntax: '<percentage>'; initial-value: 92%; inherits: false; }
+@property --a2y { syntax: '<percentage>'; initial-value: 85%; inherits: false; }
+@property --a3x { syntax: '<percentage>'; initial-value: 78%; inherits: false; }
+@property --a3y { syntax: '<percentage>'; initial-value: 8%;  inherits: false; }
+@property --a4x { syntax: '<percentage>'; initial-value: 18%; inherits: false; }
+@property --a4y { syntax: '<percentage>'; initial-value: 88%; inherits: false; }
+@property --sb1x { syntax: '<percentage>'; initial-value: -20%; inherits: false; }
+@property --sb1y { syntax: '<percentage>'; initial-value: -10%; inherits: false; }
+@property --sb2x { syntax: '<percentage>'; initial-value: 120%; inherits: false; }
+@property --sb2y { syntax: '<percentage>'; initial-value: 110%; inherits: false; }
+
 @layer base {
   :root {
+    --aurora-o1: 0.44;
+    --aurora-o2: 0.38;
+    --aurora-o3: 0.28;
+    --aurora-o4: 0.34;
     /* ── Shadcn tokens (light) ─────────────────── */
     --background: 250 25% 98%;
     --foreground: 240 20% 8%;
@@ -46,6 +67,11 @@
   }
 
   .dark {
+    --aurora-o1: 0.62;
+    --aurora-o2: 0.55;
+    --aurora-o3: 0.40;
+    --aurora-o4: 0.50;
+
     /* ── Shadcn tokens (dark) ──────────────────── */
     --background: 240 22% 5%;
     --foreground: 220 20% 94%;
@@ -106,39 +132,71 @@
      SIDEBAR — LIQUID GLASS ANIMATED
   ═══════════════════════════════════════════ */
   @keyframes sidebarBorderFlow {
-    0%, 100% { background-position: 0% 0%; }
-    50%       { background-position: 0% 100%; }
+    0%   { background-position: 0% 0%;   }
+    50%  { background-position: 0% 100%; }
+    100% { background-position: 0% 0%;   }
   }
   @keyframes sidebarBlobA {
-    0%   { transform: translate(0, 0)      scale(1);    opacity: 0.55; }
-    33%  { transform: translate(10px, 30px) scale(1.15); opacity: 0.40; }
-    66%  { transform: translate(-8px, 60px) scale(0.95); opacity: 0.60; }
-    100% { transform: translate(0, 0)      scale(1);    opacity: 0.55; }
+    0%   { transform: translate(0,   0)   scale(1);    }
+    33%  { transform: translate(12px, 35px) scale(1.2); }
+    66%  { transform: translate(-8px, 65px) scale(0.9); }
+    100% { transform: translate(0,   0)   scale(1);    }
   }
   @keyframes sidebarBlobB {
-    0%   { transform: translate(0, 0)       scale(1);    opacity: 0.45; }
-    33%  { transform: translate(-12px,-25px) scale(1.10); opacity: 0.60; }
-    66%  { transform: translate(8px, -50px)  scale(0.90); opacity: 0.40; }
-    100% { transform: translate(0, 0)       scale(1);    opacity: 0.45; }
+    0%   { transform: translate(0,    0)    scale(1);   }
+    33%  { transform: translate(-14px,-28px) scale(1.15);}
+    66%  { transform: translate(10px, -55px) scale(0.85);}
+    100% { transform: translate(0,    0)    scale(1);   }
   }
   @keyframes sidebarBlobC {
-    0%   { transform: translate(0, 0)      scale(1);   opacity: 0.35; }
-    50%  { transform: translate(15px,-20px) scale(1.2); opacity: 0.50; }
-    100% { transform: translate(0, 0)      scale(1);   opacity: 0.35; }
+    0%   { transform: translate(0,   0)    scale(1);   }
+    50%  { transform: translate(18px,-22px) scale(1.25);}
+    100% { transform: translate(0,   0)    scale(1);   }
+  }
+  @keyframes sidebarGradientShift {
+    0%   { background-position: 0%   0%;   }
+    50%  { background-position: 100% 100%; }
+    100% { background-position: 0%   0%;   }
+  }
+  @keyframes sidebarSweep {
+    0%   { top: -45%; opacity: 0;   }
+    8%   {             opacity: 1;  }
+    92%  {             opacity: 1;  }
+    100% { top: 140%; opacity: 0;  }
   }
 
   .sidebar {
     background: linear-gradient(
-      175deg,
-      hsla(var(--cf-primary), 0.10) 0%,
-      hsla(var(--cf-surface), 0.92) 35%,
-      hsla(var(--cf-accent), 0.07) 100%
+      160deg,
+      hsla(258,90%,58%, 0.18) 0%,
+      hsl(var(--cf-sidebar)) 35%,
+      hsla(328,90%,60%, 0.14) 70%,
+      hsla(195,100%,50%,0.08) 100%
     );
-    backdrop-filter: blur(48px) saturate(240%) brightness(102%);
-    -webkit-backdrop-filter: blur(48px) saturate(240%) brightness(102%);
-    border-right: 0px;
+    background-size: 200% 200%;
+    backdrop-filter: blur(32px) saturate(200%) brightness(104%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(104%);
+    border-right: 0;
     position: relative;
     overflow: hidden;
+    animation: sidebarGradientShift 10s ease-in-out infinite;
+  }
+
+  /* Light sweep that slides down the sidebar */
+  .sidebar::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; height: 45%;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      hsla(258,90%,70%, 0.10) 40%,
+      hsla(195,100%,70%,0.07) 60%,
+      transparent 100%
+    );
+    animation: sidebarSweep 7s ease-in-out infinite;
   }
 
   /* Animated gradient right border */
@@ -146,36 +204,40 @@
     content: "";
     position: absolute;
     top: 0; right: 0;
-    width: 1px;
+    width: 1.5px;
     height: 100%;
     background: linear-gradient(
       180deg,
       transparent 0%,
-      hsla(var(--cf-primary), 0.6) 20%,
-      hsla(var(--cf-accent), 0.7) 50%,
-      hsla(var(--cf-cyan), 0.5) 75%,
+      hsla(258,90%,58%, 0.8) 20%,
+      hsla(328,90%,60%, 0.9) 50%,
+      hsla(195,100%,50%,0.7) 75%,
       transparent 100%
     );
     background-size: 100% 300%;
     animation: sidebarBorderFlow 5s ease-in-out infinite;
+    z-index: 2;
   }
 
   .dark .sidebar {
     background: linear-gradient(
-      175deg,
-      hsla(var(--cf-primary), 0.18) 0%,
-      hsl(240 24% 6%) 40%,
-      hsla(var(--cf-accent), 0.12) 100%
+      160deg,
+      hsla(258,92%,70%, 0.25) 0%,
+      hsl(240 24% 6%) 35%,
+      hsla(328,92%,68%, 0.18) 70%,
+      hsla(195,100%,65%,0.10) 100%
     );
+    background-size: 200% 200%;
+    animation: sidebarGradientShift 10s ease-in-out infinite;
     box-shadow:
-      4px 0 80px -10px hsla(var(--cf-primary), 0.35),
-      inset -1px 0 0 hsla(var(--cf-border-strong), 0.3);
+      4px 0 80px -8px hsla(258,92%,70%, 0.40),
+      8px 0 40px -16px hsla(328,92%,68%, 0.20);
   }
 
-  /* Sidebar blob decorations — added via React JSX, these are style refs */
-  .sidebar-blob-a { animation: sidebarBlobA 14s ease-in-out infinite; }
-  .sidebar-blob-b { animation: sidebarBlobB 18s ease-in-out infinite; }
-  .sidebar-blob-c { animation: sidebarBlobC 22s ease-in-out infinite; }
+  /* Sidebar blob decorations */
+  .sidebar-blob-a { animation: sidebarBlobA 13s ease-in-out infinite; }
+  .sidebar-blob-b { animation: sidebarBlobB 17s ease-in-out infinite; }
+  .sidebar-blob-c { animation: sidebarBlobC 21s ease-in-out infinite; }
 
   /* ── Nav items ── */
   .nav-item {
@@ -516,15 +578,16 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background-image: radial-gradient(circle, hsla(var(--cf-primary), 0.065) 1px, transparent 1px);
+    background-image: radial-gradient(circle, hsla(var(--cf-primary), 0.08) 1px, transparent 1px);
     background-size: 36px 36px;
-    animation: gridShift 50s linear infinite;
+    animation: gridShift 40s linear infinite;
   }
 
   .dark .bg-luxury-gradient::before {
-    background-image: radial-gradient(circle, hsla(var(--cf-primary), 0.11) 1px, transparent 1px);
+    background-image: radial-gradient(circle, hsla(var(--cf-primary), 0.13) 1px, transparent 1px);
   }
 
+  /* ── Smooth aurora using @property ── */
   .bg-luxury-gradient::after {
     content: "";
     position: fixed;
@@ -532,21 +595,20 @@
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(ellipse 75% 55% at -5% -10%,  hsla(var(--cf-primary), 0.22) 0%, transparent 55%),
-      radial-gradient(ellipse 65% 75% at 105% 110%, hsla(var(--cf-accent),  0.20) 0%, transparent 55%),
-      radial-gradient(ellipse 55% 45% at 85% 8%,    hsla(var(--cf-cyan),    0.14) 0%, transparent 50%),
-      radial-gradient(ellipse 55% 65% at 15% 92%,   hsla(var(--cf-primary), 0.16) 0%, transparent 50%),
-      radial-gradient(ellipse 40% 40% at 50% 50%,   hsla(var(--cf-accent),  0.06) 0%, transparent 60%);
-    animation: auroraShift 18s ease-in-out infinite alternate;
+      radial-gradient(ellipse 55% 48% at var(--a1x) var(--a1y), hsla(258,90%,58%, var(--aurora-o1)) 0%, transparent 65%),
+      radial-gradient(ellipse 52% 60% at var(--a2x) var(--a2y), hsla(328,90%,60%, var(--aurora-o2)) 0%, transparent 65%),
+      radial-gradient(ellipse 48% 42% at var(--a3x) var(--a3y), hsla(195,100%,50%,var(--aurora-o3)) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 54% at var(--a4x) var(--a4y), hsla(258,90%,58%, var(--aurora-o4)) 0%, transparent 65%);
+    animation: auroraFloat 14s ease-in-out infinite alternate;
   }
 
-  .dark .bg-luxury-gradient::after {
-    background:
-      radial-gradient(ellipse 75% 55% at -5% -10%,  hsla(var(--cf-primary), 0.32) 0%, transparent 55%),
-      radial-gradient(ellipse 65% 75% at 105% 110%, hsla(var(--cf-accent),  0.28) 0%, transparent 55%),
-      radial-gradient(ellipse 55% 45% at 85% 8%,    hsla(var(--cf-cyan),    0.18) 0%, transparent 50%),
-      radial-gradient(ellipse 55% 65% at 15% 92%,   hsla(var(--cf-primary), 0.22) 0%, transparent 50%),
-      radial-gradient(ellipse 40% 40% at 50% 50%,   hsla(var(--cf-accent),  0.10) 0%, transparent 60%);
+  @keyframes auroraFloat {
+    0%   { --a1x:8%;  --a1y:15%; --a2x:92%; --a2y:85%; --a3x:78%; --a3y:8%;  --a4x:18%; --a4y:88%; }
+    20%  { --a1x:30%; --a1y:40%; --a2x:70%; --a2y:60%; --a3x:15%; --a3y:35%; --a4x:85%; --a4y:65%; }
+    40%  { --a1x:65%; --a1y:20%; --a2x:20%; --a2y:75%; --a3x:90%; --a3y:60%; --a4x:35%; --a4y:10%; }
+    60%  { --a1x:80%; --a1y:55%; --a2x:10%; --a2y:30%; --a3x:45%; --a3y:85%; --a4x:70%; --a4y:40%; }
+    80%  { --a1x:45%; --a1y:80%; --a2x:55%; --a2y:15%; --a3x:25%; --a3y:55%; --a4x:90%; --a4y:80%; }
+    100% { --a1x:92%; --a1y:35%; --a2x:8%;  --a2y:65%; --a3x:60%; --a3y:90%; --a4x:50%; --a4y:5%;  }
   }
 
   @keyframes auroraShift {

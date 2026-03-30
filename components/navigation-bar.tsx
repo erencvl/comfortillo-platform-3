@@ -104,24 +104,24 @@ export function NavigationBar({
         {/* ── Animated background blobs ── */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
           <div
-            className="sidebar-blob-a absolute -top-8 -left-8 w-48 h-48 rounded-full"
+            className="sidebar-blob-a absolute -top-6 -left-6 w-52 h-52 rounded-full"
             style={{
-              background: "radial-gradient(circle, hsla(var(--cf-primary), 0.30) 0%, transparent 70%)",
-              filter: "blur(32px)",
+              background: "radial-gradient(circle, hsla(258,90%,65%, 0.60) 0%, hsla(258,90%,58%, 0.20) 50%, transparent 70%)",
+              filter: "blur(18px)",
             }}
           />
           <div
-            className="sidebar-blob-b absolute bottom-16 -right-10 w-40 h-40 rounded-full"
+            className="sidebar-blob-b absolute bottom-12 -right-8 w-44 h-44 rounded-full"
             style={{
-              background: "radial-gradient(circle, hsla(var(--cf-accent), 0.25) 0%, transparent 70%)",
-              filter: "blur(28px)",
+              background: "radial-gradient(circle, hsla(328,90%,65%, 0.55) 0%, hsla(328,90%,60%, 0.18) 50%, transparent 70%)",
+              filter: "blur(16px)",
             }}
           />
           <div
-            className="sidebar-blob-c absolute top-1/2 -left-4 w-28 h-28 rounded-full"
+            className="sidebar-blob-c absolute top-1/2 -left-2 w-32 h-32 rounded-full"
             style={{
-              background: "radial-gradient(circle, hsla(var(--cf-cyan), 0.18) 0%, transparent 70%)",
-              filter: "blur(24px)",
+              background: "radial-gradient(circle, hsla(195,100%,55%, 0.45) 0%, hsla(195,100%,50%, 0.12) 50%, transparent 70%)",
+              filter: "blur(14px)",
             }}
           />
           {/* Top gradient wash */}
