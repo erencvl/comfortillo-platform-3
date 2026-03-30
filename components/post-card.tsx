@@ -125,9 +125,24 @@ export function PostCard({
   const canDelete = user && post.authorId === user.id
   const catStyle = getCategoryStyle(post.category)
 
+  const getCategoryAccent = (cat: string) => {
+    const accents: Record<string, string> = {
+      loneliness: "bg-blue-500",
+      stress: "bg-red-500",
+      family: "bg-emerald-500",
+      relationships: "bg-pink-500",
+      anxiety: "bg-amber-500",
+      depression: "bg-purple-500",
+      other: "bg-border",
+    }
+    return accents[cat] || accents.other
+  }
+
   return (
-    <Card className="border-0 luxury-card luxury-card-hover rounded-2xl transition-all duration-400">
-      <CardHeader className="pb-3">
+    <Card className="border-0 luxury-card luxury-card-hover rounded-2xl transition-all duration-400 overflow-hidden">
+      {/* Category left accent stripe */}
+      <div className={`absolute left-0 top-0 bottom-0 w-[3px] rounded-full ${getCategoryAccent(post.category)} opacity-70`} />
+      <CardHeader className="pb-3 pl-5">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2.5 mb-3">
@@ -153,7 +168,7 @@ export function PostCard({
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0 space-y-4">
+      <CardContent className="pt-0 space-y-4 pl-5">
         <p className="text-foreground/80 leading-relaxed text-sm">{post.content}</p>
 
         {post.media && (

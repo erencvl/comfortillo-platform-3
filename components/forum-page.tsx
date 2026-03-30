@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Plus, MessageCircle, Search, Trophy } from "lucide-react"
+import { Plus, MessageCircle, Search, Sparkles } from "lucide-react"
 import { CreatePostModal } from "@/components/create-post-modal"
 import { PostCard } from "@/components/post-card"
-import { Leaderboard } from "@/components/leaderboard"
 import type { Post } from "@/app/page"
 import type { Reply } from "./nested-reply-system"
 import { useAuth } from "@/hooks/use-auth"
@@ -52,7 +51,6 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [replies, setReplies] = useState<Reply[]>([])
-  const [showLeaderboard, setShowLeaderboard] = useState(false)
   const { isAuthenticated, user } = useAuth()
   const { t } = useLanguage()
 
@@ -209,129 +207,104 @@ export function ForumPage({ onAuthRequired, searchResults }: ForumPageProps) {
     searchResults || (selectedCategory === "all" ? posts : posts.filter((post) => post.category === selectedCategory))
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-7">
       {/* Header */}
-      <div className="text-center animate-fade-in-up" role="region" aria-label={t("forum.title")}>
-        <h1 className="text-4xl font-bold text-foreground mb-3 tracking-tight">
-          {searchResults ? t("forum.searchResults") : t("forum.title")}
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          {searchResults
-            ? `${searchResults.length} ${t("forum.resultsFound")}`
-            : t("forum.subtitle")}
-        </p>
-      </div>
+      <div className="flex items-center justify-between gap-4 animate-fade-in-up flex-wrap">
+        <div>
+          <h1 className="text-3xl font-black text-foreground tracking-tight">
+            {searchResults ? t("forum.searchResults") : (
+              <>Topluluk <span className="gradient-text">Forumu</span></>
+            )}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {searchResults
+              ? `${searchResults.length} ${t("forum.resultsFound")}`
+              : t("forum.subtitle")}
+          </p>
+        </div>
 
-      {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-3 animate-scale-in">
         <Button
           onClick={() => {
-            if (!isAuthenticated) {
-              onAuthRequired()
-              return
-            }
+            if (!isAuthenticated) { onAuthRequired(); return }
             setIsCreateModalOpen(true)
           }}
-          className="luxury-button-primary rounded-full px-8 py-3 text-sm font-semibold shadow-lg"
-          size="lg"
+          className="luxury-button-primary rounded-2xl px-6 py-2.5 text-sm font-bold h-auto flex-shrink-0"
           aria-label={t("forum.createPost")}
         >
           <Plus className="h-4 w-4 mr-2" />
           {t("forum.createPost")}
         </Button>
-
-        <Button
-          variant="outline"
-          onClick={() => setShowLeaderboard(!showLeaderboard)}
-          className="rounded-full px-6 py-3 text-sm font-medium border-border/60 hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all duration-300"
-          aria-label={showLeaderboard ? t("forum.showForum") : t("forum.showLeaderboard")}
-        >
-          <Trophy className="h-4 w-4 mr-2" />
-          {showLeaderboard ? t("forum.showForum") : t("forum.showLeaderboard")}
-        </Button>
       </div>
 
-      {showLeaderboard ? (
-        <div className="animate-fade-in-up" role="region" aria-label="Leaderboard">
-          <Leaderboard />
-        </div>
-      ) : (
-        <>
-          {/* Search Results Info */}
-          {searchResults && (
-            <Card className="border-0 luxury-card rounded-xl animate-scale-in">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2.5 text-foreground">
-                  <Search className="h-4 w-4 text-primary" />
-                  <span className="font-medium text-sm" role="status">
-                    {searchResults.length === 0
-                      ? t("forum.emptySearchAction")
-                      : `${searchResults.length} ${t("forum.posts")}`}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Category Filter */}
-          {!searchResults && (
-            <div className="flex flex-wrap gap-2 justify-center animate-fade-in-up" role="region" aria-label="Category filter">
-              {categories.map((cat) => (
-                <Button
-                  key={cat.value}
-                  variant="ghost"
-                  onClick={() => setSelectedCategory(cat.value)}
-                  className={`rounded-full transition-all duration-300 text-xs font-medium px-4 py-1.5 ${
-                    selectedCategory === cat.value
-                      ? "bg-primary/10 text-primary border border-primary/30 shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/80 border border-transparent"
-                  }`}
-                  size="sm"
-                  aria-pressed={selectedCategory === cat.value}
-                >
-                  {cat.label}
-                </Button>
-              ))}
+      {/* Search Results Info */}
+      {searchResults && (
+        <Card className="border-0 luxury-card rounded-xl animate-scale-in">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2.5 text-foreground">
+              <Search className="h-4 w-4 text-primary" />
+              <span className="font-medium text-sm" role="status">
+                {searchResults.length === 0
+                  ? t("forum.emptySearchAction")
+                  : `${searchResults.length} ${t("forum.posts")}`}
+              </span>
             </div>
-          )}
-
-          {/* Posts */}
-          <div className="space-y-5" role="region" aria-label="Forum posts">
-            {displayPosts.length === 0 ? (
-              <Card className="text-center py-16 border-0 luxury-card rounded-2xl animate-scale-in">
-                <CardContent>
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <MessageCircle className="h-8 w-8 text-primary/50" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    {searchResults ? t("forum.emptySearch") : t("forum.emptyCategory")}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {searchResults
-                      ? t("forum.emptySearchAction")
-                      : t("forum.emptyAction")}
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              displayPosts.map((post, index) => (
-                <div key={post.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 0.08}s` }}>
-                  <PostCard
-                    post={post}
-                    onSupport={handleSupportPost}
-                    onDelete={handleDeletePost}
-                    replies={replies.filter((reply) => reply.postId === post.id)}
-                    onAddReply={handleAddReply}
-                    onLikeReply={handleLikeReply}
-                    onMarkSolution={handleMarkSolution}
-                    onAuthRequired={onAuthRequired}
-                  />
-                </div>
-              ))
-            )}
-          </div>
-        </>
+          </CardContent>
+        </Card>
       )}
+
+      {/* Category Filter */}
+      {!searchResults && (
+        <div className="flex flex-wrap gap-2 animate-fade-in-up" role="region" aria-label="Category filter">
+          {categories.map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => setSelectedCategory(cat.value)}
+              className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-250 border ${
+                selectedCategory === cat.value
+                  ? "bg-primary/12 text-primary border-primary/35 shadow-sm shadow-primary/10"
+                  : "text-muted-foreground border-border/60 hover:text-foreground hover:bg-secondary/60 hover:border-border"
+              }`}
+              aria-pressed={selectedCategory === cat.value}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Posts */}
+      <div className="space-y-4" role="region" aria-label="Forum posts">
+        {displayPosts.length === 0 ? (
+          <Card className="text-center py-16 border-0 luxury-card rounded-2xl animate-scale-in">
+            <CardContent>
+              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                <Sparkles className="h-7 w-7 text-primary/50" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2">
+                {searchResults ? t("forum.emptySearch") : t("forum.emptyCategory")}
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                {searchResults ? t("forum.emptySearchAction") : t("forum.emptyAction")}
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          displayPosts.map((post, index) => (
+            <div key={post.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 80}ms` }}>
+              <PostCard
+                post={post}
+                onSupport={handleSupportPost}
+                onDelete={handleDeletePost}
+                replies={replies.filter((reply) => reply.postId === post.id)}
+                onAddReply={handleAddReply}
+                onLikeReply={handleLikeReply}
+                onMarkSolution={handleMarkSolution}
+                onAuthRequired={onAuthRequired}
+              />
+            </div>
+          ))
+        )}
+      </div>
 
       <CreatePostModal
         isOpen={isCreateModalOpen}

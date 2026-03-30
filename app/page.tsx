@@ -11,6 +11,7 @@ import { ProfilePage } from "@/components/profile-page"
 import { ProfileSettings } from "@/components/profile-settings"
 import { SettingsModal } from "@/components/settings-modal"
 import { AuthModal } from "@/components/auth-modal"
+import { Leaderboard } from "@/components/leaderboard"
 import { AuthProvider, useAuth } from "@/hooks/use-auth"
 import { LanguageProvider } from "@/hooks/use-language"
 
@@ -38,28 +39,21 @@ function AppContent() {
   const [darkMode, setDarkMode] = useState(false)
   const { isAuthenticated } = useAuth()
 
-  // Load dark mode preference and apply to <html> element
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("comfortillo-dark-mode")
     if (savedDarkMode) {
       const isDark = JSON.parse(savedDarkMode)
       setDarkMode(isDark)
-      if (isDark) {
-        document.documentElement.classList.add("dark")
-      } else {
-        document.documentElement.classList.remove("dark")
-      }
+      if (isDark) document.documentElement.classList.add("dark")
+      else document.documentElement.classList.remove("dark")
     }
   }, [])
 
   const handleDarkModeToggle = (enabled: boolean) => {
     setDarkMode(enabled)
     localStorage.setItem("comfortillo-dark-mode", JSON.stringify(enabled))
-    if (enabled) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
+    if (enabled) document.documentElement.classList.add("dark")
+    else document.documentElement.classList.remove("dark")
   }
 
   const handleAuthAction = (action: "login" | "register") => {
@@ -81,38 +75,36 @@ function AppContent() {
 
   const handleSearchResults = (results: Post[]) => {
     setSearchResults(results)
-    if (activeSection !== "forum") {
-      setActiveSection("forum")
-    }
+    if (activeSection !== "forum") setActiveSection("forum")
   }
 
-  const handleClearSearch = () => {
-    setSearchResults(null)
-  }
+  const handleClearSearch = () => setSearchResults(null)
 
   const renderContent = () => {
     switch (activeSection) {
       case "ai-chat":
-        return isAuthenticated ? <AIChatPage /> : <WelcomeSection />
+        return isAuthenticated ? <AIChatPage /> : <WelcomeSection onAuthAction={handleAuthAction} />
       case "forum":
         return isAuthenticated ? (
           <ForumPage onAuthRequired={handleAuthRequired} searchResults={searchResults} />
         ) : (
-          <WelcomeSection />
+          <WelcomeSection onAuthAction={handleAuthAction} />
         )
       case "profile":
-        return isAuthenticated ? <ProfilePage onEditProfile={() => setProfileSettingsOpen(true)} /> : <WelcomeSection />
+        return isAuthenticated ? <ProfilePage onEditProfile={() => setProfileSettingsOpen(true)} /> : <WelcomeSection onAuthAction={handleAuthAction} />
       case "about":
         return <AboutPage />
+      case "leaderboard":
+        return <Leaderboard />
       case "home":
       default:
-        return <WelcomeSection />
+        return <WelcomeSection onAuthAction={handleAuthAction} />
     }
   }
 
   return (
     <div className="min-h-screen bg-luxury-gradient transition-colors duration-500">
-      <Header />
+      {/* Sidebar */}
       <NavigationBar
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
@@ -122,16 +114,33 @@ function AppContent() {
         onClearSearch={handleClearSearch}
       />
 
-      <main className="container mx-auto px-6 py-12 max-w-5xl" role="main">{renderContent()}</main>
+      {/* Main content — offset by sidebar width on desktop */}
+      <div className="lg:pl-64 flex flex-col min-h-screen">
+        {/* Top bar */}
+        <Header
+          darkMode={darkMode}
+          onDarkModeToggle={handleDarkModeToggle}
+          onSearchResults={handleSearchResults}
+          onClearSearch={handleClearSearch}
+          activeSection={activeSection}
+        />
 
+        {/* Page content */}
+        <main
+          className="flex-1 container mx-auto px-4 md:px-6 py-8 max-w-5xl pb-24 lg:pb-10"
+          role="main"
+        >
+          {renderContent()}
+        </main>
+      </div>
+
+      {/* Modals */}
       <AuthModal
         isOpen={authModal.isOpen}
         onClose={() => setAuthModal({ ...authModal, isOpen: false })}
         defaultTab={authModal.type}
       />
-
       <ProfileSettings isOpen={profileSettingsOpen} onClose={() => setProfileSettingsOpen(false)} />
-
       <SettingsModal
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
