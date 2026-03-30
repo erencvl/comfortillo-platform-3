@@ -76,21 +76,13 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
 
   const handleSave = async () => {
     if (!profile || !user) return
-
     setIsLoading(true)
-
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Save to localStorage
       localStorage.setItem(`comfortillo-profile-${user.id}`, JSON.stringify(profile))
-
-      // Update the user context with new name
       const updatedUser = { ...user, name: profile.name }
       updateUser(updatedUser)
 
-      // Update all posts by this user
       const savedPosts = localStorage.getItem("comfortillo-posts")
       if (savedPosts) {
         const allPosts = JSON.parse(savedPosts)
@@ -100,7 +92,6 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
         localStorage.setItem("comfortillo-posts", JSON.stringify(updatedPosts))
       }
 
-      // Update all replies by this user
       const savedReplies = localStorage.getItem("comfortillo-replies")
       if (savedReplies) {
         const allReplies = JSON.parse(savedReplies)
@@ -123,10 +114,7 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
     if (file && profile) {
       const reader = new FileReader()
       reader.onload = (e) => {
-        setProfile({
-          ...profile,
-          profilePhoto: e.target?.result as string,
-        })
+        setProfile({ ...profile, profilePhoto: e.target?.result as string })
       }
       reader.readAsDataURL(file)
     }
@@ -137,10 +125,7 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
     if (file && profile) {
       const reader = new FileReader()
       reader.onload = (e) => {
-        setProfile({
-          ...profile,
-          profileBanner: e.target?.result as string,
-        })
+        setProfile({ ...profile, profileBanner: e.target?.result as string })
       }
       reader.readAsDataURL(file)
     }
@@ -148,40 +133,24 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
 
   const handleAddInterest = () => {
     if (newInterest.trim() && profile && !profile.interests.includes(newInterest.trim())) {
-      setProfile({
-        ...profile,
-        interests: [...profile.interests, newInterest.trim()],
-      })
+      setProfile({ ...profile, interests: [...profile.interests, newInterest.trim()] })
       setNewInterest("")
     }
   }
 
   const handleRemoveInterest = (interest: string) => {
     if (profile) {
-      setProfile({
-        ...profile,
-        interests: profile.interests.filter((i) => i !== interest),
-      })
+      setProfile({ ...profile, interests: profile.interests.filter((i) => i !== interest) })
     }
   }
 
   const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    // Only allow numbers
     if (/^\d*$/.test(value) && profile) {
       const age = value === "" ? 0 : Number.parseInt(value)
       if (age <= 120) {
-        // Reasonable age limit
-        const updatedProfile = {
-          ...profile,
-          age: age,
-        }
-
-        // If user becomes under 18, disable NSFW
-        if (age < 18) {
-          updatedProfile.nsfwEnabled = false
-        }
-
+        const updatedProfile = { ...profile, age }
+        if (age < 18) updatedProfile.nsfwEnabled = false
         setProfile(updatedProfile)
       }
     }
@@ -189,31 +158,16 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
 
   const handleNsfwToggle = (enabled: boolean) => {
     if (!profile) return
-
-    if (profile.age < 18) {
-      // Don't allow NSFW for under 18
-      return
-    }
-
+    if (profile.age < 18) return
     if (enabled) {
-      // Show warning before enabling
       setShowNsfwWarning(true)
     } else {
-      // Disable directly
-      setProfile({
-        ...profile,
-        nsfwEnabled: false,
-      })
+      setProfile({ ...profile, nsfwEnabled: false })
     }
   }
 
   const confirmNsfwEnable = () => {
-    if (profile) {
-      setProfile({
-        ...profile,
-        nsfwEnabled: true,
-      })
-    }
+    if (profile) setProfile({ ...profile, nsfwEnabled: true })
     setShowNsfwWarning(false)
   }
 
@@ -222,30 +176,41 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-0 shadow-2xl dark:bg-slate-800 dark:border-slate-700">
-          <DialogHeader className="text-center pb-4">
-            <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2 dark:text-white">
-              <User className="h-6 w-6 text-[#BDB1A4] dark:text-[#C4B8AB]" />
-              {t("settings.title")}
-            </DialogTitle>
-            <p className="text-gray-600 mt-2 dark:text-slate-400">{t("settings.subtitle")}</p>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-background border border-border/50 shadow-2xl shadow-primary/10 rounded-2xl p-0">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-primary/10 via-pink-500/10 to-primary/10 px-6 pt-6 pb-4 border-b border-border/30">
+            <DialogHeader className="text-center">
+              <DialogTitle className="text-xl font-bold text-foreground flex items-center justify-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/20 flex items-center justify-center">
+                  <User className="h-4 w-4 text-primary" />
+                </div>
+                {t("settings.title")}
+              </DialogTitle>
+              <p className="text-muted-foreground text-sm mt-1">{t("settings.subtitle")}</p>
+            </DialogHeader>
+          </div>
 
-          <div className="space-y-6">
+          <div className="p-6 space-y-6">
             {/* Profile Banner */}
             <div className="space-y-2">
-              <Label className="dark:text-slate-200">{t("settings.banner")}</Label>
-              <div className="relative">
+              <Label className="text-xs font-semibold text-foreground">{t("settings.banner")}</Label>
+              <div className="relative group">
                 <div
-                  className="h-24 bg-gradient-to-r from-[#C4B8AB] via-[#BDB1A4] to-[#A89888] rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors dark:border-slate-600 dark:hover:border-slate-500"
+                  className="h-28 rounded-xl border-2 border-dashed border-border/50 flex items-center justify-center cursor-pointer overflow-hidden transition-all duration-300 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10"
                   style={{
-                    backgroundImage: profile.profileBanner ? `url(${profile.profileBanner})` : undefined,
+                    backgroundImage: profile.profileBanner
+                      ? `url(${profile.profileBanner})`
+                      : undefined,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    background: profile.profileBanner
+                      ? `url(${profile.profileBanner}) center/cover`
+                      : "linear-gradient(135deg, hsl(var(--cf-primary) / 0.08) 0%, hsl(var(--cf-accent) / 0.08) 100%)",
                   }}
                 >
-                  <div className="bg-black/50 rounded-full p-2">
-                    <ImageIcon className="h-6 w-6 text-white" />
+                  <div className="flex flex-col items-center gap-2 bg-background/60 backdrop-blur-sm rounded-xl px-4 py-2.5 group-hover:bg-background/80 transition-colors">
+                    <ImageIcon className="h-5 w-5 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground font-medium">{t("settings.bannerHint")}</span>
                   </div>
                   <input
                     type="file"
@@ -254,222 +219,173 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1 dark:text-slate-400">{t("settings.bannerHint")}</p>
               </div>
             </div>
 
             {/* Profile Photo */}
             <div className="text-center">
               <div className="relative inline-block">
-                <Avatar className="w-24 h-24 border-4 border-white shadow-lg dark:border-slate-700">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary to-pink-500 rounded-full opacity-40 blur-sm" />
+                <Avatar className="relative w-24 h-24 border-4 border-background shadow-xl">
                   <AvatarImage src={profile.profilePhoto || "/placeholder.svg"} alt={profile.name} />
-                  <AvatarFallback className="text-xl bg-gradient-to-r from-[#C4B8AB] to-[#A89888] text-white dark:from-[#8B8478] dark:to-[#4A4039]">
-                    {profile.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()}
+                  <AvatarFallback className="text-xl bg-gradient-to-br from-primary to-pink-500 text-white font-bold">
+                    {profile.name.split(" ").map((n) => n[0]).join("").toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 -right-2 bg-[#BDB1A4] rounded-full p-2 shadow-lg cursor-pointer hover:bg-[#A89888] transition-colors dark:bg-[#8B8478] dark:hover:bg-[#6B6258]">
-                  <Camera className="h-4 w-4 text-white" />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                  />
-                </div>
+                <label className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-br from-primary to-pink-500 rounded-full flex items-center justify-center shadow-lg shadow-primary/30 cursor-pointer hover:scale-110 transition-transform duration-200">
+                  <Camera className="h-3.5 w-3.5 text-white" />
+                  <input type="file" accept="image/*" onChange={handlePhotoUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
+                </label>
               </div>
-              <p className="text-sm text-gray-500 mt-2 dark:text-slate-400">{t("settings.photoHint")}</p>
+              <p className="text-xs text-muted-foreground mt-3">{t("settings.photoHint")}</p>
             </div>
 
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="dark:text-slate-200">{t("settings.name")}</Label>
-                <Input
-                  id="name"
-                  value={profile.name}
-                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  placeholder={t("settings.namePlaceholder")}
-                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="nickname" className="dark:text-slate-200">{t("settings.nickname")}</Label>
-                <Input
-                  id="nickname"
-                  value={profile.nickname}
-                  onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
-                  placeholder={t("settings.nicknamePlaceholder")}
-                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="age" className="dark:text-slate-200">{t("settings.age")}</Label>
-                <Input
-                  id="age"
-                  value={profile.age || ""}
-                  onChange={handleAgeChange}
-                  placeholder={t("settings.agePlaceholder")}
-                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
-                  maxLength={3}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="city" className="dark:text-slate-200">{t("settings.city")}</Label>
-                <Input
-                  id="city"
-                  value={profile.city}
-                  onChange={(e) => setProfile({ ...profile, city: e.target.value })}
-                  placeholder={t("settings.cityPlaceholder")}
-                  className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
-                />
-              </div>
+              {[
+                { id: "name", label: t("settings.name"), value: profile.name, onChange: (v: string) => setProfile({ ...profile, name: v }), placeholder: t("settings.namePlaceholder") },
+                { id: "nickname", label: t("settings.nickname"), value: profile.nickname, onChange: (v: string) => setProfile({ ...profile, nickname: v }), placeholder: t("settings.nicknamePlaceholder") },
+                { id: "age", label: t("settings.age"), value: profile.age || "", onChange: handleAgeChange as any, placeholder: t("settings.agePlaceholder"), maxLength: 3 },
+                { id: "city", label: t("settings.city"), value: profile.city, onChange: (v: string) => setProfile({ ...profile, city: v }), placeholder: t("settings.cityPlaceholder") },
+              ].map((field) => (
+                <div key={field.id} className="space-y-1.5">
+                  <Label htmlFor={field.id} className="text-xs font-semibold text-foreground">{field.label}</Label>
+                  <Input
+                    id={field.id}
+                    value={field.value}
+                    onChange={field.id === "age" ? field.onChange : (e) => (field.onChange as (v: string) => void)(e.target.value)}
+                    placeholder={field.placeholder}
+                    maxLength={field.maxLength}
+                    className="border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-background"
+                  />
+                </div>
+              ))}
             </div>
 
             {/* Bio */}
-            <div className="space-y-2">
-              <Label htmlFor="bio" className="dark:text-slate-200">{t("settings.bio")}</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="bio" className="text-xs font-semibold text-foreground">{t("settings.bio")}</Label>
               <Textarea
                 id="bio"
                 value={profile.bio}
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                 placeholder={t("settings.bioPlaceholder")}
-                className="border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] resize-none dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
+                className="border-border/50 focus:border-primary focus:ring-primary/20 resize-none rounded-xl text-sm bg-background"
                 rows={3}
                 maxLength={300}
               />
-              <div className="text-xs text-gray-500 text-right dark:text-slate-400">{profile.bio.length}/300</div>
+              <div className="text-xs text-muted-foreground text-right">{profile.bio.length}/300</div>
             </div>
 
             {/* Interests */}
             <div className="space-y-3">
-              <Label className="dark:text-slate-200">{t("settings.interests")}</Label>
-
-              {/* Add Interest */}
+              <Label className="text-xs font-semibold text-foreground">{t("settings.interests")}</Label>
               <div className="flex gap-2">
                 <Input
                   value={newInterest}
                   onChange={(e) => setNewInterest(e.target.value)}
                   placeholder={t("settings.interestPlaceholder")}
-                  className="flex-1 border-gray-200 focus:border-[#BDB1A4] focus:ring-[#BDB1A4] dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:border-[#C4B8AB]"
+                  className="flex-1 border-border/50 focus:border-primary focus:ring-primary/20 rounded-xl text-sm bg-background"
                   maxLength={20}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault()
-                      handleAddInterest()
-                    }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") { e.preventDefault(); handleAddInterest() }
                   }}
                 />
                 <Button
                   type="button"
                   onClick={handleAddInterest}
                   disabled={!newInterest.trim()}
-                  className="bg-[#BDB1A4] hover:bg-[#A89888] text-white dark:bg-[#8B8478] dark:hover:bg-[#6B6258]"
                   size="sm"
+                  className="luxury-button-primary rounded-xl px-3"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
 
-              {/* Interest Tags */}
               {profile.interests.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {profile.interests.map((interest, index) => (
-                    <Badge key={index} className="bg-[#F0EBE5] text-[#6B6258] border-0 pr-1 flex items-center gap-1 dark:bg-[#2E2A25] dark:text-[#E0D6CB]">
+                    <Badge
+                      key={index}
+                      className="bg-primary/10 text-primary border border-primary/20 rounded-full px-2.5 py-0.5 text-xs font-medium flex items-center gap-1"
+                    >
                       {interest}
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
                         onClick={() => handleRemoveInterest(interest)}
-                        className="h-4 w-4 p-0 hover:bg-[#E8E2DA] rounded-full dark:hover:bg-[#6B6258]"
+                        className="w-3.5 h-3.5 rounded-full hover:bg-primary/20 flex items-center justify-center transition-colors"
                       >
-                        <X className="h-3 w-3" />
-                      </Button>
+                        <X className="h-2.5 w-2.5" />
+                      </button>
                     </Badge>
                   ))}
                 </div>
               )}
-
-              <p className="text-xs text-gray-500 dark:text-slate-400">
-                {t("settings.interestHint")}
-              </p>
+              <p className="text-xs text-muted-foreground">{t("settings.interestHint")}</p>
             </div>
 
-            {/* NSFW Settings */}
-            <div className="space-y-3">
-              <Label className="flex items-center gap-2 dark:text-slate-200">
-                <Shield className="h-4 w-4" />
+            {/* NSFW / Content Settings */}
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-foreground flex items-center gap-2">
+                <Shield className="h-3.5 w-3.5 text-primary" />
                 {t("settings.contentSettings")}
               </Label>
-
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 dark:bg-slate-700 dark:border-slate-600">
+              <div className="p-4 rounded-xl bg-secondary/40 border border-border/30">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-800 dark:text-white">{t("settings.nsfw")}</h4>
-                    <p className="text-sm text-gray-600 mt-1 dark:text-slate-300">
-                      {profile.age < 18
-                        ? t("settings.nsfwDisabledUnder18")
-                        : t("settings.nsfwDescription")}
+                    <h4 className="font-semibold text-foreground text-sm">{t("settings.nsfw")}</h4>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {profile.age < 18 ? t("settings.nsfwDisabledUnder18") : t("settings.nsfwDescription")}
                     </p>
                   </div>
                   <Switch
                     checked={profile.nsfwEnabled}
                     onCheckedChange={handleNsfwToggle}
                     disabled={profile.age < 18}
+                    className="data-[state=checked]:bg-primary"
                   />
                 </div>
 
                 {profile.age < 18 && (
-                  <div className="mt-3 p-3 bg-[#F8F5F0] border border-[#E8E2DA] rounded-lg dark:bg-[#2E2A25]/20 dark:border-[#5C5248]">
-                    <div className="flex items-center gap-2 text-[#6B6258] dark:text-[#E0D6CB]">
-                      <AlertTriangle className="h-4 w-4" />
-                      <span className="text-sm font-medium">
-                        {t("settings.under18Warning")}
-                      </span>
-                    </div>
+                  <div className="mt-3 p-2.5 bg-amber-500/5 border border-amber-500/15 rounded-lg flex items-center gap-2">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
+                    <span className="text-xs text-muted-foreground">{t("settings.under18Warning")}</span>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Privacy Notice */}
-            <div className="bg-[#F5F0EA] border border-[#D4C8BB] rounded-lg p-4 dark:bg-[#2E2A25]/20 dark:border-[#8B8478]">
-              <p className="text-sm text-[#6B6258] dark:text-[#E0D6CB]">
-                <strong>{t("settings.privacy")}:</strong> {t("settings.privacyText")}
+            <div className="rounded-xl p-3 bg-primary/5 border border-primary/10">
+              <p className="text-xs text-muted-foreground">
+                <strong className="text-foreground">{t("settings.privacy")}:</strong> {t("settings.privacyText")}
               </p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-2">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={onClose}
                 disabled={isLoading}
-                className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+                className="flex-1 text-muted-foreground hover:text-foreground hover:bg-secondary/80 rounded-xl text-sm"
               >
                 {t("settings.cancel")}
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="flex-1 bg-gradient-to-r from-[#C4B8AB] to-[#A89888] hover:from-[#B5A999] hover:to-[#9E9285] text-[#3D352C] shadow-lg dark:from-[#8B8478] dark:to-[#6B6258] dark:hover:from-[#7D7268] dark:hover:to-[#5C5248]"
+                className="flex-1 luxury-button-primary rounded-xl text-sm font-semibold"
               >
                 {isLoading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white/30 border-t-white" />
                     {t("settings.saving")}
                   </div>
                 ) : (
-                  <div className="flex items-center">
-                    <Save className="h-4 w-4 mr-2" />
+                  <div className="flex items-center gap-1.5">
+                    <Save className="h-3.5 w-3.5" />
                     {t("settings.save")}
                   </div>
                 )}
@@ -481,20 +397,24 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
 
       {/* NSFW Warning Dialog */}
       <Dialog open={showNsfwWarning} onOpenChange={setShowNsfwWarning}>
-        <DialogContent className="sm:max-w-md bg-white border-0 shadow-2xl dark:bg-slate-800 dark:border-slate-700">
-          <DialogHeader className="text-center pb-4">
-            <DialogTitle className="text-xl font-bold text-red-800 flex items-center justify-center gap-2 dark:text-red-400">
-              <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              {t("settings.nsfwWarningTitle")}
-            </DialogTitle>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-md bg-background border border-border/50 shadow-2xl rounded-2xl p-0">
+          <div className="bg-gradient-to-r from-red-500/10 via-orange-500/10 to-red-500/10 px-6 pt-6 pb-4 border-b border-border/30">
+            <DialogHeader className="text-center">
+              <DialogTitle className="text-lg font-bold text-red-600 dark:text-red-400 flex items-center justify-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                  <AlertTriangle className="h-4 w-4 text-red-500" />
+                </div>
+                {t("settings.nsfwWarningTitle")}
+              </DialogTitle>
+            </DialogHeader>
+          </div>
 
-          <div className="space-y-4">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 dark:bg-red-900/20 dark:border-red-700">
-              <p className="text-sm text-red-800 leading-relaxed dark:text-red-200">
+          <div className="p-6 space-y-4">
+            <div className="rounded-xl p-4 bg-red-500/5 border border-red-500/20">
+              <p className="text-sm text-red-600/80 dark:text-red-400/80 leading-relaxed">
                 <strong>{t("settings.warning")}:</strong> {t("settings.nsfwWarningText")}
               </p>
-              <ul className="mt-2 text-sm text-red-700 space-y-1 ml-4 dark:text-red-300">
+              <ul className="mt-2 text-xs text-red-600/70 dark:text-red-400/70 space-y-1 ml-3">
                 <li>• {t("settings.nsfwPoint1")}</li>
                 <li>• {t("settings.nsfwPoint2")}</li>
                 <li>• {t("settings.nsfwPoint3")}</li>
@@ -502,25 +422,26 @@ export function ProfileSettings({ isOpen, onClose }: ProfileSettingsProps) {
               </ul>
             </div>
 
-            <div className="bg-[#F8F5F0] border border-[#E8E2DA] rounded-lg p-4 dark:bg-[#2E2A25]/20 dark:border-[#5C5248]">
-              <p className="text-sm text-[#6B6258] dark:text-[#E0D6CB]">
+            <div className="rounded-xl p-3 bg-primary/5 border border-primary/10">
+              <p className="text-xs text-muted-foreground">
                 <strong>{t("settings.responsibility")}:</strong> {t("settings.responsibilityText")}
               </p>
             </div>
 
-            <p className="text-center text-gray-700 font-medium dark:text-slate-300">
-              {t("settings.nsfwConfirm")}
-            </p>
+            <p className="text-center text-sm text-foreground font-medium">{t("settings.nsfwConfirm")}</p>
 
             <div className="flex gap-3">
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={() => setShowNsfwWarning(false)}
-                className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+                className="flex-1 text-muted-foreground hover:text-foreground hover:bg-secondary/80 rounded-xl text-sm"
               >
                 {t("settings.cancel")}
               </Button>
-              <Button onClick={confirmNsfwEnable} className="flex-1 bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800">
+              <Button
+                onClick={confirmNsfwEnable}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-red-500/20"
+              >
                 {t("settings.enableYes")}
               </Button>
             </div>

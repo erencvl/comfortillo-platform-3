@@ -146,16 +146,16 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
         )}
 
         {isAudio && (
-          <div className="bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg p-4">
+          <div className="bg-secondary/40 border border-border/30 rounded-xl p-4">
             <div className="flex items-center gap-3">
-              <div className="bg-[#F0EBE5] dark:bg-[#2E2A25]/30 p-2 rounded-full">
-                <Play className="h-5 w-5 text-[#A89888] dark:text-[#C4B8AB]" />
+              <div className="bg-primary/10 p-2 rounded-full border border-primary/20">
+                <Play className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-stone-800 dark:text-stone-200">{t("media.audioFile")}</p>
-                <p className="text-sm text-stone-600 dark:text-stone-400">{media}</p>
+                <p className="font-medium text-foreground">{t("media.audioFile")}</p>
+                <p className="text-sm text-muted-foreground">{media}</p>
               </div>
-              <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+              <Button variant="outline" size="sm" onClick={() => setIsOpen(true)} className="border-border/50 rounded-lg">
                 <Play className="h-4 w-4" />
               </Button>
             </div>
@@ -163,16 +163,16 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
         )}
 
         {!isImage && !isVideo && !isAudio && (
-          <div className="bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg p-4">
+          <div className="bg-secondary/40 border border-border/30 rounded-xl p-4">
             <div className="flex items-center gap-3">
-              <div className="bg-stone-200 dark:bg-stone-700 p-2 rounded-full">
-                <Download className="h-5 w-5 text-stone-600 dark:text-stone-400" />
+              <div className="bg-secondary p-2 rounded-full border border-border/50">
+                <Download className="h-5 w-5 text-muted-foreground" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-stone-800 dark:text-stone-200">{t("media.file")}</p>
-                <p className="text-sm text-stone-600 dark:text-stone-400">{media}</p>
+                <p className="font-medium text-foreground">{t("media.file")}</p>
+                <p className="text-sm text-muted-foreground">{media}</p>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="border-border/50 rounded-lg">
                 <Download className="h-4 w-4" />
               </Button>
             </div>
@@ -213,9 +213,11 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
 
             {isAudio && (
               <div className="p-8 text-center">
-                <div className="bg-white dark:bg-stone-900 rounded-lg p-6">
-                  <Play className="h-16 w-16 mx-auto mb-4 text-[#A89888] dark:text-[#C4B8AB]" />
-                  <h3 className="text-lg font-medium text-stone-800 dark:text-stone-200 mb-4">{t("media.audioFile")}</h3>
+                <div className="bg-background rounded-xl p-6">
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
+                    <Play className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-medium text-foreground mb-4">{t("media.audioFile")}</h3>
                   <audio controls className="w-full">
                     <source src={getImageUrl(media)} />
                   </audio>
@@ -241,8 +243,8 @@ export function MediaPreview({ media, isNsfw = false, className = "" }: MediaPre
               </p>
             </div>
 
-            <div className="bg-[#F8F5F0] dark:bg-[#2E2A25]/20 border border-[#E8E2DA] dark:border-[#5C5248] rounded-lg p-3">
-              <p className="text-xs text-[#6B6258] dark:text-[#D4C8BB]">{t("media.nsfwDisclaimer")}</p>
+            <div className="rounded-xl p-3 bg-secondary/40 border border-border/30">
+              <p className="text-xs text-muted-foreground">{t("media.nsfwDisclaimer")}</p>
             </div>
 
             <div className="flex gap-3">

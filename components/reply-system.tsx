@@ -114,22 +114,22 @@ export function ReplySystem({
       {/* Existing Replies */}
       {replies.length > 0 && (
         <div className="space-y-3">
-          <h4 className="font-medium text-gray-800 dark:text-gray-200 flex items-center gap-2">
-            <MessageCircle className="h-4 w-4" />
+          <h4 className="font-medium text-foreground flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-primary" />
             {t("replies.title")} ({replies.length})
           </h4>
 
           {replies.map((reply) => (
-            <Card key={reply.id} className="border-l-4 border-l-blue-200 bg-gray-50/50 dark:bg-gray-800/50">
+            <Card key={reply.id} className="border-l-4 border-l-primary/30 luxury-card luxury-card-hover rounded-xl">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <div className="w-8 h-8 bg-gradient-to-br from-primary/15 to-pink-500/15 border border-primary/20 rounded-full flex items-center justify-center">
+                      <User className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                      <span className="font-medium text-gray-800 dark:text-gray-200">{reply.authorName}</span>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                      <span className="font-medium text-foreground">{reply.authorName}</span>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         {formatTimeAgo(reply.timestamp)}
                       </div>
@@ -137,25 +137,25 @@ export function ReplySystem({
                   </div>
 
                   {reply.isSolution && (
-                    <Badge className="bg-green-100 text-green-800 border-green-200">
+                    <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-full px-2.5 py-0.5 text-xs font-medium">
                       <Award className="h-3 w-3 mr-1" />
                       {t("replies.markSolution")}
                     </Badge>
                   )}
                 </div>
 
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">{reply.content}</p>
+                <p className="text-foreground/80 leading-relaxed mb-3 text-sm">{reply.content}</p>
 
                 <div className="flex items-center gap-3">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleLike(reply.id)}
-                    className={`text-gray-600 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-colors ${
-                      reply.isLiked ? "text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20" : ""
+                    className={`text-muted-foreground hover:text-pink-500 hover:bg-pink-500/10 transition-all duration-200 rounded-xl text-xs ${
+                      reply.isLiked ? "text-pink-500 bg-pink-500/10" : ""
                     }`}
                   >
-                    <Heart className={`h-4 w-4 mr-1 ${reply.isLiked ? "fill-current" : ""}`} />
+                    <Heart className={`h-3.5 w-3.5 mr-1 ${reply.isLiked ? "fill-current" : ""}`} />
                     {reply.likes}
                   </Button>
 
@@ -164,9 +164,9 @@ export function ReplySystem({
                       variant="ghost"
                       size="sm"
                       onClick={() => handleMarkSolution(reply.id)}
-                      className="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                      className="text-muted-foreground hover:text-emerald-600 hover:bg-emerald-500/10 transition-all duration-200 rounded-xl text-xs"
                     >
-                      <Award className="h-4 w-4 mr-1" />
+                      <Award className="h-3.5 w-3.5 mr-1" />
                       {t("replies.markSolution")}
                     </Button>
                   )}
@@ -178,7 +178,7 @@ export function ReplySystem({
       )}
 
       {/* Reply Form */}
-      <Card className="border-dashed border-2 border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/30">
+      <Card className="border-dashed border-2 border-border/40 luxury-card rounded-xl">
         <CardContent className="p-4">
           <form onSubmit={handleSubmitReply} className="space-y-3">
             <Textarea
@@ -189,7 +189,7 @@ export function ReplySystem({
                   ? t("replies.placeholder")
                   : t("replies.loginRequired")
               }
-              className="border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500 resize-none"
+              className="border-border/50 focus:border-primary focus:ring-primary/20 resize-none rounded-xl text-sm bg-background"
               rows={3}
               maxLength={1000}
               disabled={!isAuthenticated}
@@ -202,12 +202,12 @@ export function ReplySystem({
             )}
 
             <div className="flex items-center justify-between">
-              <div className="text-xs text-gray-500 dark:text-gray-400">{replyContent.length}/1000 {t("replies.characters")}</div>
+              <div className="text-xs text-muted-foreground">{replyContent.length}/1000 {t("replies.characters")}</div>
 
               <Button
                 type="submit"
                 disabled={isSubmitting || !replyContent.trim() || !isAuthenticated}
-                className="bg-blue-500 hover:bg-blue-600 text-white"
+                className="luxury-button-primary rounded-xl px-5 text-xs font-semibold"
                 size="sm"
               >
                 {isSubmitting ? (
@@ -226,10 +226,10 @@ export function ReplySystem({
           </form>
 
           {!isAuthenticated && (
-            <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-center">
-              <p className="text-sm text-blue-800 dark:text-blue-300">
-                {t("replies.loginRequired")} {" "}
-                <button onClick={onAuthRequired} className="font-medium underline hover:no-underline">
+            <div className="mt-3 p-3 bg-primary/5 border border-primary/10 rounded-xl text-center">
+              <p className="text-sm text-muted-foreground">
+                {t("replies.loginRequired")}{" "}
+                <button onClick={onAuthRequired} className="font-medium text-primary underline hover:no-underline">
                   {t("replies.loginLink")}
                 </button>
               </p>

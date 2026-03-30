@@ -91,7 +91,7 @@ function ReplyItem({ reply, level, onReply, onLike, onMarkSolution, onAuthRequir
   }
 
   const indentClass = level > 0 ? `ml-${Math.min(level * 4, 12)}` : ""
-  const borderColor = level === 0 ? "border-l-[#E8E2DA]" : level === 1 ? "border-l-[#E8E2DA]" : "border-l-[#E0D6CB]"
+  const borderColor = level === 0 ? "border-l-primary/30" : level === 1 ? "border-l-pink-500/25" : "border-l-border/50"
 
   return (
     <div className={indentClass}>
@@ -99,8 +99,8 @@ function ReplyItem({ reply, level, onReply, onLike, onMarkSolution, onAuthRequir
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#F0EBE5] to-[#E8E2DA] rounded-full flex items-center justify-center shadow-sm">
-                <User className="h-4 w-4 text-[#A89888]" aria-label={reply.authorName} />
+              <div className="w-8 h-8 bg-gradient-to-br from-primary/15 to-pink-500/15 border border-primary/20 rounded-full flex items-center justify-center shadow-sm">
+                <User className="h-4 w-4 text-primary" aria-label={reply.authorName} />
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ function ReplyItem({ reply, level, onReply, onLike, onMarkSolution, onAuthRequir
                 variant="ghost"
                 size="sm"
                 onClick={handleReply}
-                className="luxury-text hover:text-[#A89888] hover:bg-[#F5F0EA] dark:hover:bg-[#2E2A25]/20 transition-all duration-300 rounded-xl luxury-hover"
+                className="luxury-text hover:text-primary hover:bg-primary/10 transition-all duration-300 rounded-xl luxury-hover"
                 aria-label={t("replies.replyBtn")}
               >
                 <ReplyIcon className="h-4 w-4 mr-1" />
@@ -308,16 +308,16 @@ export function NestedReplySystem({
         </div>
       )}
 
-      <Card className="border-dashed border-2 border-luxury-warm luxury-card rounded-xl">
+      <Card className="border-dashed border-2 border-border/40 luxury-card rounded-xl">
         <CardContent className="p-4">
           {replyingTo && (
-            <div className="mb-3 p-2 bg-[#F5F0EA] dark:bg-[#2E2A25]/20 border border-[#D4C8BB] dark:border-[#5C5248] rounded-lg flex items-center justify-between">
-              <span className="text-sm text-[#6B6258] dark:text-[#E0D6CB]">{t("replies.replyTo")}</span>
+            <div className="mb-3 p-2.5 bg-primary/5 border border-primary/15 rounded-xl flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">{t("replies.replyTo")}</span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setReplyingTo(null)}
-                className="text-[#A89888] hover:text-[#6B6258] luxury-hover"
+                className="text-muted-foreground hover:text-foreground hover:bg-secondary/80 luxury-hover h-7 px-2 text-xs rounded-lg"
                 aria-label={t("replies.cancel")}
               >
                 {t("replies.cancel")}
@@ -336,7 +336,7 @@ export function NestedReplySystem({
                     : t("replies.placeholder")
                   : t("replies.loginRequired")
               }
-              className="border-luxury-warm focus:border-[#BDB1A4] focus:ring-[#BDB1A4] resize-none rounded-xl luxury-text bg-luxury-beige/50"
+              className="border-border/50 focus:border-primary focus:ring-primary/20 resize-none rounded-xl text-sm bg-background"
               rows={3}
               maxLength={1000}
               disabled={!isAuthenticated}
@@ -375,10 +375,10 @@ export function NestedReplySystem({
           </form>
 
           {!isAuthenticated && (
-            <div className="mt-3 p-3 bg-[#F5F0EA] dark:bg-[#2E2A25]/20 border border-[#D4C8BB] dark:border-[#5C5248] rounded-lg text-center">
-              <p className="text-sm text-[#6B6258] dark:text-[#E0D6CB]">
+            <div className="mt-3 p-3 bg-primary/5 border border-primary/10 rounded-xl text-center">
+              <p className="text-sm text-muted-foreground">
                 {t("replies.loginRequired")}{" "}
-                <button onClick={onAuthRequired} className="font-medium underline hover:no-underline" aria-label={t("replies.loginLink")}>
+                <button onClick={onAuthRequired} className="font-medium text-primary underline hover:no-underline" aria-label={t("replies.loginLink")}>
                   {t("replies.loginLink")}
                 </button>
               </p>
