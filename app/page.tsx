@@ -37,6 +37,7 @@ function AppContent() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [searchResults, setSearchResults] = useState<Post[] | null>(null)
   const [darkMode, setDarkMode] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const { isAuthenticated } = useAuth()
 
   useEffect(() => {
@@ -112,10 +113,12 @@ function AppContent() {
         onSettingsOpen={() => setSettingsOpen(true)}
         onSearchResults={handleSearchResults}
         onClearSearch={handleClearSearch}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
       {/* Main content — offset by sidebar width on desktop */}
-      <div className="lg:pl-64 flex flex-col min-h-screen">
+      <div className={`flex flex-col min-h-screen transition-all duration-350 ease-out ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"}`}>
         {/* Top bar */}
         <Header
           darkMode={darkMode}

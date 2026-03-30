@@ -2,22 +2,26 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Heart, Shield, Users, MessageCircle, Sparkles, Star, ArrowRight, Zap, Lock, HeartHandshake } from "lucide-react"
+import { Heart, Shield, Users, MessageCircle, Sparkles, ArrowRight, Zap, Lock, HeartHandshake, FlaskConical } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 
 interface WelcomeSectionProps {
   onAuthAction?: (action: "login" | "register") => void
 }
 
+const particles = [
+  { size: 4,  top: "12%",  left: "8%",   color: "bg-violet-400/40",  dur: "9s",  delay: "0s",  dx: "60px",  dy: "-80px" },
+  { size: 6,  top: "25%",  left: "88%",  color: "bg-pink-400/35",    dur: "12s", delay: "1s",  dx: "-70px", dy: "-60px" },
+  { size: 3,  top: "65%",  left: "5%",   color: "bg-cyan-400/30",    dur: "14s", delay: "2s",  dx: "80px",  dy: "-90px" },
+  { size: 5,  top: "78%",  left: "92%",  color: "bg-violet-500/35",  dur: "10s", delay: "0.5s",dx: "-50px", dy: "-70px" },
+  { size: 3,  top: "45%",  left: "95%",  color: "bg-pink-300/30",    dur: "16s", delay: "3s",  dx: "-80px", dy: "40px"  },
+  { size: 4,  top: "85%",  left: "40%",  color: "bg-cyan-300/25",    dur: "11s", delay: "1.5s",dx: "30px",  dy: "-100px"},
+  { size: 2,  top: "18%",  left: "55%",  color: "bg-violet-300/20",  dur: "18s", delay: "4s",  dx: "-40px", dy: "60px"  },
+  { size: 5,  top: "55%",  left: "15%",  color: "bg-pink-400/25",    dur: "13s", delay: "2.5s",dx: "90px",  dy: "-50px" },
+]
+
 export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
   const { t } = useLanguage()
-
-  const stats = [
-    { value: "10K+", label: "Üye", icon: Users, color: "text-primary" },
-    { value: "50K+", label: "Paylaşım", icon: MessageCircle, color: "text-pink-500" },
-    { value: "99%", label: "Anonim", icon: Lock, color: "text-emerald-500" },
-    { value: "7/24", label: "AI Destek", icon: Zap, color: "text-amber-500" },
-  ]
 
   const features = [
     {
@@ -45,7 +49,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
       iconColor: "text-emerald-400",
       titleKey: "welcome.feature.privacy.title",
       descKey: "welcome.feature.privacy.desc",
-      tag: "Güvenlik",
+      tag: "Gizlilik",
     },
     {
       icon: HeartHandshake,
@@ -54,7 +58,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
       iconColor: "text-amber-400",
       titleKey: "welcome.feature.professional.title",
       descKey: "welcome.feature.professional.desc",
-      tag: "Profesyonel",
+      tag: "Destek",
     },
   ]
 
@@ -65,36 +69,79 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
           HERO
       ══════════════════════════════════════ */}
       <section className="relative text-center pt-8 pb-4">
+        {/* Floating particles */}
+        {particles.map((p, i) => (
+          <span
+            key={i}
+            className={`particle ${p.color} rounded-full`}
+            style={{
+              width: p.size * 4,
+              height: p.size * 4,
+              top: p.top,
+              left: p.left,
+              filter: `blur(${p.size}px)`,
+              ["--dur" as string]: p.dur,
+              ["--delay" as string]: p.delay,
+              ["--dx" as string]: p.dx,
+              ["--dy" as string]: p.dy,
+            }}
+          />
+        ))}
+
         {/* Background orbs */}
         <div className="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
-          <div className="orb orb-primary w-80 h-80 -top-20 -left-20 opacity-40" />
-          <div className="orb orb-accent w-72 h-72 -bottom-10 -right-10 opacity-35" />
-          <div className="orb orb-cyan w-48 h-48 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
+          <div className="orb orb-primary w-96 h-96 -top-24 -left-24 opacity-50" />
+          <div className="orb orb-accent w-80 h-80 -bottom-16 -right-16 opacity-45" />
+          <div className="orb orb-cyan w-56 h-56 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-25" />
+          <div className="orb orb-primary w-48 h-48 top-1/4 right-1/4 opacity-20" />
         </div>
 
-        {/* Badge */}
+        {/* Prototype badge */}
         <div className="flex justify-center mb-7 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            Güvenli Duygusal Destek Platformu
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full liquid-glass text-sm font-semibold">
+            <FlaskConical className="h-3.5 w-3.5 text-primary" />
+            <span className="text-foreground/80">Prototip Sürüm</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
           </div>
         </div>
 
-        {/* Main headline */}
-        <div className="animate-fade-in-up delay-100">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none mb-3">
-            <span className="text-foreground block">Yalnız</span>
-            <span className="luxury-name-fade block">Değilsin.</span>
+        {/* Main headline — each word animates in separately */}
+        <div className="mb-4 overflow-hidden">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none">
+            <span
+              className="text-foreground block animate-hero-word"
+              style={{ animationDelay: "100ms" }}
+            >
+              Yalnız
+            </span>
+            <span
+              className="block animate-hero-word animate-glow-pulse"
+              style={{
+                animationDelay: "280ms",
+                background: "linear-gradient(135deg, hsl(var(--cf-primary)) 0%, hsl(var(--cf-accent)) 50%, hsl(var(--cf-cyan)) 100%)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Değilsin.
+            </span>
           </h1>
         </div>
 
         {/* Subtitle */}
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mt-7 mb-10 animate-fade-in-up delay-200">
+        <p
+          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mt-7 mb-10 animate-fade-in-up"
+          style={{ animationDelay: "480ms" }}
+        >
           {t("welcome.subtitle")}
         </p>
 
         {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-fade-in-up delay-300">
+        <div
+          className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-fade-in-up"
+          style={{ animationDelay: "600ms" }}
+        >
           <Button
             onClick={() => onAuthAction?.("register")}
             size="lg"
@@ -114,12 +161,15 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
           </Button>
         </div>
 
-        {/* Trust badges */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-10 animate-fade-in-up delay-400">
+        {/* Honest trust badges */}
+        <div
+          className="flex flex-wrap items-center justify-center gap-3 mt-10 animate-fade-in-up"
+          style={{ animationDelay: "750ms" }}
+        >
           {[
-            { icon: Shield, text: "100% Anonim", color: "text-emerald-500 bg-emerald-500/8 border-emerald-500/15" },
-            { icon: Lock, text: "Veri Korumalı", color: "text-blue-500 bg-blue-500/8 border-blue-500/15" },
-            { icon: Star, text: "Ücretsiz", color: "text-amber-500 bg-amber-500/8 border-amber-500/15" },
+            { icon: Lock,         text: "Anonim",    color: "text-violet-500  bg-violet-500/8  border-violet-500/20"  },
+            { icon: Zap,          text: "Ücretsiz",  color: "text-amber-500   bg-amber-500/8   border-amber-500/20"   },
+            { icon: FlaskConical, text: "Prototip",  color: "text-emerald-500 bg-emerald-500/8 border-emerald-500/20" },
           ].map(({ icon: Icon, text, color }) => (
             <div key={text} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold ${color}`}>
               <Icon className="h-3.5 w-3.5" />
@@ -127,27 +177,6 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          STATS ROW
-      ══════════════════════════════════════ */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in-up delay-200">
-        {stats.map((stat, i) => {
-          const Icon = stat.icon
-          return (
-            <div
-              key={i}
-              className="luxury-card luxury-card-hover rounded-2xl p-5 text-center group"
-            >
-              <div className={`w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center bg-current/8 group-hover:scale-110 transition-transform duration-300 ${stat.color}`}>
-                <Icon className={`h-5 w-5 ${stat.color}`} />
-              </div>
-              <div className="text-2xl font-black text-foreground mb-1">{stat.value}</div>
-              <div className="text-xs text-muted-foreground font-medium">{stat.label}</div>
-            </div>
-          )
-        })}
       </section>
 
       {/* ══════════════════════════════════════
@@ -175,7 +204,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
               >
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
-                    <div className={`flex-shrink-0 bg-gradient-to-br ${feature.gradient} p-3 rounded-xl border ${feature.border} group-hover:scale-110 transition-transform duration-400`}>
+                    <div className={`flex-shrink-0 bg-gradient-to-br ${feature.gradient} p-3 rounded-xl border ${feature.border} group-hover:scale-110 group-hover:rotate-3 transition-all duration-400`}>
                       <Icon className={`h-5 w-5 ${feature.iconColor}`} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -201,15 +230,20 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
           CTA BANNER
       ══════════════════════════════════════ */}
       <section className="animate-fade-in-up relative">
-        <Card className="border-0 luxury-card rounded-3xl overflow-hidden relative">
+        <Card className="border-0 luxury-card rounded-3xl overflow-hidden relative animate-border-glow">
           {/* Background gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-pink-500/8 pointer-events-none" />
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-pink-500/8 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/12 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-pink-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          {/* Decorative particles */}
+          <div className="absolute top-8 left-8 w-2 h-2 bg-primary/40 rounded-full animate-float" style={{ animationDelay: "0s" }} />
+          <div className="absolute top-12 right-16 w-1.5 h-1.5 bg-pink-400/40 rounded-full animate-float" style={{ animationDelay: "1.5s" }} />
+          <div className="absolute bottom-10 left-24 w-1 h-1 bg-cyan-400/50 rounded-full animate-float" style={{ animationDelay: "3s" }} />
 
           <CardContent className="relative p-10 md:p-14 text-center">
             <div className="flex justify-center mb-5">
-              <div className="relative">
+              <div className="relative animate-float">
                 <div className="absolute -inset-3 bg-gradient-to-r from-primary/30 to-pink-500/30 rounded-3xl blur-xl animate-pulse" />
                 <div className="relative w-16 h-16 bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/25 rounded-2xl flex items-center justify-center">
                   <Heart className="h-8 w-8 text-primary" />
@@ -241,6 +275,7 @@ export function WelcomeSection({ onAuthAction }: WelcomeSectionProps) {
           </CardContent>
         </Card>
       </section>
+
     </div>
   )
 }
