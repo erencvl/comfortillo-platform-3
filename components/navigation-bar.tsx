@@ -21,6 +21,59 @@ interface NavigationBarProps {
   onToggleCollapse?: () => void
 }
 
+const navItems = [
+  {
+    id: "home",
+    labelKey: "nav.home",
+    icon: Home,
+    iconColor: "text-violet-500",
+    iconBg: "from-violet-500/25 to-purple-600/15",
+    iconBgActive: "from-violet-500/40 to-purple-600/25",
+    glow: "shadow-violet-500/40",
+    dot: "bg-violet-400",
+  },
+  {
+    id: "forum",
+    labelKey: "nav.forum",
+    icon: Users,
+    iconColor: "text-blue-500",
+    iconBg: "from-blue-500/25 to-blue-600/15",
+    iconBgActive: "from-blue-500/40 to-blue-600/25",
+    glow: "shadow-blue-500/40",
+    dot: "bg-blue-400",
+  },
+  {
+    id: "ai-chat",
+    labelKey: "nav.aiChat",
+    icon: MessageSquare,
+    iconColor: "text-pink-500",
+    iconBg: "from-pink-500/25 to-rose-600/15",
+    iconBgActive: "from-pink-500/40 to-rose-600/25",
+    glow: "shadow-pink-500/40",
+    dot: "bg-pink-400",
+  },
+  {
+    id: "leaderboard",
+    labelKey: "nav.leaderboard",
+    icon: Trophy,
+    iconColor: "text-amber-500",
+    iconBg: "from-amber-500/25 to-orange-500/15",
+    iconBgActive: "from-amber-500/40 to-orange-500/25",
+    glow: "shadow-amber-500/40",
+    dot: "bg-amber-400",
+  },
+  {
+    id: "about",
+    labelKey: "nav.about",
+    icon: Info,
+    iconColor: "text-emerald-500",
+    iconBg: "from-emerald-500/25 to-teal-600/15",
+    iconBgActive: "from-emerald-500/40 to-teal-600/25",
+    glow: "shadow-emerald-500/40",
+    dot: "bg-emerald-400",
+  },
+]
+
 export function NavigationBar({
   activeSection,
   onSectionChange,
@@ -33,14 +86,6 @@ export function NavigationBar({
   const { t } = useLanguage()
   const { user, isAuthenticated, logout } = useAuth()
 
-  const navItems = [
-    { id: "home",        label: t("nav.home"),        icon: Home,         color: "text-violet-500" },
-    { id: "forum",       label: t("nav.forum"),       icon: Users,        color: "text-blue-500" },
-    { id: "ai-chat",     label: t("nav.aiChat"),      icon: MessageSquare,color: "text-pink-500" },
-    { id: "leaderboard", label: t("nav.leaderboard"), icon: Trophy,       color: "text-amber-500" },
-    { id: "about",       label: t("nav.about"),       icon: Info,         color: "text-emerald-500" },
-  ]
-
   const handleNav = (id: string) => {
     onSectionChange(id)
     setShowUserMenu(false)
@@ -52,18 +97,51 @@ export function NavigationBar({
           DESKTOP SIDEBAR (lg+)
       ══════════════════════════════════ */}
       <aside
-        className={`hidden lg:flex fixed left-0 top-0 h-full flex-col z-50 sidebar sidebar-expand overflow-hidden ${
+        className={`hidden lg:flex fixed left-0 top-0 h-full flex-col z-50 sidebar sidebar-expand ${
           collapsed ? "w-16" : "w-64"
         }`}
       >
-        {/* Logo row */}
-        <div className={`border-b border-border/50 flex items-center transition-all duration-300 ${collapsed ? "px-3 pt-6 pb-5 justify-center" : "px-4 pt-6 pb-5 gap-3 justify-between"}`}>
+        {/* ── Animated background blobs ── */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+          <div
+            className="sidebar-blob-a absolute -top-8 -left-8 w-48 h-48 rounded-full"
+            style={{
+              background: "radial-gradient(circle, hsla(var(--cf-primary), 0.30) 0%, transparent 70%)",
+              filter: "blur(32px)",
+            }}
+          />
+          <div
+            className="sidebar-blob-b absolute bottom-16 -right-10 w-40 h-40 rounded-full"
+            style={{
+              background: "radial-gradient(circle, hsla(var(--cf-accent), 0.25) 0%, transparent 70%)",
+              filter: "blur(28px)",
+            }}
+          />
+          <div
+            className="sidebar-blob-c absolute top-1/2 -left-4 w-28 h-28 rounded-full"
+            style={{
+              background: "radial-gradient(circle, hsla(var(--cf-cyan), 0.18) 0%, transparent 70%)",
+              filter: "blur(24px)",
+            }}
+          />
+          {/* Top gradient wash */}
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
+          {/* Bottom gradient wash */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-pink-500/8 to-transparent pointer-events-none" />
+        </div>
+
+        {/* ── Logo row ── */}
+        <div
+          className={`relative z-10 border-b border-primary/15 flex items-center transition-all duration-300 ${
+            collapsed ? "px-3 pt-6 pb-5 justify-center flex-col gap-2" : "px-4 pt-6 pb-5 gap-3 justify-between"
+          }`}
+        >
           {!collapsed && (
             <button onClick={() => handleNav("home")} className="flex items-center gap-3 group flex-1 min-w-0">
               <div className="relative flex-shrink-0">
-                <div className="absolute -inset-2 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-25 blur-lg group-hover:opacity-45 transition-opacity duration-500" />
+                <div className="absolute -inset-2 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-30 blur-lg group-hover:opacity-50 transition-opacity duration-500" />
                 <div
-                  className="relative w-9 h-9 bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/25 rounded-2xl flex items-center justify-center"
+                  className="relative w-9 h-9 bg-gradient-to-br from-primary/25 to-pink-500/25 border border-primary/30 rounded-2xl flex items-center justify-center"
                   style={{ animation: "logoGlow 3s ease-in-out infinite" }}
                 >
                   <Heart className="h-4 w-4 text-primary group-hover:scale-110 transition-transform duration-300" />
@@ -71,7 +149,7 @@ export function NavigationBar({
               </div>
               <div className="text-left min-w-0">
                 <div className="font-bold text-sm leading-tight luxury-name-fade">Comfortillo</div>
-                <div className="text-[10px] text-muted-foreground font-medium tracking-wide uppercase mt-0.5">
+                <div className="text-[10px] text-muted-foreground/70 font-medium tracking-widest uppercase mt-0.5">
                   {t("header.tagline") || "Destek Platformu"}
                 </div>
               </div>
@@ -79,10 +157,10 @@ export function NavigationBar({
           )}
 
           {collapsed && (
-            <button onClick={() => handleNav("home")} className="relative group flex-shrink-0">
-              <div className="absolute -inset-2 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-25 blur-lg group-hover:opacity-45 transition-opacity duration-500" />
+            <button onClick={() => handleNav("home")} className="relative group">
+              <div className="absolute -inset-2 bg-gradient-to-br from-primary to-pink-500 rounded-2xl opacity-30 blur-lg group-hover:opacity-50 transition-opacity duration-500" />
               <div
-                className="relative w-9 h-9 bg-gradient-to-br from-primary/20 to-pink-500/20 border border-primary/25 rounded-2xl flex items-center justify-center"
+                className="relative w-9 h-9 bg-gradient-to-br from-primary/25 to-pink-500/25 border border-primary/30 rounded-2xl flex items-center justify-center"
                 style={{ animation: "logoGlow 3s ease-in-out infinite" }}
               >
                 <Heart className="h-4 w-4 text-primary" />
@@ -92,7 +170,7 @@ export function NavigationBar({
 
           <button
             onClick={onToggleCollapse}
-            className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/70 transition-all duration-200 ${collapsed ? "mt-4" : ""}`}
+            className="relative z-10 flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground/60 hover:text-foreground hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all duration-200"
             title={collapsed ? "Menüyü Aç" : "Menüyü Kapat"}
           >
             {collapsed
@@ -102,28 +180,36 @@ export function NavigationBar({
           </button>
         </div>
 
-        {/* Nav items */}
-        <nav className={`flex-1 py-4 overflow-y-auto space-y-0.5 ${collapsed ? "px-2" : "px-3"}`}>
+        {/* ── Nav items ── */}
+        <nav className={`relative z-10 flex-1 py-4 overflow-y-auto space-y-1 ${collapsed ? "px-2" : "px-3"}`}>
           {navItems.map((item, i) => {
             const Icon = item.icon
             const isActive = activeSection === item.id
+            const label = t(item.labelKey)
 
             if (collapsed) {
               return (
                 <button
                   key={item.id}
                   onClick={() => handleNav(item.id)}
-                  title={item.label}
-                  className={`w-full flex items-center justify-center p-2.5 rounded-xl transition-all duration-300 group relative animate-nav-item ${
-                    isActive
-                      ? "bg-primary/15 shadow-md shadow-primary/25"
-                      : "hover:bg-secondary/70 hover:scale-105"
+                  title={label}
+                  className={`animate-nav-item w-full flex items-center justify-center p-2.5 rounded-xl transition-all duration-300 group relative ${
+                    isActive ? "scale-105" : "hover:scale-105"
                   }`}
                   style={{ animationDelay: `${i * 55}ms` }}
                 >
-                  <Icon className={`h-4.5 w-4.5 transition-all duration-300 ${isActive ? "text-primary scale-110" : `${item.color} group-hover:scale-110`}`} />
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br transition-all duration-300 ${
+                      isActive
+                        ? `${item.iconBgActive} shadow-lg ${item.glow}`
+                        : `${item.iconBg} group-hover:shadow-md group-hover:${item.glow}`
+                    }`}
+                    style={isActive ? { animation: "iconGlow 2.5s ease-in-out infinite" } : undefined}
+                  >
+                    <Icon className={`h-4 w-4 ${item.iconColor} transition-all duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
+                  </div>
                   {isActive && (
-                    <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    <span className={`absolute top-1 right-1 w-1.5 h-1.5 rounded-full ${item.dot} animate-pulse`} />
                   )}
                 </button>
               )
@@ -133,59 +219,69 @@ export function NavigationBar({
               <button
                 key={item.id}
                 onClick={() => handleNav(item.id)}
-                className={`nav-item w-full text-left animate-nav-item group ${isActive ? "active" : ""}`}
+                className={`animate-nav-item nav-item w-full text-left group ${isActive ? "active" : ""}`}
                 style={{ animationDelay: `${i * 55}ms` }}
               >
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-                  isActive
-                    ? "bg-primary/15 shadow-md shadow-primary/25"
-                    : "bg-secondary/60 group-hover:bg-secondary group-hover:scale-105"
-                }`}
-                style={isActive ? { animation: "iconGlow 2.5s ease-in-out infinite" } : undefined}
+                {/* Colored icon pill */}
+                <div
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br transition-all duration-300 ${
+                    isActive
+                      ? `${item.iconBgActive} shadow-md ${item.glow} scale-105`
+                      : `${item.iconBg} group-hover:shadow-sm group-hover:scale-105`
+                  }`}
+                  style={isActive ? { animation: "iconGlow 2.5s ease-in-out infinite" } : undefined}
                 >
-                  <Icon className={`h-4 w-4 transition-all duration-300 ${isActive ? "text-primary" : `${item.color} group-hover:scale-110`}`} />
+                  <Icon className={`h-3.5 w-3.5 ${item.iconColor} transition-transform duration-300 ${isActive ? "" : "group-hover:scale-110"}`} />
                 </div>
-                <span className="font-medium sidebar-label">{item.label}</span>
+
+                <span className="font-medium sidebar-label flex-1">{label}</span>
+
                 {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className={`w-1.5 h-1.5 rounded-full ${item.dot} animate-pulse flex-shrink-0`} />
                 )}
               </button>
             )
           })}
         </nav>
 
-        {/* Bottom: User card or auth */}
-        <div className={`pb-5 pt-3 border-t border-border/50 space-y-2 ${collapsed ? "px-2" : "px-3"}`}>
+        {/* ── Bottom user area ── */}
+        <div className={`relative z-10 pb-5 pt-3 border-t border-primary/15 space-y-2 ${collapsed ? "px-2" : "px-3"}`}>
           {isAuthenticated && user ? (
             <div className="relative">
               {collapsed ? (
                 <button
                   onClick={() => handleNav("profile")}
                   title={user.name}
-                  className="w-full flex items-center justify-center py-2 rounded-xl hover:bg-secondary/60 transition-all duration-200"
+                  className="w-full flex items-center justify-center py-2 rounded-xl hover:bg-primary/10 transition-all duration-200 group"
                 >
                   <div className="relative">
-                    <div className="w-8 h-8 bg-gradient-to-br from-primary to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-primary/25">
+                    <div
+                      className="w-8 h-8 bg-gradient-to-br from-primary to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-primary/30 group-hover:scale-105 transition-transform"
+                      style={{ animation: "logoGlow 3s ease-in-out infinite" }}
+                    >
                       <User className="h-3.5 w-3.5 text-white" />
                     </div>
-                    <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-background rounded-full" />
+                    <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-background rounded-full animate-pulse" />
                   </div>
                 </button>
               ) : (
                 <>
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-secondary/60 transition-all duration-200 group"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/10 border border-transparent hover:border-primary/15 transition-all duration-200 group"
                   >
                     <div className="relative flex-shrink-0">
-                      <div className="w-9 h-9 bg-gradient-to-br from-primary to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-primary/25">
-                        <User className="h-4 w-4 text-white" />
+                      <div
+                        className="w-8 h-8 bg-gradient-to-br from-primary to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-primary/30"
+                        style={{ animation: "logoGlow 4s ease-in-out infinite" }}
+                      >
+                        <User className="h-3.5 w-3.5 text-white" />
                       </div>
-                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-background rounded-full" />
+                      <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-background rounded-full animate-pulse" />
                     </div>
                     <div className="flex-1 min-w-0 text-left">
-                      <div className="text-sm font-semibold text-foreground truncate">{user.name}</div>
-                      <div className="text-xs text-muted-foreground">Çevrimiçi</div>
+                      <div className="text-xs font-semibold text-foreground truncate">{user.name}</div>
+                      <div className="text-[10px] text-emerald-500 font-medium">● Çevrimiçi</div>
                     </div>
                     <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-300 ${showUserMenu ? "rotate-180" : ""}`} />
                   </button>
@@ -193,12 +289,12 @@ export function NavigationBar({
                   {showUserMenu && (
                     <>
                       <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
-                      <div className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-background border border-border/60 rounded-xl shadow-2xl shadow-black/20 overflow-hidden animate-scale-in">
+                      <div className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-background/90 backdrop-blur-xl border border-border/60 rounded-xl shadow-2xl shadow-black/25 overflow-hidden animate-scale-in">
                         <div className="p-1">
                           <button
                             onClick={() => { handleNav("profile"); setShowUserMenu(false) }}
                             className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                              activeSection === "profile" ? "bg-primary/10 text-primary" : "text-foreground hover:bg-secondary/60"
+                              activeSection === "profile" ? "bg-primary/15 text-primary" : "text-foreground hover:bg-secondary/60"
                             }`}
                           >
                             <User className="h-4 w-4" /> {t("nav.profile")}
@@ -229,14 +325,15 @@ export function NavigationBar({
                 <button
                   onClick={() => onAuthAction("register")}
                   title={t("nav.register")}
-                  className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-pink-500 flex items-center justify-center shadow-md shadow-primary/30 hover:scale-105 transition-transform"
+                  className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-pink-500 flex items-center justify-center shadow-lg shadow-primary/35 hover:scale-105 transition-transform"
+                  style={{ animation: "buttonRing 3s ease-in-out infinite" }}
                 >
                   <UserPlus className="h-4 w-4 text-white" />
                 </button>
                 <button
                   onClick={() => onAuthAction("login")}
                   title={t("nav.login")}
-                  className="w-10 h-10 rounded-xl bg-secondary/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+                  className="w-10 h-10 rounded-xl bg-secondary/60 border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-primary/10 hover:border-primary/20 transition-all"
                 >
                   <LogIn className="h-4 w-4" />
                 </button>
@@ -254,7 +351,7 @@ export function NavigationBar({
                 <Button
                   variant="ghost"
                   onClick={() => onAuthAction("login")}
-                  className="w-full text-muted-foreground hover:text-foreground hover:bg-secondary/60 rounded-xl text-sm h-9"
+                  className="w-full text-muted-foreground hover:text-foreground hover:bg-primary/8 hover:border-primary/15 border border-transparent rounded-xl text-sm h-9 transition-all"
                   size="sm"
                 >
                   <LogIn className="h-4 w-4 mr-2" />
@@ -270,7 +367,7 @@ export function NavigationBar({
           MOBILE BOTTOM NAV
       ══════════════════════════════════ */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50">
-        <div className="glass border-t border-border/60 px-2 py-2">
+        <div className="liquid-glass border-t border-primary/15 px-2 py-2">
           <div className="flex items-center justify-around">
             {navItems.slice(0, 4).map((item) => {
               const Icon = item.icon
@@ -280,19 +377,23 @@ export function NavigationBar({
                   key={item.id}
                   onClick={() => handleNav(item.id)}
                   className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-300 min-w-[56px] ${
-                    isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    isActive ? "scale-105" : ""
                   }`}
                 >
-                  <div className={`relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300 ${
-                    isActive ? "bg-primary/15 shadow-sm shadow-primary/20 scale-110" : ""
-                  }`}>
-                    <Icon className="h-4.5 w-4.5" />
+                  <div
+                    className={`relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br transition-all duration-300 ${
+                      isActive
+                        ? `${item.iconBgActive} shadow-md ${item.glow}`
+                        : `${item.iconBg}`
+                    }`}
+                  >
+                    <Icon className={`h-4 w-4 ${item.iconColor}`} />
                     {isActive && (
-                      <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-primary rounded-full" />
+                      <span className={`absolute -top-0.5 -right-0.5 w-1.5 h-1.5 ${item.dot} rounded-full animate-pulse`} />
                     )}
                   </div>
-                  <span className={`text-[10px] font-medium transition-all ${isActive ? "font-semibold" : ""}`}>
-                    {item.label}
+                  <span className={`text-[10px] font-medium transition-colors ${isActive ? item.iconColor : "text-muted-foreground"}`}>
+                    {t(item.labelKey)}
                   </span>
                 </button>
               )
@@ -301,23 +402,21 @@ export function NavigationBar({
             {isAuthenticated && user ? (
               <button
                 onClick={() => handleNav("profile")}
-                className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-300 min-w-[56px] ${
-                  activeSection === "profile" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
+                className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl min-w-[56px]"
               >
-                <div className={`w-8 h-8 bg-gradient-to-br from-primary to-pink-500 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                  activeSection === "profile" ? "scale-110 shadow-md shadow-primary/30" : ""
+                <div className={`w-9 h-9 bg-gradient-to-br from-primary to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-primary/30 transition-all duration-300 ${
+                  activeSection === "profile" ? "scale-110" : ""
                 }`}>
                   <User className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-[10px] font-medium">{t("nav.profile")}</span>
+                <span className={`text-[10px] font-medium ${activeSection === "profile" ? "text-primary" : "text-muted-foreground"}`}>{t("nav.profile")}</span>
               </button>
             ) : (
               <button
                 onClick={() => onAuthAction("login")}
-                className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-muted-foreground hover:text-foreground transition-all min-w-[56px]"
+                className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-muted-foreground min-w-[56px]"
               >
-                <div className="w-8 h-8 bg-secondary rounded-xl flex items-center justify-center">
+                <div className="w-9 h-9 bg-gradient-to-br from-secondary to-secondary/60 border border-border/50 rounded-xl flex items-center justify-center">
                   <LogIn className="h-4 w-4" />
                 </div>
                 <span className="text-[10px] font-medium">{t("nav.login")}</span>
